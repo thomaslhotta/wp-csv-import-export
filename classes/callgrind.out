@@ -1,0 +1,4010 @@
+version: 1
+cmd: unknown
+positions: line
+events: MemorySize BlocksCount
+
+fl=/todo.php
+fn=fgetcsv
+1 10291 153
+
+fl=/todo.php
+fn=ArrayObject::__construct
+1 0 0
+
+fl=/todo.php
+fn=CIE_Importer::get_handlers
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=is_string
+1 0 0
+
+fl=/todo.php
+fn=in_array
+1 0 0
+
+fl=/todo.php
+fn=ArrayObject::getArrayCopy
+1 1626 40
+
+fl=/todo.php
+fn=ArrayObject::getIterator
+1 0 0
+
+fl=/todo.php
+fn=ArrayObject::exchangeArray
+1 2091 39
+
+fl=/todo.php
+fn=CIE_Handler_Fieldname::__invoke
+1 20 1
+cfl=/todo.php
+cfn=is_array
+calls=996 1
+1 0 0
+cfl=/todo.php
+cfn=is_string
+calls=38 1
+1 0 0
+cfl=/todo.php
+cfn=in_array
+calls=38 1
+1 0 0
+cfl=/todo.php
+cfn=ArrayObject::getArrayCopy
+calls=1 1
+1 1626 40
+cfl=/todo.php
+cfn=ArrayObject::getIterator
+calls=995 1
+1 0 0
+cfl=/todo.php
+cfn=ArrayObject::exchangeArray
+calls=995 1
+1 2091 39
+
+fl=/todo.php
+fn=ArrayObject::getIterator
+1 0 0
+
+fl=/todo.php
+fn=ltrim
+1 0 0
+
+fl=/todo.php
+fn=ArrayObject::offsetUnset
+1 0 0
+
+fl=/todo.php
+fn=substr
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 135 4
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 16 2
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=ArrayObject::offsetSet
+1 109 2
+
+fl=/todo.php
+fn=json_decode
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Transform::transform_extract
+1 40 2
+cfl=/todo.php
+cfn=ltrim
+calls=1990 1
+1 0 0
+cfl=/todo.php
+cfn=ArrayObject::offsetUnset
+calls=1990 1
+1 0 0
+cfl=/todo.php
+cfn=substr
+calls=3249 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=930 1
+1 135 4
+cfl=/todo.php
+cfn=strlen
+calls=930 1
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=1860 1
+1 16 2
+cfl=/todo.php
+cfn=is_array
+calls=1389 1
+1 0 0
+cfl=/todo.php
+cfn=ArrayObject::offsetSet
+calls=9663 1
+1 109 2
+cfl=/todo.php
+cfn=json_decode
+calls=459 1
+1 0 0
+
+fl=/todo.php
+fn=ArrayIterator::rewind
+1 0 0
+
+fl=/todo.php
+fn=array_unshift
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Transform::call_string_function
+1 21 2
+cfl=/todo.php
+cfn=array_unshift
+calls=995 1
+1 0 0
+
+fl=/todo.php
+fn=ArrayIterator::offsetSet
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Transform::transform_string_function
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Transform::call_string_function
+calls=995 1
+1 21 2
+cfl=/todo.php
+cfn=ArrayIterator::offsetSet
+calls=995 1
+1 0 0
+
+fl=/todo.php
+fn=ArrayObject::offsetExists
+1 0 0
+
+fl=/todo.php
+fn=array_unshift
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Transform::call_string_function
+1 0 0
+cfl=/todo.php
+cfn=array_unshift
+calls=4975 1
+1 0 0
+
+fl=/todo.php
+fn=ArrayObject::offsetSet
+1 46 1
+
+fl=/todo.php
+fn=CIE_Handler_Transform::transform_generate
+1 21 2
+cfl=/todo.php
+cfn=ArrayObject::offsetExists
+calls=2985 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Transform::call_string_function
+calls=6965 1
+1 0 0
+cfl=/todo.php
+cfn=ArrayObject::offsetSet
+calls=995 1
+1 46 1
+
+fl=/todo.php
+fn=explode
+1 0 0
+
+fl=/todo.php
+fn=implode
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Transform::transform_multi_replace
+1 0 0
+cfl=/todo.php
+cfn=explode
+calls=459 1
+1 0 0
+cfl=/todo.php
+cfn=implode
+calls=459 1
+1 0 0
+
+fl=/todo.php
+fn=ArrayIterator::offsetGet
+1 0 0
+
+fl=/todo.php
+fn=explode
+1 0 0
+
+fl=/todo.php
+fn=ArrayIterator::offsetSet
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Transform::transform_to_array
+1 0 0
+cfl=/todo.php
+cfn=ArrayIterator::offsetGet
+calls=1836 1
+1 0 0
+cfl=/todo.php
+cfn=explode
+calls=1836 1
+1 0 0
+cfl=/todo.php
+cfn=ArrayIterator::offsetSet
+calls=1836 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Transform::__invoke
+1 0 0
+cfl=/todo.php
+cfn=ArrayObject::getIterator
+calls=995 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Transform::transform_extract
+calls=1990 1
+1 300 10
+cfl=/todo.php
+cfn=ArrayIterator::rewind
+calls=995 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Transform::transform_string_function
+calls=995 1
+1 21 2
+cfl=/todo.php
+cfn=CIE_Handler_Transform::transform_generate
+calls=995 1
+1 67 3
+cfl=/todo.php
+cfn=CIE_Handler_Transform::transform_multi_replace
+calls=459 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Transform::transform_to_array
+calls=1836 1
+1 0 0
+
+fl=/todo.php
+fn=ArrayObject::offsetGet
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=strip_tags
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=wp_strip_all_tags
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=strip_tags
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=ord
+1 0 0
+
+fl=/todo.php
+fn=seems_utf8
+1 0 0
+cfl=/todo.php
+cfn=strlen
+calls=6 1
+1 0 0
+cfl=/todo.php
+cfn=ord
+calls=79 1
+1 0 0
+
+fl=/todo.php
+fn=chr
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=get_locale
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=5 1
+1 0 0
+
+fl=/todo.php
+fn=strtr
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=remove_accents
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=seems_utf8
+calls=6 1
+1 0 0
+cfl=/todo.php
+cfn=chr
+calls=3689 1
+1 0 0
+cfl=/todo.php
+cfn=get_locale
+calls=5 1
+1 0 0
+cfl=/todo.php
+cfn=strtr
+calls=6 1
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=reset
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=current
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=array_slice
+1 0 0
+
+fl=/todo.php
+fn=next
+1 0 0
+
+fl=/todo.php
+fn=array_pop
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+cfl=/todo.php
+cfn=reset
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=current
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=array_slice
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=next
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=array_pop
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=sanitize_user
+1 0 0
+cfl=/todo.php
+cfn=wp_strip_all_tags
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=remove_accents
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=2715 1
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=array_shift
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=is_float
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::escape_by_ref
+1 0 0
+cfl=/todo.php
+cfn=is_float
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=array_walk
+1 0 0
+cfl=/todo.php
+cfn=wpdb::escape_by_ref
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=wpdb::prepare
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=array_shift
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=1810 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=1810 1
+1 0 0
+cfl=/todo.php
+cfn=array_walk
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=897 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 0 0
+
+fl=/todo.php
+fn=wpdb::query
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=1810 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=1810 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=1810 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::get_row
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=is_bool
+1 0 0
+
+fl=/todo.php
+fn=wp_suspend_cache_addition
+1 0 0
+cfl=/todo.php
+cfn=is_bool
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::set
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::add
+1 0 0
+cfl=/todo.php
+cfn=wp_suspend_cache_addition
+calls=3620 1
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=3620 1
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::set
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_add
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::add
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=update_user_caches
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_add
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=WP_User::get_data_by
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=sanitize_user
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::prepare
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_row
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=update_user_caches
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=is_a
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=WP_User::get_data_by
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=WP_User::__construct
+1 0 0
+cfl=/todo.php
+cfn=is_a
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=WP_User::get_data_by
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=is_multisite
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=wpdb::get_blog_prefix
+1 0 0
+cfl=/todo.php
+cfn=is_multisite
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=intval
+1 0 0
+
+fl=/todo.php
+fn=abs
+1 0 0
+
+fl=/todo.php
+fn=absint
+1 0 0
+cfl=/todo.php
+cfn=intval
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=abs
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=76 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=_get_meta_table
+1 0 0
+
+fl=/todo.php
+fn=strtolower
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=sanitize_key
+1 0 0
+cfl=/todo.php
+cfn=strtolower
+calls=904 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=904 1
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=904 1
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=array_map
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=904 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=75 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=904 1
+1 0 0
+
+fl=/todo.php
+fn=join
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=array_shift
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=is_float
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::escape_by_ref
+1 0 0
+cfl=/todo.php
+cfn=is_float
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=array_walk
+1 0 0
+cfl=/todo.php
+cfn=wpdb::escape_by_ref
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=wpdb::prepare
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=array_shift
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=1658 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=1658 1
+1 0 0
+cfl=/todo.php
+cfn=array_walk
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 954 86
+
+fl=/todo.php
+fn=wpdb::query
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=1658 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=1658 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=872 1
+1 954 86
+
+fl=/todo.php
+fn=get_object_vars
+1 0 0
+
+fl=/todo.php
+fn=wpdb::get_results
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=829 1
+1 954 86
+cfl=/todo.php
+cfn=get_object_vars
+calls=43 1
+1 0 0
+
+fl=/todo.php
+fn=is_bool
+1 0 0
+
+fl=/todo.php
+fn=wp_suspend_cache_addition
+1 0 0
+cfl=/todo.php
+cfn=is_bool
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::set
+1 29015 829
+cfl=/todo.php
+cfn=is_object
+calls=829 1
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::add
+1 0 0
+cfl=/todo.php
+cfn=wp_suspend_cache_addition
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::set
+calls=829 1
+1 29015 829
+
+fl=/todo.php
+fn=wp_cache_add
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::add
+calls=829 1
+1 29015 829
+
+fl=/todo.php
+fn=intval
+1 0 0
+
+fl=/todo.php
+fn=update_meta_cache
+1 79932 2598
+cfl=/todo.php
+cfn=_get_meta_table
+calls=904 1
+1 0 0
+cfl=/todo.php
+cfn=sanitize_key
+calls=904 1
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=956 1
+1 0 0
+cfl=/todo.php
+cfn=array_map
+calls=904 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=904 1
+1 0 0
+cfl=/todo.php
+cfn=join
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::prepare
+calls=829 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_results
+calls=829 1
+1 954 86
+cfl=/todo.php
+cfn=wp_cache_add
+calls=829 1
+1 29015 829
+cfl=/todo.php
+cfn=intval
+calls=43 1
+1 0 0
+
+fl=/todo.php
+fn=get_metadata
+1 0 0
+cfl=/todo.php
+cfn=absint
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=update_meta_cache
+calls=904 1
+1 109901 3513
+
+fl=/todo.php
+fn=get_user_meta
+1 0 0
+cfl=/todo.php
+cfn=get_metadata
+calls=905 1
+1 109901 3513
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=array_keys
+1 0 0
+
+fl=/todo.php
+fn=array_filter
+1 0 0
+
+fl=/todo.php
+fn=array_merge
+1 0 0
+
+fl=/todo.php
+fn=WP_User::get_role_caps
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=array_keys
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=array_filter
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=array_merge
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=WP_User::_init_caps
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_blog_prefix
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=get_user_meta
+calls=905 1
+1 109901 3513
+cfl=/todo.php
+cfn=is_array
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=WP_User::get_role_caps
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=WP_User::for_blog
+1 0 0
+cfl=/todo.php
+cfn=WP_User::_init_caps
+calls=905 1
+1 109901 3513
+
+fl=/todo.php
+fn=WP_User::init
+1 0 0
+cfl=/todo.php
+cfn=WP_User::for_blog
+calls=905 1
+1 109901 3513
+
+fl=/todo.php
+fn=get_user_by
+1 0 0
+cfl=/todo.php
+cfn=WP_User::get_data_by
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=WP_User::__construct
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=WP_User::init
+calls=905 1
+1 109901 3513
+
+fl=/todo.php
+fn=dirname
+1 0 0
+
+fl=/todo.php
+fn=main
+1 0 0
+
+fl=/todo.php
+fn=htmlspecialchars
+1 0 0
+
+fl=/todo.php
+fn=Exception::__construct
+1 41 2
+
+fl=/todo.php
+fn=CIE_Handler_Abstract::throw_exception
+1 14660 393
+cfl=/todo.php
+cfn=dirname
+calls=90 1
+1 0 0
+cfl=/todo.php
+cfn=main
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=htmlspecialchars
+calls=90 1
+1 0 0
+cfl=/todo.php
+cfn=Exception::__construct
+calls=90 1
+1 41 2
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::get_wp_user
+1 0 0
+cfl=/todo.php
+cfn=ArrayObject::offsetGet
+calls=2985 1
+1 0 0
+cfl=/todo.php
+cfn=get_user_by
+calls=905 1
+1 109901 3513
+cfl=/todo.php
+cfn=CIE_Handler_Abstract::throw_exception
+calls=90 1
+1 14701 395
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=substr
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::compare_prefix
+1 0 0
+cfl=/todo.php
+cfn=strlen
+calls=83221 1
+1 0 0
+cfl=/todo.php
+cfn=substr
+calls=83221 1
+1 0 0
+
+fl=/todo.php
+fn=function_exists
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::remove_prefix
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=16710 1
+1 0 0
+
+fl=/todo.php
+fn=is_numeric
+1 0 0
+
+fl=/todo.php
+fn=BuddyPress::__get
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=array_shift
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=is_float
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::escape_by_ref
+1 0 0
+cfl=/todo.php
+cfn=is_float
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=array_walk
+1 0 0
+cfl=/todo.php
+cfn=wpdb::escape_by_ref
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=wpdb::prepare
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=array_shift
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=20 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=20 1
+1 0 0
+cfl=/todo.php
+cfn=array_walk
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 0 0
+
+fl=/todo.php
+fn=wpdb::query
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=20 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=20 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=20 1
+1 0 0
+
+fl=/todo.php
+fn=get_object_vars
+1 0 0
+
+fl=/todo.php
+fn=array_values
+1 0 0
+
+fl=/todo.php
+fn=wpdb::get_var
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=get_object_vars
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=array_values
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=BP_XProfile_Field::get_id_from_name
+1 0 0
+cfl=/todo.php
+cfn=BuddyPress::__get
+calls=20 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::prepare
+calls=10 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_var
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=xprofile_get_field_id_from_name
+1 175 2
+cfl=/todo.php
+cfn=BP_XProfile_Field::get_id_from_name
+calls=10 1
+1 0 0
+
+fl=/todo.php
+fn=BuddyPress::__get
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=array_shift
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=is_float
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=25 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::escape_by_ref
+1 0 0
+cfl=/todo.php
+cfn=is_float
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=25 1
+1 0 0
+
+fl=/todo.php
+fn=array_walk
+1 0 0
+cfl=/todo.php
+cfn=wpdb::escape_by_ref
+calls=25 1
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=wpdb::prepare
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=array_shift
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=array_walk
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=25 1
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=25 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 5729 500
+
+fl=/todo.php
+fn=wpdb::query
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=50 1
+1 5729 500
+
+fl=/todo.php
+fn=wpdb::get_row
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=25 1
+1 5729 500
+
+fl=/todo.php
+fn=stripslashes
+1 660 50
+
+fl=/todo.php
+fn=in_array
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=48 1
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=2 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=50 1
+1 0 0
+
+fl=/todo.php
+fn=BuddyPress::__get
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=array_shift
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=is_float
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=144 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::escape_by_ref
+1 0 0
+cfl=/todo.php
+cfn=is_float
+calls=144 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=144 1
+1 0 0
+
+fl=/todo.php
+fn=array_walk
+1 0 0
+cfl=/todo.php
+cfn=wpdb::escape_by_ref
+calls=144 1
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=wpdb::prepare
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=array_shift
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=96 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=96 1
+1 0 0
+cfl=/todo.php
+cfn=array_walk
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=48 1
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=48 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 0 0
+
+fl=/todo.php
+fn=wpdb::query
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=96 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=96 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=92 1
+1 0 0
+
+fl=/todo.php
+fn=count
+1 0 0
+
+fl=/todo.php
+fn=get_object_vars
+1 0 0
+
+fl=/todo.php
+fn=array_values
+1 0 0
+
+fl=/todo.php
+fn=wpdb::get_var
+1 1320 88
+cfl=/todo.php
+cfn=get_object_vars
+calls=44 1
+1 0 0
+cfl=/todo.php
+cfn=array_values
+calls=44 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::get_col
+1 5956 188
+cfl=/todo.php
+cfn=wpdb::query
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=count
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_var
+calls=44 1
+1 1320 88
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::set
+1 3956 48
+cfl=/todo.php
+cfn=is_object
+calls=48 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_set
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::set
+calls=48 1
+1 3956 48
+
+fl=/todo.php
+fn=is_string
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=is_serialized
+1 0 0
+cfl=/todo.php
+cfn=is_string
+calls=46 1
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=46 1
+1 0 0
+cfl=/todo.php
+cfn=strlen
+calls=46 1
+1 0 0
+
+fl=/todo.php
+fn=maybe_unserialize
+1 0 0
+cfl=/todo.php
+cfn=is_serialized
+calls=46 1
+1 0 0
+
+fl=/todo.php
+fn=array_map
+1 0 0
+cfl=/todo.php
+cfn=maybe_unserialize
+calls=46 1
+1 0 0
+
+fl=/todo.php
+fn=count
+1 0 0
+
+fl=/todo.php
+fn=bp_xprofile_get_meta
+1 0 0
+cfl=/todo.php
+cfn=in_array
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=BuddyPress::__get
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::prepare
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_col
+calls=48 1
+1 7276 276
+cfl=/todo.php
+cfn=wp_cache_set
+calls=48 1
+1 3956 48
+cfl=/todo.php
+cfn=array_map
+calls=46 1
+1 0 0
+cfl=/todo.php
+cfn=count
+calls=46 1
+1 0 0
+
+fl=/todo.php
+fn=BP_XProfile_Field::populate
+1 1777 104
+cfl=/todo.php
+cfn=BuddyPress::__get
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::prepare
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_row
+calls=25 1
+1 5729 500
+cfl=/todo.php
+cfn=stripslashes
+calls=50 1
+1 660 50
+cfl=/todo.php
+cfn=bp_xprofile_get_meta
+calls=50 1
+1 11232 324
+
+fl=/todo.php
+fn=BP_XProfile_Field::__construct
+1 0 0
+cfl=/todo.php
+cfn=BP_XProfile_Field::populate
+calls=25 1
+1 19398 978
+
+fl=/todo.php
+fn=BuddyPress::__get
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=array_shift
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=str_replace
+1 0 0
+
+fl=/todo.php
+fn=preg_replace
+1 0 0
+
+fl=/todo.php
+fn=is_float
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=50 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::escape_by_ref
+1 0 0
+cfl=/todo.php
+cfn=is_float
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=50 1
+1 0 0
+
+fl=/todo.php
+fn=array_walk
+1 0 0
+cfl=/todo.php
+cfn=wpdb::escape_by_ref
+calls=50 1
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=wpdb::prepare
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=array_shift
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=str_replace
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=preg_replace
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=array_walk
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=25 1
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=25 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 82120 3393
+
+fl=/todo.php
+fn=wpdb::query
+1 1740 87
+cfl=/todo.php
+cfn=apply_filters
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=50 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=112 1
+1 82120 3393
+
+fl=/todo.php
+fn=wpdb::get_results
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=25 1
+1 83860 3480
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=BP_XProfile_Field::get_children
+1 0 0
+cfl=/todo.php
+cfn=BuddyPress::__get
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::prepare
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::get_results
+calls=25 1
+1 83860 3480
+cfl=/todo.php
+cfn=apply_filters
+calls=12 1
+1 0 0
+
+fl=/todo.php
+fn=intval
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::get_xprofile_field
+1 30546 691
+cfl=/todo.php
+cfn=is_numeric
+calls=25 1
+1 0 0
+cfl=/todo.php
+cfn=xprofile_get_field_id_from_name
+calls=10 1
+1 175 2
+cfl=/todo.php
+cfn=BP_XProfile_Field::__construct
+calls=25 1
+1 19398 978
+cfl=/todo.php
+cfn=BP_XProfile_Field::get_children
+calls=25 1
+1 83860 3480
+cfl=/todo.php
+cfn=intval
+calls=15 1
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=is_numeric
+1 0 0
+
+fl=/todo.php
+fn=intval
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::prepare_xprofile_field_value
+1 0 0
+cfl=/todo.php
+cfn=is_numeric
+calls=15594 1
+1 0 0
+cfl=/todo.php
+cfn=intval
+calls=31188 1
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=15594 1
+1 0 0
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=substr
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::compare_prefix
+1 0 0
+cfl=/todo.php
+cfn=strlen
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=substr
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=count
+1 0 0
+
+fl=/todo.php
+fn=_get_meta_table
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=8 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_escape
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=8 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=8 1
+1 0 0
+
+fl=/todo.php
+fn=esc_sql
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_escape
+calls=8 1
+1 0 0
+
+fl=/todo.php
+fn=intval
+1 0 0
+
+fl=/todo.php
+fn=implode
+1 0 0
+
+fl=/todo.php
+fn=sprintf
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=16 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=16 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 179 4
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 0 0
+
+fl=/todo.php
+fn=mysql_affected_rows
+1 0 0
+
+fl=/todo.php
+fn=mysql_insert_id
+1 0 0
+
+fl=/todo.php
+fn=wpdb::query
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=16 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=16 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=32 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=16 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=16 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=40 1
+1 179 4
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=48 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_affected_rows
+calls=8 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_insert_id
+calls=8 1
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=rtrim
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::flush_meta_queue
+1 0 0
+cfl=/todo.php
+cfn=_get_meta_table
+calls=8 1
+1 0 0
+cfl=/todo.php
+cfn=esc_sql
+calls=8 1
+1 0 0
+cfl=/todo.php
+cfn=intval
+calls=1616 1
+1 0 0
+cfl=/todo.php
+cfn=implode
+calls=16 1
+1 0 0
+cfl=/todo.php
+cfn=sprintf
+calls=8 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=16 1
+1 179 4
+cfl=/todo.php
+cfn=array_key_exists
+calls=40 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=808 1
+1 0 0
+cfl=/todo.php
+cfn=rtrim
+calls=8 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::meta_update
+1 0 0
+cfl=/todo.php
+cfn=count
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::flush_meta_queue
+calls=8 1
+1 179 4
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::add_meta
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::compare_prefix
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::meta_update
+calls=905 1
+1 179 4
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::get_xprofile_field
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=is_string
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=is_serialized
+1 0 0
+cfl=/todo.php
+cfn=is_string
+calls=13969 1
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=13969 1
+1 0 0
+cfl=/todo.php
+cfn=strlen
+calls=13969 1
+1 0 0
+
+fl=/todo.php
+fn=serialize
+1 0 0
+
+fl=/todo.php
+fn=maybe_serialize
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=15805 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=13969 1
+1 0 0
+cfl=/todo.php
+cfn=is_serialized
+calls=13969 1
+1 0 0
+cfl=/todo.php
+cfn=serialize
+calls=1836 1
+1 0 0
+
+fl=/todo.php
+fn=count
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::xprofile_update
+1 0 0
+cfl=/todo.php
+cfn=maybe_serialize
+calls=15805 1
+1 0 0
+cfl=/todo.php
+cfn=count
+calls=15805 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::add_xprofile
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::get_xprofile_field
+calls=15805 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::xprofile_update
+calls=15805 1
+1 0 0
+
+fl=/todo.php
+fn=is_numeric
+1 0 0
+
+fl=/todo.php
+fn=WP_User::exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::delete
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_delete
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::delete
+calls=3620 1
+1 0 0
+
+fl=/todo.php
+fn=WP_User::__get
+1 0 0
+
+fl=/todo.php
+fn=clean_user_cache
+1 0 0
+cfl=/todo.php
+cfn=is_numeric
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=WP_User::exists
+calls=905 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_delete
+calls=3620 1
+1 0 0
+cfl=/todo.php
+cfn=WP_User::__get
+calls=2715 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::__invoke
+1 20 1
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::get_wp_user
+calls=995 1
+1 124602 3908
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::compare_prefix
+calls=83221 1
+1 0 0
+cfl=/todo.php
+cfn=function_exists
+calls=42063 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::remove_prefix
+calls=16710 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::get_xprofile_field
+calls=15805 1
+1 133979 5151
+cfl=/todo.php
+cfn=is_array
+calls=15805 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::prepare_xprofile_field_value
+calls=26809 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::add_meta
+calls=905 1
+1 179 4
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::add_xprofile
+calls=15805 1
+1 0 0
+cfl=/todo.php
+cfn=clean_user_cache
+calls=905 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_Importer::handle_row
+1 196 5
+cfl=/todo.php
+cfn=ArrayObject::__construct
+calls=996 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Importer::get_handlers
+calls=996 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Fieldname::__invoke
+calls=996 1
+1 3737 80
+cfl=/todo.php
+cfn=CIE_Handler_Transform::__invoke
+calls=995 1
+1 388 15
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::__invoke
+calls=995 1
+1 258780 9064
+
+fl=/todo.php
+fn=Exception::getMessage
+1 1890 90
+
+fl=/todo.php
+fn=CIE_Importer::get_handlers
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Abstract::end
+1 0 0
+
+fl=/todo.php
+fn=dirname
+1 0 0
+
+fl=/todo.php
+fn=main
+1 0 0
+
+fl=/todo.php
+fn=CIE_WPDB_Wrapper::__construct
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::get_db_wrapper
+1 31386 280
+cfl=/todo.php
+cfn=dirname
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=main
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_WPDB_Wrapper::__construct
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_WPDB_Wrapper::flush_queue
+1 92 3
+
+fl=/todo.php
+fn=intval
+1 0 0
+
+fl=/todo.php
+fn=BuddyPress::__get
+1 0 0
+
+fl=/todo.php
+fn=implode
+1 0 0
+
+fl=/todo.php
+fn=sprintf
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 0 0
+cfl=/todo.php
+cfn=is_resource
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=2 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 0 0
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 0 0
+
+fl=/todo.php
+fn=mysql_affected_rows
+1 0 0
+
+fl=/todo.php
+fn=mysql_insert_id
+1 0 0
+
+fl=/todo.php
+fn=wpdb::query
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=4 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=preg_match
+calls=5 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=4 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_affected_rows
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_insert_id
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=time
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=reset
+1 0 0
+
+fl=/todo.php
+fn=func_get_args
+1 0 0
+
+fl=/todo.php
+fn=current
+1 0 0
+
+fl=/todo.php
+fn=is_null
+1 0 0
+
+fl=/todo.php
+fn=array_slice
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=wp_load_alloptions
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=in_array
+1 0 0
+
+fl=/todo.php
+fn=is_string
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=is_serialized
+1 0 0
+cfl=/todo.php
+cfn=is_string
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=strlen
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=maybe_unserialize
+1 0 0
+cfl=/todo.php
+cfn=is_serialized
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=get_option
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=29482 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=29482 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=wp_load_alloptions
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=in_array
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=maybe_unserialize
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=wp_timezone_override_offset
+1 0 0
+cfl=/todo.php
+cfn=get_option
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=next
+1 0 0
+
+fl=/todo.php
+fn=array_pop
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+cfl=/todo.php
+cfn=reset
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=func_get_args
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=current
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=is_null
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=array_slice
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=wp_timezone_override_offset
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=next
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=array_pop
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::_exists
+1 0 0
+
+fl=/todo.php
+fn=is_object
+1 0 0
+
+fl=/todo.php
+fn=WP_Object_Cache::get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::_exists
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=is_object
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=wp_cache_get
+1 0 0
+cfl=/todo.php
+cfn=WP_Object_Cache::get
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=wp_load_alloptions
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=in_array
+1 0 0
+
+fl=/todo.php
+fn=is_string
+1 0 0
+
+fl=/todo.php
+fn=trim
+1 0 0
+
+fl=/todo.php
+fn=strlen
+1 0 0
+
+fl=/todo.php
+fn=is_serialized
+1 0 0
+cfl=/todo.php
+cfn=is_string
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=strlen
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=maybe_unserialize
+1 0 0
+cfl=/todo.php
+cfn=is_serialized
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=get_option
+1 0 0
+cfl=/todo.php
+cfn=trim
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=apply_filters
+calls=29482 1
+1 0 0
+cfl=/todo.php
+cfn=defined
+calls=29482 1
+1 0 0
+cfl=/todo.php
+cfn=wp_cache_get
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=wp_load_alloptions
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=in_array
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=maybe_unserialize
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=gmdate
+1 0 0
+
+fl=/todo.php
+fn=current_time
+1 0 0
+cfl=/todo.php
+cfn=time
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=get_option
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=gmdate
+calls=14741 1
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=rtrim
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_escape
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=esc_sql
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_escape
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::flush_queue
+1 92 3
+cfl=/todo.php
+cfn=intval
+calls=29476 1
+1 0 0
+cfl=/todo.php
+cfn=BuddyPress::__get
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=implode
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=sprintf
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=array_key_exists
+calls=3 1
+1 0 0
+cfl=/todo.php
+cfn=current_time
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=14741 1
+1 0 0
+cfl=/todo.php
+cfn=rtrim
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=esc_sql
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=_get_meta_table
+1 0 0
+
+fl=/todo.php
+fn=is_array
+1 0 0
+
+fl=/todo.php
+fn=mysql_real_escape_string
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_real_escape
+1 0 0
+cfl=/todo.php
+cfn=mysql_real_escape_string
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=wpdb::_escape
+1 0 0
+cfl=/todo.php
+cfn=is_array
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_real_escape
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=esc_sql
+1 0 0
+cfl=/todo.php
+cfn=wpdb::_escape
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=intval
+1 0 0
+
+fl=/todo.php
+fn=implode
+1 0 0
+
+fl=/todo.php
+fn=sprintf
+1 0 0
+
+fl=/todo.php
+fn=apply_filters
+1 0 0
+
+fl=/todo.php
+fn=is_resource
+1 0 0
+
+fl=/todo.php
+fn=mysql_free_result
+1 0 0
+
+fl=/todo.php
+fn=wpdb::flush
+1 132 5
+cfl=/todo.php
+cfn=is_resource
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_free_result
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=defined
+1 0 0
+
+fl=/todo.php
+fn=mysql_query
+1 0 0
+
+fl=/todo.php
+fn=mysql_error
+1 1 1
+
+fl=/todo.php
+fn=preg_match
+1 0 0
+
+fl=/todo.php
+fn=mysql_fetch_object
+1 0 0
+
+fl=/todo.php
+fn=mysql_affected_rows
+1 0 0
+
+fl=/todo.php
+fn=mysql_insert_id
+1 0 0
+
+fl=/todo.php
+fn=wpdb::query
+1 215 7
+cfl=/todo.php
+cfn=apply_filters
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::flush
+calls=2 1
+1 132 5
+cfl=/todo.php
+cfn=defined
+calls=4 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_query
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_error
+calls=2 1
+1 1 1
+cfl=/todo.php
+cfn=preg_match
+calls=5 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_fetch_object
+calls=8 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_affected_rows
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=mysql_insert_id
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=array_key_exists
+1 0 0
+
+fl=/todo.php
+fn=vsprintf
+1 0 0
+
+fl=/todo.php
+fn=rtrim
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::flush_meta_queue
+1 207 5
+cfl=/todo.php
+cfn=_get_meta_table
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=esc_sql
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=intval
+calls=120 1
+1 0 0
+cfl=/todo.php
+cfn=implode
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=sprintf
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=wpdb::query
+calls=2 1
+1 348 13
+cfl=/todo.php
+cfn=array_key_exists
+calls=7 1
+1 0 0
+cfl=/todo.php
+cfn=vsprintf
+calls=60 1
+1 0 0
+cfl=/todo.php
+cfn=rtrim
+calls=1 1
+1 0 0
+
+fl=/todo.php
+fn=CIE_Handler_Create_User::end
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::get_db_wrapper
+calls=1 1
+1 31386 280
+cfl=/todo.php
+cfn=CIE_WPDB_Wrapper::flush_queue
+calls=1 1
+1 92 3
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::flush_queue
+calls=1 1
+1 92 3
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::flush_meta_queue
+calls=1 1
+1 555 18
+
+fl=/todo.php
+fn=microtime
+1 0 0
+
+fl=/todo.php
+fn=fclose
+1 0 0
+
+fl=/todo.php
+fn=dirname
+1 0 0
+
+fl=/todo.php
+fn=fopen
+1 370 5
+
+fl=/todo.php
+fn=memprof_dump_callgrind
+1 0 0
+
+fl=/todo.php
+fn=root
+1 5030 184
+cfl=/todo.php
+cfn=fgetcsv
+calls=997 1
+1 10291 153
+cfl=/todo.php
+cfn=CIE_Importer::handle_row
+calls=996 1
+1 263101 9164
+cfl=/todo.php
+cfn=Exception::getMessage
+calls=90 1
+1 1890 90
+cfl=/todo.php
+cfn=CIE_Importer::get_handlers
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Abstract::end
+calls=2 1
+1 0 0
+cfl=/todo.php
+cfn=CIE_Handler_Create_User::end
+calls=1 1
+1 32125 304
+cfl=/todo.php
+cfn=microtime
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=fclose
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=dirname
+calls=1 1
+1 0 0
+cfl=/todo.php
+cfn=fopen
+calls=1 1
+1 370 5
+cfl=/todo.php
+cfn=memprof_dump_callgrind
+calls=1 1
+1 0 0
+
+total: 312807 9900
