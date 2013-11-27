@@ -64,6 +64,8 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 		'substr',
 		'str_pad',
 		'str_replace',
+		'crc32',
+		'md5',
 	);
 	
 	public function __construct( $transforms = null )
@@ -215,7 +217,6 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 		}
 	}
 	
-	
 	/**
 	 * Extracts fields from JSON or a delimited string.
 	 * 
@@ -237,6 +238,7 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 
 		// Detect json
 		if ( '{' === substr( $value, 0 ,1 ) ) {
+			
 			$extracted = json_decode( $value, true );
 		} elseif ( 'address' === $transform['delimiter'] ) {
 			preg_match( '/^\D*(?=\d)/', $value, $m );
@@ -406,7 +408,13 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 	{
 		$value = null;
 		foreach ( $transform['parts'] as $part ) {
+			if ( isset ( $part['string'] ) ) {
+				$value .= $part['string'];
+				continue;
+			}
+		
 			$from = $part['from'];
+			
 			if ( 'csv_row' === $from ) {
 				$value .= $number;
 				continue;
@@ -423,10 +431,8 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 					$new = $this->call_string_function( $new, $function, $params );
 				}
 			}
-			
 			$value .= $new;
 		}
-		
 		$row->offsetSet( $name , $value );
 	}
 	

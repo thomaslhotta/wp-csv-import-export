@@ -27,6 +27,18 @@ abstract class CIE_Handler_Abstract
 	public function end() {}
 	
 	/**
+	 * Should return any data that is required to resume the importing process.
+	 * 
+	 * @return multitype
+	 */
+	public function get_resume_data()
+	{
+		return null;
+	}
+	
+	public function set_resume_date( $data ) {}
+	
+	/**
 	 * Throws a handler exception.
 	 * 
 	 * @param string $text Message text

@@ -104,7 +104,7 @@ class CIE_WPDB_Wrapper
 	public function query( $query )
 	{
 		$match = null;
-		
+
 		foreach ( $this->allowed as $part ) {
 			if ( 0 === strpos( $query, $part ) ) {
 				$match = crc32( $part );
@@ -119,7 +119,7 @@ class CIE_WPDB_Wrapper
 		if ( array_key_exists( $match, $this->substitutes ) ) {
 			$query = str_replace( array( 'INSERT', 'UPDATE' ) , $this->substitutes[$match], $query );
 		}
-		
+	
 		if ( in_array( trim( substr( $query, 0, 7 ) ), array( 'INSERT', 'REPLACE' ) ) ) {
 			$this->enqueue( $query , $part );
 			return 1;		
@@ -256,7 +256,6 @@ class CIE_WPDB_Wrapper
 	public function enqueue( $query, $part )
 	{
 		$value_pos = strpos( $query, 'VALUES' );
-		
 		if ( !$value_pos ) {
 			return;
 		}

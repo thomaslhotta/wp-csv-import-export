@@ -1,22 +1,14 @@
 <?php
+
+require_once dirname( __FILE__ ) . '/class-cie-csv-processor-abstract.php';
+
 /**
  * Imports CSV files
  * 
  * @author Thomas Lhotta
  */
-class CIE_Importer
+class CIE_Importer extends CIE_CSV_Processor_Abstract
 {
-	/**
-	 * @var SplPriorityQueue
-	 */
-	protected $handlers;
-	
-	/**
-	 * Stores the import execution time.
-	 * 
-	 * @var number
-	 */
-	protected $execution_time = null;
 	
 	protected $stopped_at = 0;
 	
@@ -26,27 +18,29 @@ class CIE_Importer
 	 * @param $handle
 	 * @return array An array of import errors.
 	 */
-	public function import( $file , $start_at = 0 )
+	public function import( $file)
 	{
-		if ( !file_exists( $file ) ) {
-			throw new Exception( 'File "' . htmlspecialchars( $file ) . '" does not exist!' );
+		if ( !is_resource( $file ) ) {
+			if ( !file_exists( $file ) ) {
+				throw new Exception( 'File "' . htmlspecialchars( $file ) . '" does not exist!' );
+			}
+		
+	    	$handle = fopen( $file , 'r' );
+		} else {
+			$handle = $file; 
 		}
-		
-	    $handle = fopen( $file , 'r' );
-		
+	    	
+	    	
 		$count = 0;
 		
 		$errors = array();
-		
-		$max_ex_time = intval( ini_get('max_execution_time') ) - 15; 
+		$max_ex_time = intval( ini_get('max_execution_time') ) - 6; 
 		$interrupted = false;
 		
 		$start = microtime( true );
 		
-		
 		//memprof_enable();
 		while ( false !== ($data = fgetcsv( $handle ) ) ) {
-			
 			$count ++;
 			try {
 				$this->handle_row( $data, $count );
@@ -64,8 +58,8 @@ class CIE_Importer
 				break;
 			}
 			
-			if ( $start_at > 0 && 1 === $count ) {
-				fseek( $handle, $start_at );
+			if ( $this->stopped_at > 0 && 1 === $count ) {
+				fseek( $handle, $this->stopped_at );
 			}
 			
 		}
@@ -77,59 +71,40 @@ class CIE_Importer
 		
 		$this->execution_time = microtime( true ) - $start;
 		fclose( $handle );
-		
 		return $errors;
-	}
-	
-	/**
-	 * Process one row.
-	 * 
-	 * @param array $row
-	 * @param integer $number
-	 */
-	public function handle_row( array $row, $number ) 
-	{
-		$row = new ArrayObject( $row );
-		
-		foreach ( clone $this->get_handlers() as $handler ) {
-			// Stop loop if handler returns true.
-			if ( $handler( $row, $number ) ) {
-				break;
-			}
-		}
-	}
-	
-	/**
-	 * Get hander queue.
-	 * 
-	 * @return SplPriorityQueue
-	 */
-	public function get_handlers()
-	{
-		if ( !$this->handlers instanceof SplPriorityQueue ) {
-			$this->handlers = new SplPriorityQueue();
-		}
-		
-		return $this->handlers;
-	}
-	
-	/**
-	 * Returns the execution time for performed imports.
-	 * 
-	 * @param number $round
-	 * @return number
-	 */
-	public function get_exexution_time( $round = 2 )
-	{
-		if ( !$round ) {
-			return $this->execution_time;
-		}
-		
-		return round( $this->execution_time, $round );
 	}
 	
 	public function get_stopped_at()
 	{
 		return $this->stopped_at;
+	}
+	
+	public function set_stopped_at( $offset )
+	{
+		$this->stopped_at = $offset;		
+	}
+	
+	public function get_resume_data()
+	{
+		$handlers = clone $this->get_handlers();
+		
+		$return = array();
+		
+		foreach ( $handlers as $id => $handler ) {
+			$return[$id] = $handler->get_resume_data();
+		}
+		
+		return $return;
+	}
+	
+	public function set_resume_data( array $data )
+	{
+		$handlers = clone $this->get_handlers();
+		
+		foreach ( $handlers as $id => $handler ) {
+			$handler->set_resume_date( $data[$id] );
+		}
+		
+		return $this;
 	}
 }

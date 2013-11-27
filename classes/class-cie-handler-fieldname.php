@@ -66,7 +66,6 @@ class CIE_Handler_Fieldname extends CIE_Handler_Abstract
 		$iterator = $row->getIterator();
 		$new = array();
 		
-		
 		foreach ( $iterator as $col => $value ) {
 			// Only include columns that have a title
 			if ( isset( $this->fieldnames[$col] ) ) {
