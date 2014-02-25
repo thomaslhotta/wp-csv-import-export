@@ -43,10 +43,16 @@ class CSV_Import_Export {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+
+		// Only allow ajax for super admins for now
+		if( is_super_admin() ) {
+			
+			add_action( 'wp_ajax_import_user', array( $this, 'display_user_import_page' ) );
+			add_action( 'wp_ajax_import_comments', array( $this, 'display_comment_import_page' ) );
+			add_action( 'wp_ajax_import_posts', array( $this, 'display_post_import_page' ) );
 		
-		add_action( 'wp_ajax_import_user', array( $this, 'display_user_import_page' ) );
-		add_action( 'wp_ajax_import_comments', array( $this, 'display_comment_import_page' ) );
-		add_action( 'wp_ajax_import_posts', array( $this, 'display_post_import_page' ) );
+			add_action( 'wp_ajax_export_users', array( $this, 'display_user_export_page' ) );
+		}
 	}
 
 	/**
@@ -83,14 +89,17 @@ class CSV_Import_Export {
 			array( $this, 'display_user_import_page' ) 
 		);
 		
-		/*$slugs[] = $this->plugin_screen_hook_suffix[] = add_users_page(
-			__('Export CSV', 'cie'),
-			__('Export CSV', 'cie'),
-			'activate_plugins',
-			'export',
-			array( $this, 'display_user_export_page' )
-		);
-		*/
+		if ( is_super_admin() ) {
+		
+			$slugs[] = $this->plugin_screen_hook_suffix[] = add_users_page(
+				__('Export CSV', 'cie'),
+				__('Export CSV', 'cie'),
+				'activate_plugins',
+				'export',
+				array( $this, 'display_user_export_page' )
+			);
+		
+		}
 		
 		foreach ( get_post_types() as $post_type ) {
 			$slugs[] = add_submenu_page( 
@@ -148,21 +157,56 @@ class CSV_Import_Export {
 	public function display_user_export_page() 
 	{
 		$this->include_class( 'CIE_Exporter_User' );
-		$this->include_class( 'CIE_Exporter' );
-		
-		$user = new CIE_Exporter_User( );
-		
-		$exporter = new CIE_Exporter( $user->get_available_fields() );
-		$exporter->print_export();
+		$this->include_class( 'CIE_Field_Table' );
 		
 		
-		print_r($user->get_available_fields());
-		die();
-		
-		global $wpdb;
+		$exporter = new CIE_Exporter_User();
 		
 		
-		include_once( dirname( dirname( __FILE__ ) ) . '/views/import.php' );
+		$posted = array();
+		
+		if ( !empty( $_REQUEST['user'] ) ) {
+			$posted['user'] = $_REQUEST['user'];
+		}
+		
+		if ( !empty( $_REQUEST['meta'] ) ) {
+			$posted['meta'] = $_REQUEST['meta'];
+		}
+		
+		if ( !empty( $_REQUEST['buddypress'] ) ) {
+			$posted['buddypress'] = $_REQUEST['buddypress'];
+		}
+		
+		if ( empty( $_REQUEST['offset'] ) ) {
+			$offset = 0;
+		} else {
+			$offset = intval( $_REQUEST['offset'] );
+		}
+		
+		if ( empty( $_REQUEST['limit'] ) ) {
+			$limit = 0;
+		} else {
+			$limit = intval( $_REQUEST['limit'] );
+		}
+		
+		
+		if ( !empty( $posted ) ) {
+			$exporter->print_export( $posted, array(), $offset, $limit );
+			die();
+		}
+		
+		$groups = array();
+		foreach ( $exporter->get_available_fields() as $name => $fields ) {
+			if ( empty( $fields ) ) {
+				continue;
+			}
+			
+			$groups[] = new CIE_Field_Table( $name , $fields );
+			
+		}
+		
+		
+		include_once( dirname( dirname( __FILE__ ) ) . '/views/export.php' );
 	}
 
 	/**
@@ -351,7 +395,6 @@ class CSV_Import_Export {
 	/**
 	 * Register and enqueue admin-specific script.
 	 *
-	 *
 	 * @return null Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts() {
@@ -364,6 +407,11 @@ class CSV_Import_Export {
 			wp_enqueue_script(
 				$this->plugin_slug .'-admin-script',
 				plugins_url( basename( dirname( dirname( __FILE__ ) ) ) . '/js/admin.js' ),
+				array()
+			);
+			wp_enqueue_script(
+				$this->plugin_slug .'-filesaver',
+				plugins_url( basename( dirname( dirname( __FILE__ ) ) ) . '/js/FileSaver.js' ),
 				array()
 			);
 		}

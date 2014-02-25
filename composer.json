@@ -1,0 +1,16 @@
+{
+    "name": "thomaslhotta/wp-csv-import-export",
+    "description": "A wordpress plugin that allows import and export of users, post and comments in as CSV files",
+    "license": "MIT",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Thomas Lhotta",
+            "email": "th.lhotta@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "fancyguy/webroot-installer": "1.1.0"
+    }
+}
