@@ -246,7 +246,9 @@ class CSV_Import_Export {
 	 *
 	 * @since    1.0.0
 	 */
-	public function display_comment_import_page() {
+	public function display_comment_import_page()
+	{
+		
 		$use_ajax = 'import_comments';
 		
 		if ( !$this->is_post() ) {
@@ -262,7 +264,7 @@ class CSV_Import_Export {
 		if ( isset( $_FILES['csv'] ) && check_admin_referer( 'upload-csv', 'verify' ) ) {
 			extract( $this->import( $_FILES['csv']['tmp_name'] , $comments_handler ) );
 		}
-	
+		
 		include_once( dirname( dirname( __FILE__ ) ) . '/views/import.php' );
 	}
 	
@@ -308,7 +310,7 @@ class CSV_Import_Export {
 	
 	public function import( $file, $handler )
 	{
-		
+
 		$renames = $this->get_json( 'renames' );
 		$transforms = $this->get_json( 'transforms' );
 		$resume_data = $this->get_json( 'resume_data' );
@@ -356,7 +358,10 @@ class CSV_Import_Export {
 			$return['checksum'] = md5_file( $file );
 		}
 		
-		rewind( $file );
+		if ( is_resource( $file ) ) {
+			rewind( $file );
+		}
+		
 		
 		return array_merge(
 			$return,
@@ -368,6 +373,9 @@ class CSV_Import_Export {
 				'resume_data'    => json_encode( $importer->get_resume_data() ),
 			)
 		);
+		
+		
+		
 	}
 	
 	

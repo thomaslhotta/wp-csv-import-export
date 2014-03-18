@@ -18,7 +18,7 @@ $url = get_admin_url( get_current_blog_id(), get_current_screen()->parent_file )
 $url = add_query_arg( 'import' , '', $url );
 
 if ( !isset( $batch_size ) ) {
-	$batch_size = 100;
+	$batch_size = 50;
 }
 
 

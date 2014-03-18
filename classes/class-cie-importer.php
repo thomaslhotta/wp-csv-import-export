@@ -34,14 +34,14 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 		$count = 0;
 		
 		$errors = array();
-		$max_ex_time = intval( ini_get('max_execution_time') ) - 6; 
+		$max_ex_time = intval( ini_get( 'max_execution_time' ) ) - 6; 
 		$interrupted = false;
 		
 		$start = microtime( true );
 		
-		//memprof_enable();
 		while ( false !== ($data = fgetcsv( $handle ) ) ) {
 			$count ++;
+			
 			try {
 				$this->handle_row( $data, $count );
 			} catch (CIE_Hander_Exception $e) {

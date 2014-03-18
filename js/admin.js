@@ -79,8 +79,10 @@
 	    
 	    $.post( ajaxurl, data, function( result ) {
 	        var progress = 100 - ( csv.length * 100 / rowCount );
-	        
-	        addErrors( result.errors );
+	 
+	        if ( result.errors && 0 < result.errors.length ) {
+	            addErrors( result.errors );
+	        }
 	        
 	        $( '#ajax-progress' ).css({
 	            display:   'block',
@@ -97,7 +99,7 @@
 	    table.css( 'display', 'block' );
 	    table = $( 'tbody', table );
 	    
-	    if ( 0 === table.length ) {
+	    if ( 0 === table.length  ) {
 	        return;
 	    }
 	    

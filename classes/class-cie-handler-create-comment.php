@@ -41,8 +41,7 @@ class CIE_Handler_Create_Comment extends CIE_Handler_Creator_Abstract
 			$this->import_ids[ $result->meta_value ] = $result->comment_id;
 		}
 		
-		//$this->get_db_wrapper()->add_allowed('INSERT INTO `wp_commentmeta`');
-		
+		wp_defer_comment_counting( true );
 	}
 	
 	/**
@@ -135,7 +134,7 @@ class CIE_Handler_Create_Comment extends CIE_Handler_Creator_Abstract
 		}
 		
 		// Flush cache to prevent memory leaks
-		wp_cache_flush();
+		//wp_cache_flush();
 	}
 	
 	/**
@@ -166,6 +165,17 @@ class CIE_Handler_Create_Comment extends CIE_Handler_Creator_Abstract
 		
 		$this->post_ids[$id] = $id;
 		return $id;		
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see CIE_Handler_Abstract::end()
+	 */
+	public function end()
+	{
+		wp_defer_comment_counting( false );
+		
+		parent::end();
 	}
 	
 }
