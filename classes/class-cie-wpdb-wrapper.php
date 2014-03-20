@@ -1,12 +1,12 @@
 <?php
 /**
- * 
+ * Database wrapper that improved speed.
+ *
  * @package   WP_CSV_User_Import
  * @author    Thomas Lhotta
  * @license   GPL-2.0+
- * @link      http://example.com
+ * @link      https://github.com/thomaslhotta/wp-csv-import-export/
  * @copyright 2013 Thomas Lhotta
- *
  */
 class CIE_WPDB_Wrapper
 {

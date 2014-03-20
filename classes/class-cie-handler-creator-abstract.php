@@ -115,7 +115,8 @@ abstract class CIE_Handler_Creator_Abstract extends CIE_Handler_Abstract
 			$meta_keys[esc_sql( $query['meta_key'] ) ] = true;
 		}
 		
-		$query = sprintf( 'DELETE FROM %s WHERE user_id IN ( %s ) AND meta_key IN ( %s );',
+		$query = sprintf(
+			'DELETE FROM %s WHERE user_id IN ( %s ) AND meta_key IN ( %s );',
 			$table,
 			implode( ',', array_keys( $user_ids ) ),
 			"'" . implode( "','", array_keys( $meta_keys ) ) . "'"
@@ -182,14 +183,11 @@ abstract class CIE_Handler_Creator_Abstract extends CIE_Handler_Abstract
 			return $this->prefixes[ $key ];
 		}
 		
-		
 		$prefix .= '_';
 		$return = 0 === strncmp( $prefix , $name, strlen( $prefix ) );
 		$this->prefixes[ $key ] = $return;
 		
 		return $return;
-		
-		//return $prefix  === substr( $name , 0, strlen( $prefix ) ) ;
 	}
 	
 	public function remove_prefix( $prefix, $name )
@@ -215,10 +213,19 @@ abstract class CIE_Handler_Creator_Abstract extends CIE_Handler_Abstract
 		if ( !$this->attachment_processor ) {
 			require_once dirname( __FILE__ ) . '/class-cie-attachment-processor.php';
 			$this->attachment_processor = new CIE_Attachment_Processor();
-			
 		}
 		
 		return $this->attachment_processor;
+	}
+	
+	/**
+	 * Returns the number of successful users processed.
+	 *
+	 * @return number
+	 */
+	public function get_success_count()
+	{
+		return $this->success_count;
 	}
 	
 }

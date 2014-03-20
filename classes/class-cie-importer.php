@@ -3,13 +3,21 @@
 require_once dirname( __FILE__ ) . '/class-cie-csv-processor-abstract.php';
 
 /**
- * Imports CSV files
- * 
- * @author Thomas Lhotta
+ * Import processor class
+ *
+ * @package   WP_CSV_User_Import
+ * @author    Thomas Lhotta
+ * @license   GPL-2.0+
+ * @link      https://github.com/thomaslhotta/wp-csv-import-export/
+ * @copyright 2013 Thomas Lhotta
  */
 class CIE_Importer extends CIE_CSV_Processor_Abstract
 {
-	
+	/**
+	 * The stream position the import stopped at
+	 * 
+	 * @var integer
+	 */
 	protected $stopped_at = 0;
 	
 	/**
@@ -22,7 +30,9 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 	{
 		if ( !is_resource( $file ) ) {
 			if ( !file_exists( $file ) ) {
-				throw new Exception( 'File "' . htmlspecialchars( $file ) . '" does not exist!' );
+				throw new Exception(
+					'File "' . htmlspecialchars( $file ) . '" does not exist!' 
+				);
 			}
 		
 	    	$handle = fopen( $file , 'r' );
@@ -74,11 +84,21 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 		return $errors;
 	}
 	
+	/**
+	 * Returns the stream position the import stopped at.
+	 * 
+	 * @return number
+	 */
 	public function get_stopped_at()
 	{
 		return $this->stopped_at;
 	}
 	
+	/**
+	 * Set the stream position the import stopped at.
+	 * 
+	 * @param unknown $offset
+	 */
 	public function set_stopped_at( $offset )
 	{
 		$this->stopped_at = $offset;		

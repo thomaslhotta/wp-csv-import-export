@@ -5,7 +5,7 @@
  * @package   WP_CSV_User_Import
  * @author    Thomas Lhotta
  * @license   GPL-2.0+
- * @link      http://example.com
+ * @link      https://github.com/thomaslhotta/wp-csv-import-export/
  * @copyright 2013 Thomas Lhotta
  */
 class CSV_Import_Export {
@@ -25,7 +25,6 @@ class CSV_Import_Export {
 	 * Slug of the plugin screen.
 	 *
 	 * @since    1.0.0
-	 *
 	 * @var      array
 	 */
 	protected $plugin_screen_hook_suffix = array();
@@ -45,8 +44,7 @@ class CSV_Import_Export {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Only allow ajax for super admins for now
-		if( is_super_admin() ) {
-			
+		if ( is_super_admin() ) {
 			add_action( 'wp_ajax_import_user', array( $this, 'display_user_import_page' ) );
 			add_action( 'wp_ajax_import_comments', array( $this, 'display_comment_import_page' ) );
 			add_action( 'wp_ajax_import_posts', array( $this, 'display_post_import_page' ) );
@@ -72,49 +70,54 @@ class CSV_Import_Export {
 		return self::$instance;
 	}
 
+	/**
+	 * Returns the plugin slug
+	 * 
+	 * @return string
+	 */
 	public function get_plugin_slug()
 	{
 		return $this->plugin_slug;
 	}
-	
 
+	/**
+	 * Adds admin menus
+	 */
 	public function admin_menu()
 	{
 		$slugs = array();
-		$slugs[] = $this->plugin_screen_hook_suffix[] = add_users_page( 
-			__('Import CSV', 'cie'),
-			__('Import CSV', 'cie'),
+		$slugs[] = $this->plugin_screen_hook_suffix[] = add_users_page(
+			__( 'Import CSV', 'cie' ),
+			__( 'Import CSV', 'cie' ),
 			'activate_plugins',
 			'import',
 			array( $this, 'display_user_import_page' ) 
 		);
 		
 		if ( is_super_admin() ) {
-		
 			$slugs[] = $this->plugin_screen_hook_suffix[] = add_users_page(
-				__('Export CSV', 'cie'),
-				__('Export CSV', 'cie'),
+				__( 'Export CSV', 'cie' ),
+				__( 'Export CSV', 'cie' ),
 				'activate_plugins',
 				'export',
 				array( $this, 'display_user_export_page' )
 			);
-		
 		}
 		
 		foreach ( get_post_types() as $post_type ) {
-			$slugs[] = add_submenu_page( 
+			$slugs[] = add_submenu_page(
 				'edit.php?post_type=' . $post_type,
-				__('Import CSV', 'cie'),
-				__('Import CSV', 'cie'),
+				__( 'Import CSV', 'cie' ),
+				__( 'Import CSV', 'cie' ),
 				'activate_plugins',
 				'import-' . $post_type . '',
 				array( $this, 'display_post_import_page' )
 			);
 		}
 		
-		$slugs[] = add_comments_page( 
-			__('Import CSV', 'cie'),
-			__('Import CSV', 'cie'),
+		$slugs[] = add_comments_page(
+			__( 'Import CSV', 'cie' ),
+			__( 'Import CSV', 'cie' ),
 			'activate_plugins',
 			'import-comments',
 			array( $this, 'display_comment_import_page' )
@@ -136,8 +139,14 @@ class CSV_Import_Export {
 			return;
 		} 
 		
-		$this->include_class( 'CIE_Handler_Create_User' );
-		$user_handler = new CIE_Handler_Create_User();
+		if ( function_exists( 'is_network_admin' ) && is_network_admin() ) {
+			$this->include_class( 'CIE_Handler_Create_User' );
+			$user_handler = new CIE_Handler_Create_User();
+		} else {
+			$this->include_class( 'CIE_Handler_Add_User' );
+			$user_handler = new CIE_Handler_Add_User();
+		}
+		
 		
 		$this->maybe_ajax( $user_handler );
 		
@@ -202,7 +211,6 @@ class CSV_Import_Export {
 			}
 			
 			$groups[] = new CIE_Field_Table( $name , $fields );
-			
 		}
 		
 		
@@ -270,16 +278,16 @@ class CSV_Import_Export {
 	
 	public function maybe_ajax( $handler ) 
 	{
-		if ( !defined('DOING_AJAX') || !DOING_AJAX) {
+		if ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) {
 			return;
 		}
 		
 		if ( !isset( $_POST['csv'] ) ) {
-			wp_send_json_error(array());
+			wp_send_json_error( array() );
 		}
 		
 		
-		$file = fopen('php://memory','r+');
+		$file = fopen( 'php://memory','r+' );
 		
 		fwrite( $file, stripslashes( $_POST['csv'] ) );
 		
@@ -322,12 +330,15 @@ class CSV_Import_Export {
 		);
 		
 		if ( isset( $_POST['checksum'] ) ) {
-			if ( md5_file( $file ) !==  $_POST['checksum'] ) {
-				return array_merge( $return, array(
-					'checksum'   => $_POST['checksum'],
-					'errors'      => array( __( 'Wrong file uploaded. Please upload the correct file', $this->get_plugin_slug() ) ),
-					'stopped_at' => $_POST['stopped_at'],
-				));
+			if ( md5_file( $file ) !== $_POST['checksum'] ) {
+				return array_merge(
+					$return,
+					array(
+						'checksum'   => $_POST['checksum'],
+						'errors'      => array( __( 'Wrong file uploaded. Please upload the correct file', $this->get_plugin_slug() ) ),
+						'stopped_at' => $_POST['stopped_at'],
+					)
+				);
 			}
 		}
 		
@@ -342,8 +353,8 @@ class CSV_Import_Export {
 		}
 		
 		
-		$importer->get_handlers()->insert(new CIE_Handler_Fieldname( $renames ), 3);
-		$importer->get_handlers()->insert(new CIE_Handler_Transform( $transforms ), 2);
+		$importer->get_handlers()->insert( new CIE_Handler_Fieldname( $renames ), 3 );
+		$importer->get_handlers()->insert( new CIE_Handler_Transform( $transforms ), 2 );
 		
 		$importer->get_handlers()->insert( $handler , 1 );
 	

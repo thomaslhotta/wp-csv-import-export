@@ -37,7 +37,7 @@ class CIE_Handler_Create_Post extends CIE_Handler_Creator_Abstract
 		}
 		
 		if ( !$row->offsetExists( 'post_title' ) || '' == trim( $row['post_title'] ) ) {
-			if( is_int( $this->previous_post ) ) {
+			if ( is_int( $this->previous_post ) ) {
 				$post_id = $this->previous_post;
 				$using_previous = true;
 			} else {
@@ -57,8 +57,6 @@ class CIE_Handler_Create_Post extends CIE_Handler_Creator_Abstract
 		if ( !empty( $attachments ) ) {
 			$import = $this->get_attachment_processor();
 			foreach ( $attachments as $meta_key => $url ) {
-				
-				// Skip empty urls
 				if ( '' == $url ) {
 					continue;
 				}
@@ -76,7 +74,6 @@ class CIE_Handler_Create_Post extends CIE_Handler_Creator_Abstract
 				
 				$metas[ $meta_key ] = $attachment_id;
 			}
-		
 		}
 		
 		

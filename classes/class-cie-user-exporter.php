@@ -1,7 +1,17 @@
 <?php
 require_once dirname( __FILE__ ) . '/class-cie-csv-processor-abstract.php';
 
-
+/**
+ * Exports users
+ * 
+ * @toto Finish this
+ *
+ * @package   WP_CSV_User_Import
+ * @author    Thomas Lhotta
+ * @license   GPL-2.0+
+ * @link      https://github.com/thomaslhotta/wp-csv-import-export/
+ * @copyright 2013 Thomas Lhotta
+ */
 class CIE_Exporter extends CIE_CSV_Processor_Abstract
 {
 	protected $fields;

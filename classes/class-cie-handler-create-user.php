@@ -1,9 +1,14 @@
 <?php 
 require_once  dirname( __FILE__ ) . '/class-cie-handler-creator-abstract.php';
 
+/**
+ * Handler that creates users
+ * 
+ * @author Thomas Lhotta
+ *
+ */
 class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 {
-	
 	/**
 	 * Overwrite mode
 	 * 
@@ -49,37 +54,33 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 			remove_all_filters( 'user_register' );
 			
 			if ( !defined( 'WP_IMPORTING' ) ) {
-				define('WP_IMPORTING', true);
+				define( 'WP_IMPORTING', true );
 			}
 		}
-		
 		
 		global $wpdb;
 		
 		$tables = $wpdb->tables();
 		 
 		// User login is checked manually
-		$this->get_db_wrapper()->add_allowed( "SELECT * FROM {$tables['users']} WHERE user_login", true, null ) ;
+		$this->get_db_wrapper()->add_allowed( "SELECT * FROM {$tables['users']} WHERE user_login", true, null );
 		
 		if ( $overwrite ) {
 			// We never check for existing nice names.
-			$this->get_db_wrapper()->add_allowed( "SELECT ID FROM {$tables['users']} WHERE user_nicename", true, false ) ;
+			$this->get_db_wrapper()->add_allowed( "SELECT ID FROM {$tables['users']} WHERE user_nicename", true, false );
 		}
 	
 		// We never need actual user data
-		$this->get_db_wrapper()->add_allowed( "SELECT * FROM {$tables['users']} WHERE ID =", true, array() ) ;
+		$this->get_db_wrapper()->add_allowed( "SELECT * FROM {$tables['users']} WHERE ID =", true, array() );
 		
-		
-		
-		
-		if ( !isset( $GLOBALS['bp'] ) ) {
+		if ( !function_exists( 'buddypress' ) ) {
 			return;
 		}
 		
-		global $bp;
+		$bp = buddypress();
 		
-		// Prevent very expensive buddypress filters
-		remove_filter( 'pre_user_login' , 'bp_core_strip_username_spaces');
+		// Prevent very expensive BuddyPress filters
+		remove_filter( 'pre_user_login' , 'bp_core_strip_username_spaces' );
 		
 		// Metadata should not be required during bulk inserts.
 		$this->get_db_wrapper()->add_allowed( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id", true,  1 );
@@ -89,8 +90,7 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 			return;
 		}
 		
-		$this->get_db_wrapper()->add_allowed('SELECT user_id, meta_key, meta_value FROM wp_usermeta WHERE user_id IN', true , array());
-		
+		$this->get_db_wrapper()->add_allowed( 'SELECT user_id, meta_key, meta_value FROM wp_usermeta WHERE user_id IN', true , array() );
 	}
 	
 	/**
@@ -101,8 +101,8 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 	{
 		if ( $this->overwrite ) {
 			// Add special metadata import functions
-			add_filter('add_user_metadata', array( $this, 'meta_update' ), 10, 5 );
-			add_filter('update_user_metadata', array( $this, 'meta_update' ), 10, 5 );
+			add_filter( 'add_user_metadata', array( $this, 'meta_update' ), 10, 5 );
+			add_filter( 'update_user_metadata', array( $this, 'meta_update' ), 10, 5 );
 			add_filter( 'get_user_metadata', array( $this, 'return_dummy_meta' ), 10, 4 );
 		}
 		
@@ -111,7 +111,7 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		$metas = array();
 		$xprofile = array();
 		
-		// Extract metadata and xprofile data from row.
+		// Extract meta data and xprofile data from row.
 		foreach ( $row as $name => $value ) {
 			if ( $this->compare_prefix( 'meta' , $name ) ) {
 				$metas[ $this->remove_prefix( 'meta' , $name ) ] = $value;
@@ -150,8 +150,8 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		$this->success_count ++;
 		
 		if ( $this->overwrite ) {
-			remove_filter('add_user_metadata', array( $this, 'meta_update' ) );
-			remove_filter('update_user_metadata', array( $this, 'meta_update' ) );
+			remove_filter( 'add_user_metadata', array( $this, 'meta_update' ) );
+			remove_filter( 'update_user_metadata', array( $this, 'meta_update' ) );
 			remove_filter( 'get_user_metadata', array( $this, 'return_dummy_meta' ) );
 		}
 	}
@@ -196,7 +196,7 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		}
 		
 		if ( !is_email( $email ) ) {
-    		$this->throw_exception( "Email '$email' is invalid.");
+    		$this->throw_exception( "Email '$email' is invalid." );
 		}
 		
 		$user = null;
@@ -251,7 +251,7 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 			$wp_hasher = $org_hasher;
 		}
 		
-		// Check if Wordpress generated an error when inserting a new user.
+		// Check if WordPress generated an error when inserting a new user.
 		if ( $user instanceof WP_Error ) {
 			$this->throw_exception( implode( '.', $user->get_error_messages() ) );
 		}
@@ -272,16 +272,10 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		return $user;
 	}
 	
-	
-	
-	
-	
-	
 	public function add_xprofile( $user, $name, $value )
 	{
 		$field = $this->get_xprofile_field( $name );
 		
-
 		// We never expect to get anything other than arrays to serialize.
 		if ( is_array( $value ) ) {
 			$value = serialize( $value );
@@ -292,6 +286,8 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 			return $this->xprofile_update( $user, $field, $value );
 		}
 		
+
+		// Todo finish this
 		
 		$data = new BP_XProfile_ProfileData();
 		$data->field_id = $field->id;
@@ -358,7 +354,7 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		$this->xprofile_queue[$user . '-' . $field->id ] = array(
 		    'user_id'  => $user,
 			'field_id' => $field->id,
-			'value'    => $value
+			'value'    => $value,
  		);
 		
 		if ( count( $this->xprofile_queue_length ) > $this->xprofile_queue_length ) {
@@ -366,14 +362,18 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		}
 	}
 	
+	/**
+	 * Flushes insert queue
+	 */
 	public function flush_queue()
 	{
 		if ( empty( $this->xprofile_queue ) ) {
+			// Nothing to do
 			return;
 		}
 		
 		global $wpdb;
-		global $bp;
+		$bp = buddypress() ;
 		
 		$field_ids = array();
 		$user_ids = array();
@@ -417,7 +417,7 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		}
 		*/
 		
-		foreach( $this->xprofile_queue as $field ) {
+		foreach ( $this->xprofile_queue as $field ) {
 			$values[] = array(
 				0,
 				$field['field_id'],

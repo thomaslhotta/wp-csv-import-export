@@ -20,7 +20,7 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 	protected $field_transforms = null;
 	
 	/**
-	 * Transform defaukts
+	 * Transform defaults
 	 * 
 	 * @var array
 	 */
@@ -238,7 +238,6 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 
 		// Detect json
 		if ( '{' === substr( $value, 0 ,1 ) ) {
-			
 			$extracted = json_decode( $value, true );
 		} elseif ( 'address' === $transform['delimiter'] ) {
 			preg_match( '/^\D*(?=\d)/', $value, $m );
@@ -357,14 +356,14 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 			$row->offsetSet( $name , json_decode( $row->offsetGet( $name ), true ) );
 			
 			if ( JSON_ERROR_NONE !== json_last_error() ) {
-				$this->throw_exception( 'Could not convert JSON to Array on field "' . $name .  '".');
+				$this->throw_exception( 'Could not convert JSON to Array on field "' . $name .  '".' );
 			}
 			return;
 		} 
 		
 		$delimited = array();
 		
-		foreach ( explode( $transform['delimiter'], $row->offsetGet( $name ) ) as $key=> $value ) {
+		foreach ( explode( $transform['delimiter'], $row->offsetGet( $name ) ) as $key => $value ) {
 			$delimited[ $key + $transform['index_offset'] ] = $value;
 		}
 		
@@ -475,6 +474,4 @@ class CIE_Handler_Transform extends CIE_Handler_Abstract
 		
 		return call_user_func_array( $function, $params );
 	}
-	
-	
 }

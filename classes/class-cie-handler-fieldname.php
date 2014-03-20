@@ -2,12 +2,12 @@
 require_once  dirname( __FILE__ ) . '/class-cie-handler-abstract.php';
 
 /**
- * Replace numberic the column numbers with field names. 
+ * Replace numeric the column numbers with field names. 
  * 
  * @package   WP_CSV_User_Import
  * @author    Thomas Lhotta
  * @license   GPL-2.0+
- * @link      http://example.com
+ * @link      https://github.com/thomaslhotta/
  * @copyright 2013 Thomas Lhotta
  *
  */
@@ -56,7 +56,6 @@ class CIE_Handler_Fieldname extends CIE_Handler_Abstract
 				if ( in_array( $fieldname, $this->renames ) ) {
 					$this->throw_exception( 'Cannot rename to field "'. $fieldname . '" as this already exists in CSV!' );
 				}
-				
 			}
 			$this->fieldnames = $row->getArrayCopy();
 			return true;
@@ -69,7 +68,6 @@ class CIE_Handler_Fieldname extends CIE_Handler_Abstract
 		foreach ( $iterator as $col => $value ) {
 			// Only include columns that have a title
 			if ( isset( $this->fieldnames[$col] ) ) {
-				
 				$name = $this->fieldnames[$col];
 				
 				// Maybe rename field.
