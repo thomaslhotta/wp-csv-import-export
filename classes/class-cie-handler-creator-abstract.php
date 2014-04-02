@@ -217,15 +217,4 @@ abstract class CIE_Handler_Creator_Abstract extends CIE_Handler_Abstract
 		
 		return $this->attachment_processor;
 	}
-	
-	/**
-	 * Returns the number of successful users processed.
-	 *
-	 * @return number
-	 */
-	public function get_success_count()
-	{
-		return $this->success_count;
-	}
-	
 }

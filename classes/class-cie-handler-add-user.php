@@ -40,6 +40,7 @@ class CIE_Handler_Add_User extends CIE_Handler_Creator_Abstract
 		}
 		
 		if ( !$user instanceof WP_User ) {
+			require_once __DIR__ . '/class-cie-handler-exception.php';
 			throw new CIE_Hander_Exception( 'User not found' );
 		}
 		
