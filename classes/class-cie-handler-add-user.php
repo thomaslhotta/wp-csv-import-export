@@ -34,6 +34,7 @@ class CIE_Handler_Add_User extends CIE_Handler_Creator_Abstract
 		} elseif ( $row->offsetExists( 'user_login' ) ) {
 			$user = get_user_by( 'login', $row->offsetGet( 'user_login' ) );
 		} else {
+			require_once __DIR__ . '/class-cie-handler-exception.php';
 			throw new CIE_Hander_Exception(
 				__( 'No user identification column found. Valid columns are ID, user_email or user_login' )
 			);  
