@@ -13,7 +13,7 @@ class CSV_Import_Export {
 	/**
 	 * Instance of this class.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 *
 	 * @var      object
 	 */
@@ -166,9 +166,7 @@ class CSV_Import_Export {
 	public function display_user_export_page() 
 	{
 		$this->include_class( 'CIE_Exporter_User' );
-		$this->include_class( 'CIE_Field_Table' );
-		
-		
+
 		$exporter = new CIE_Exporter_User();
 		
 		
@@ -203,16 +201,6 @@ class CSV_Import_Export {
 			$exporter->print_export( $posted, array(), $offset, $limit );
 			die();
 		}
-		
-		$groups = array();
-		foreach ( $exporter->get_available_fields() as $name => $fields ) {
-			if ( empty( $fields ) ) {
-				continue;
-			}
-			
-			$groups[] = new CIE_Field_Table( $name , $fields );
-		}
-		
 		
 		include_once( dirname( dirname( __FILE__ ) ) . '/views/export.php' );
 	}
@@ -433,6 +421,7 @@ class CSV_Import_Export {
 				plugins_url( basename( dirname( dirname( __FILE__ ) ) ) . '/js/FileSaver.js' ),
 				array()
 			);
+			wp_enqueue_script( 'jquery-ui-progressbar' );
 		}
 	
 	}

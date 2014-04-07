@@ -373,7 +373,7 @@ class CIE_Handler_Create_User extends CIE_Handler_Creator_Abstract
 		}
 		
 		global $wpdb;
-		$bp = buddypress() ;
+		$bp = buddypress();
 		
 		$field_ids = array();
 		$user_ids = array();

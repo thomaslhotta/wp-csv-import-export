@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress CSV Import Export\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/plugins/plugin-name\n"
-"POT-Creation-Date: 2014-03-20 18:31+0100\n"
-"PO-Revision-Date: 2014-03-20 18:34+0100\n"
+"POT-Creation-Date: 2014-04-07 15:51+0100\n"
+"PO-Revision-Date: 2014-04-07 15:52+0100\n"
 "Last-Translator: Thomas Lhotta <th.lhotta@gmail.com>\n"
 "Language-Team:  <th.lhotta@gmail.com>\n"
 "Language: de_DE\n"
@@ -63,15 +63,19 @@ msgstr "Zeile"
 
 #: views/import.php:102
 msgid "Message"
-msgstr ""
+msgstr "Nachricht"
 
-#: views/export.php:18
+#: views/export.php:17
+msgid "Select all"
+msgstr "Alle auswählen"
+
+#: views/export.php:38
 msgid "Export"
 msgstr "Export"
 
 #: classes/class-cie-attachment-processor.php:34
 msgid "Invalid file type"
-msgstr ""
+msgstr "Ungültiger Dateityp"
 
 #: classes/class-cie-attachment-processor.php:78
 msgid "Remote server did not respond"
@@ -90,11 +94,7 @@ msgstr ""
 msgid "Zero size file downloaded"
 msgstr ""
 
-#: classes/class-cie-field-table.php:44
-msgid "Name"
-msgstr ""
-
-#: classes/class-cie-handler-add-user.php:38
+#: classes/class-cie-handler-add-user.php:39
 msgid ""
 "No user identification column found. Valid columns are ID, user_email or "
 "user_login"
@@ -114,6 +114,6 @@ msgstr "CSV importieren"
 msgid "Export CSV"
 msgstr "CSV exportieren"
 
-#: classes/class-csv-import-export.php:338
+#: classes/class-csv-import-export.php:326
 msgid "Wrong file uploaded. Please upload the correct file"
 msgstr ""

@@ -77,11 +77,9 @@ class CIE_Handler_Create_Comment extends CIE_Handler_Creator_Abstract
 				}
 				
 				$row['comment_post_ID'] = $post_id;
-				
 			} else {
 				$this->throw_exception( 'Comment contains neither comment_post_id nor comment_post_name.' );
 			}
-			
 		}  
 		
 		// Find comment parent
@@ -95,8 +93,7 @@ class CIE_Handler_Create_Comment extends CIE_Handler_Creator_Abstract
 		}
 		
 		// Find comment user
-		if ( !$row->offsetExists('user_id') && $row->offsetExists( 'comment_author_email' ) ) {
-			
+		if ( !$row->offsetExists( 'user_id' ) && $row->offsetExists( 'comment_author_email' ) ) {
 			if ( isset ( $this->user_ids[$row['comment_author_email']] ) ) {
 				$row['user_id'] = $this->user_ids[$row['comment_author_email']];
 			} else {
@@ -110,8 +107,6 @@ class CIE_Handler_Create_Comment extends CIE_Handler_Creator_Abstract
 				} else {
 					$this->user_ids[$row['comment_author_email']] = false;
 				}
-				
-				
 			}
 		}
 		
@@ -154,15 +149,10 @@ class CIE_Handler_Create_Comment extends CIE_Handler_Creator_Abstract
 		
 		$query = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE $type = %s", $name );
 		
-		$wpdb->query($query);
+		$wpdb->query( $query );
 		
 		$id = $wpdb->get_var( $query );
 
-		if ( !is_numeric( $id ) ) {
-			die( print_r(array( $id, $query )) );
-		}
-		
-		
 		$this->post_ids[$id] = $id;
 		return $id;		
 	}

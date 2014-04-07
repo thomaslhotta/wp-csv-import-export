@@ -26,7 +26,7 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 	 * @param $handle
 	 * @return array An array of import errors.
 	 */
-	public function import( $file)
+	public function import( $file )
 	{
 		if ( !is_resource( $file ) ) {
 			if ( !file_exists( $file ) ) {
@@ -71,7 +71,6 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 			if ( $this->stopped_at > 0 && 1 === $count ) {
 				fseek( $handle, $this->stopped_at );
 			}
-			
 		}
 
 		// Call end functions

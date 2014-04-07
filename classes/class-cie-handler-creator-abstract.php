@@ -66,7 +66,7 @@ abstract class CIE_Handler_Creator_Abstract extends CIE_Handler_Abstract
 	public function add_meta( $user, $name, $value )
 	{
 		// Multi value metas
-		if ( $this->compare_prefix('[]' , $name ) ) {
+		if ( $this->compare_prefix( '[]' , $name ) ) {
 			add_user_meta( $user, $this->remove_prefix( '[]' , $name ), $value, false );
 			return;
 		}

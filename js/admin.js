@@ -32,9 +32,7 @@
 	    var csv = reader.result;
 	    
 	    // Deal with JSON in cells
-	    //csv = csv.replace( new RegExp('""', "g"), '\\"'  );
 	    csv = csv.split( "\n" )
-	    
 	    
 	    if ( 1 === csv.length ) {
 	        alert( 'No data found.' );
@@ -111,7 +109,7 @@
 	
 	function clearErrors()
 	{
-	    var table = $( '#errors' ).css( 'display', 'none' ).find('tbody').empty();
+	    $( '#errors' ).css( 'display', 'none' ).find( 'tbody' ).empty();
 	}
 	
 	
@@ -121,80 +119,55 @@
 (function ( $ ) {
     "use strict";
 
-    
     $(function () {
-        // Check all inputs function for tables
-        $('#box input').click( function() {
-            var inputs =  $(this).parents('table').find( 'input[type="checkbox"]');
-            
-            if ( $(this).attr( 'checked' ) ) {
-                inputs.attr( 'checked', 'checked' );
-            } else {
-                inputs.removeAttr( 'checked' );
-            }
+        // Check all inputs
+        $( '.select-all' ).click( function() {
+            $(  '#options-' + $(this).val() + ' input').prop( 'checked', $(this).prop( 'checked' ) );
         });
 
-        $('#export-csv').click( function() {
+        $( '#export-csv' ).click( function() {
+			$( '#progressbar').progressbar({
+				value: 0,
+				max: 100
+			});
 
-            $( '#ajax-progress' ).addClass( 'button-primary' ).text( '0%' ).css({
-                "text_align": "center",
-                "width":      "auto",
-            });
-            
-            var form = $('#export');
-            
-            
+            var form = $( '#export' );
+
             var csv = '';
-            var current = 0;
-            
             var data = form.serializeObject();
             data.action = 'export_users';
             data.offset = 0;
             data.limit = 300;
 
-            
             var addPart = function() {
-                
-               
-                
-                $.get( ajaxurl, data, function( result, status, xhr ) {
-                    var range = xhr.getResponseHeader('Content-Range');
-                    var total = parseInt( range.split('/')[1], 10);
-                    var current = parseInt( range.split('/')[0].split('-')[1], 10);
-                    
-                    if ( ''  !== csv ) {
-                        result = result.split( '\n' );
-                        result.shift();
-                        result = result.join( "\n" );
-                    } 
-                        
-                    csv += result;
-                    
-                    
-                    var progress = Math.round(current / total * 100);
-                    
-                    console.log( progress + '%' );
-                    
-                    $( '#ajax-progress' ).css({
-                        display:   'block',
-                        width:     progress + '%'
-                    }).text( progress + '%' );
-                    
-                    $( '#ajax-progress' ).css( 'width', progress + '%'  );
-                    
-                    if ( current < total ) {
-                        data.offset = current;
-                        addPart();
-                    } else {
-                        var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
-                        saveAs(blob, "export.csv");
-                    }
-                    
-                }) 
-            };
+				$.get( ajaxurl, data, function( result, status, xhr ) {
+					var range = xhr.getResponseHeader( 'Content-Range' );
+					var total = parseInt( range.split( '/' )[1], 10);
+					var current = parseInt( range.split( '/' )[0].split( '-' )[1], 10);
+
+					if ( ''  !== csv ) {
+						result = result.split( '\n' );
+						result.shift();
+						result = result.join( "\n" );
+					}
+
+					csv += result;
+
+					var progress = Math.round( current / total * 100 );
+
+					$( '#progressbar').progressbar( 'value', progress );
+
+					if ( current < total ) {
+						data.offset = current;
+						addPart();
+					} else {
+						var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
+						saveAs(blob, "export.csv");
+					}
+				});
+        	};
             
-            addPart();
-            
+        	addPart();
         });
         
         $.fn.serializeObject = function()
@@ -213,7 +186,5 @@
             });
             return o;
         };
-        
-        
     });
 }(jQuery));
