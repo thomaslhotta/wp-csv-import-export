@@ -20,11 +20,15 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 			'fields'      => 'all',
 			'count_total' => true,
 		);
+		
 
-		// Only export subscribers if not in network admin
-		if ( is_multisite() && !$this->is_network_admin() ) {
-			$params['role'] = $role;
-		}
+	        // Only export subscribers if not in network admin
+                if ( is_multisite() && !$this->is_network_admin() ) {
+                        $params['role'] = $role;
+                } else {
+                        $params['blog_id'] = 0;
+                }
+
 
 		$query = new WP_User_Query( $params );
 
@@ -33,8 +37,8 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 
 		// Calculate range header
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			$total = count_users();
-			$total = $total['avail_roles'][strtolower( $role )];
+		
+			$total = $query->total_users; 
 
 			$range_end = $offset + $limit;
 			if ( $range_end > $total ) {
