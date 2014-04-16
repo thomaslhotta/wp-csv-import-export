@@ -22,7 +22,7 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 		);
 
 		// Only export subscribers if not in network admin
-		if ( is_multisite() && !is_network_admin() ) {
+		if ( is_multisite() && !$this->is_network_admin() ) {
 			$params['role'] = $role;
 		}
 
@@ -193,5 +193,17 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 		    'user'        => $fields,
 			'meta'        => $meta,
 		);
+	}
+	
+	/**
+	 * Detect network admin in an AJAX safe way 
+	 */
+	public function is_network_admin()
+	{
+		if ( defined('DOING_AJAX') && DOING_AJAX ) {
+			return ( is_multisite() && preg_match( '#^' . network_admin_url(). '#i', $_SERVER['HTTP_REFERER'] ) )
+		}
+		
+		return is_network_admin();
 	}
 }
