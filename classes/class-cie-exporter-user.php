@@ -201,7 +201,7 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 	public function is_network_admin()
 	{
 		if ( defined('DOING_AJAX') && DOING_AJAX ) {
-			return ( is_multisite() && preg_match( '#^' . network_admin_url(). '#i', $_SERVER['HTTP_REFERER'] ) )
+			return ( is_multisite() && preg_match( '#^' . network_admin_url(). '#i', $_SERVER['HTTP_REFERER'] ) );
 		}
 		
 		return is_network_admin();
