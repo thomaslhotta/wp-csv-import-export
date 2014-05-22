@@ -82,9 +82,8 @@ if ( !isset( $errors ) ) {
 	    </table>
 	    <p class="submit"><input id="submit-csv" name="submit-csv" class="button-primary" type="submit" value="<?php _e( 'Import', $ps )?>"></input></p>
     </form>
-    
-    <div id="ajax-progress">
-    </div>
+
+	<div id="progressbar"></div>
 
     <?php 
 		if ( isset( $success_count ) ) {

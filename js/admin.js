@@ -81,11 +81,10 @@
 	        if ( result.errors && 0 < result.errors.length ) {
 	            addErrors( result.errors );
 	        }
-	        
-	        $( '#ajax-progress' ).css({
-	            display:   'block',
-	            width:     progress + '%'
-	        }).text( Math.round(progress) + '%' );
+
+			$('#progressbar').progressbar({
+				value: progress
+			});
 	        post_csv( csv, rowNames, result.resume_data );
 	    });
 	    
@@ -155,7 +154,9 @@
 
 					var progress = Math.round( current / total * 100 );
 
-					$( '#progressbar').progressbar( 'value', progress );
+					$('#progressbar').progressbar({
+						value: progress
+					});
 
 					if ( current < total ) {
 						data.offset = current;

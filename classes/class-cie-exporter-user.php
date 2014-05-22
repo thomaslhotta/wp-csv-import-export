@@ -10,10 +10,12 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 {
 	protected $batch_size = 100;
 
+	protected $xprofile_fields = array();
+
 	public function print_export( array $fields, $search = array(), $offset = '', $limit = '' )
 	{
 		$role = 'Subscriber';
-
+		//wp_cache_close();
 		$params = array(
 			'offset'      => $offset,
 			'number'      => $limit,
@@ -22,13 +24,12 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 		);
 		
 
-	        // Only export subscribers if not in network admin
-                if ( is_multisite() && !$this->is_network_admin() ) {
-                        $params['role'] = $role;
-                } else {
-                        $params['blog_id'] = 0;
-                }
-
+	    // Only export subscribers if not in network admin
+        if ( is_multisite() && !$this->is_network_admin() ) {
+        	$params['role'] = $role;
+        } else {
+        	$params['blog_id'] = 0;
+        }
 
 		$query = new WP_User_Query( $params );
 
@@ -68,8 +69,8 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 			}
 		}
 		if ( !empty( $fields['buddypress'] ) ) {
-			foreach ( $fields['buddypress'] as $field ) {
-				$first_row[] = xprofile_get_field( $field )->name;
+			foreach ( $fields['buddypress'] as $field_id ) {
+				$first_row[] = $this->get_bp_field_name( $field_id );
 			}
 		}
 
@@ -108,20 +109,33 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 			if ( !empty( $fields['buddypress'] ) ) {
 				$xprofile_data = new BP_XProfile_ProfileData();
 
-				$xprofile_data = $xprofile_data->get_all_for_user( $user->ID );
+				$xprofile_ids = $fields['buddypress'];
+
+				// Ensure that we are only using integers
+				array_walk( $xprofile_ids, 'intval' );
+
+				$xprofile_data  = $xprofile_data->get_data_for_user( $user->ID, $xprofile_ids );
 
 
-				foreach ( $xprofile_data  as $name => $data ) {
-					if ( isset( $data['field_id'] ) && in_array( $data['field_id'], $fields['buddypress'] ) ) {
-						$value = $data['field_data'];
-						$value = maybe_unserialize( $value );
+				foreach ( $xprofile_data  as $data ) {
+					$value = $data->value;
 
-						if ( is_array( $value ) ) {
-							$row[$name] = json_encode( $value );
-						} else {
-							$row[$name] = $value;
-						}
+					$unserialize = array(
+						'multiselectbox',
+						'radio',
+						'selectbox',
+						'checkbox',
+					);
+
+					if ( in_array( $this->get_bp_field_type( $data->field_id ), $unserialize ) ) {
+						$value = @unserialize( $value );
 					}
+
+					if ( is_array( $value ) ) {
+						$value = json_encode( $value );
+					}
+
+					$row[$this->get_bp_field_name( $data->field_id )] = $value;
 				}
 			}
 
@@ -198,7 +212,26 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 			'meta'        => $meta,
 		);
 	}
-	
+
+	protected function get_bp_field( $id )
+	{
+		if ( !isset( $this->xprofile_fields[$id] ) ) {
+			$this->xprofile_fields[$id] = xprofile_get_field( $id );
+		}
+		return $this->xprofile_fields[$id];
+	}
+
+	protected function get_bp_field_name( $id )
+	{
+		return $this->get_bp_field( $id )->name;
+	}
+
+	protected function get_bp_field_type( $id )
+	{
+		return $this->get_bp_field( $id )->type;
+	}
+
+
 	/**
 	 * Detect network admin in an AJAX safe way 
 	 */

@@ -414,14 +414,17 @@ class CSV_Import_Export {
 			wp_enqueue_script(
 				$this->plugin_slug .'-admin-script',
 				plugins_url( basename( dirname( dirname( __FILE__ ) ) ) . '/js/admin.js' ),
-				array()
+				array( 'jquery-ui-progressbar' )
 			);
 			wp_enqueue_script(
 				$this->plugin_slug .'-filesaver',
 				plugins_url( basename( dirname( dirname( __FILE__ ) ) ) . '/js/FileSaver.js' ),
 				array()
 			);
-			wp_enqueue_script( 'jquery-ui-progressbar' );
+			wp_enqueue_style(
+				$this->plugin_slug .'-jquery-ui',
+				'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css'
+			);
 		}
 	
 	}
