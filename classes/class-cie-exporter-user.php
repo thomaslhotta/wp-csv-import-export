@@ -118,18 +118,7 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 
 
 				foreach ( $xprofile_data  as $data ) {
-					$value = $data->value;
-
-					$unserialize = array(
-						'multiselectbox',
-						'radio',
-						'selectbox',
-						'checkbox',
-					);
-
-					if ( in_array( $this->get_bp_field_type( $data->field_id ), $unserialize ) ) {
-						$value = @unserialize( $value );
-					}
+					$value = maybe_unserialize( $data->value );
 
 					if ( is_array( $value ) ) {
 						$value = json_encode( $value );
