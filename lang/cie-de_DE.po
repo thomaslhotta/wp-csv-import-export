@@ -1,0 +1,146 @@
+# Copyright (C) 2013 TODO
+# This file is distributed under the same license as the TODO package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress CSV Import Export\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/plugins/plugin-name\n"
+"POT-Creation-Date: 2014-08-26 12:37+0100\n"
+"PO-Revision-Date: 2014-08-26 13:26+0100\n"
+"Last-Translator: Thomas Lhotta <th.lhotta@gmail.com>\n"
+"Language-Team:  <th.lhotta@gmail.com>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: __;_e;_n;_x;esc_html_e;esc_html__;esc_attr_e;"
+"esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: classes/class-cie-handler-add-user.php:38
+msgid ""
+"No user identification column found. Valid columns are ID, user_email or "
+"user_login"
+msgstr ""
+"Keine Spalte zur Benutzeridentifikation gefunden. Erlaubte Spalten sind ID, "
+"user_email oder user_login."
+
+#: classes/class-cie-attachment-processor.php:34
+msgid "Invalid file type"
+msgstr "Ungültiger Dateityp"
+
+#: classes/class-cie-attachment-processor.php:78
+msgid "Remote server did not respond"
+msgstr ""
+
+#: classes/class-cie-attachment-processor.php:84
+#, php-format
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: classes/class-cie-attachment-processor.php:91
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: classes/class-cie-attachment-processor.php:96
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: classes/class-csv-import-export.php:90
+#: classes/class-csv-import-export.php:91
+#: classes/class-csv-import-export.php:110
+#: classes/class-csv-import-export.php:111
+#: classes/class-csv-import-export.php:119
+#: classes/class-csv-import-export.php:120
+msgid "Import CSV"
+msgstr "CSV importieren"
+
+#: classes/class-csv-import-export.php:99
+#: classes/class-csv-import-export.php:100
+msgid "Export CSV"
+msgstr "CSV exportieren"
+
+#: classes/class-csv-import-export.php:326
+msgid "Wrong file uploaded. Please upload the correct file"
+msgstr "Falsche Datei hochgeladen. Bitte laden sie die korrekte Datei hoch."
+
+#: views/export.php:17
+msgid "Select all"
+msgstr "Alle auswählen"
+
+#: views/export.php:38
+msgid "Export"
+msgstr "Export"
+
+#: views/import.php:36
+msgid "CSV File"
+msgstr "CSV Datei"
+
+#: views/import.php:41 views/import.php:43
+msgid "Use AJAX"
+msgstr "AJAX verwenden"
+
+#: views/import.php:45
+msgid "Experimental: "
+msgstr "Experimentell"
+
+#: views/import.php:46
+msgid "Tick this option if you are importing very large CSV files"
+msgstr ""
+"Wählen Sie diese Option falls Sie eine sehr große CSV Datei importieren."
+
+#: views/import.php:55
+msgid "Rename fields"
+msgstr "Felder umbenennen"
+
+#: views/import.php:61
+msgid "Transform fields"
+msgstr "Felder umwandeln"
+
+#: views/import.php:76
+msgid "File format"
+msgstr "Dateiformat"
+
+#: views/import.php:81
+msgid ""
+"Your CSV file must at least contain column row that identifies the user. The "
+"column name must be on the first row. The following column names are valid:"
+msgstr ""
+"Die hochgeladene CSV Datei muss mindestens eine Spalte zur "
+"Benutzeridentifikation enthalten. Der Spaltenname muss in der ersten Zeile "
+"stehen. Folgende Spaltennamen sind erlaubt:"
+
+#: views/import.php:88 views/import.php:92
+msgid "Numeric user ID"
+msgstr "Numerische Benutzer ID"
+
+#: views/import.php:96
+msgid "Username"
+msgstr "Benutzername"
+
+#: views/import.php:100
+msgid "User email addresse"
+msgstr "Email Adresse"
+
+#: views/import.php:110
+msgid "Import"
+msgstr "Import"
+
+#: views/import.php:117
+#, php-format
+msgid "%d successfull insertions in %s seconds"
+msgstr "%d Datensätze in %s Sekunden eingefügt"
+
+#: views/import.php:123
+msgid "Errors"
+msgstr "Fehler"
+
+#: views/import.php:127
+msgid "Row"
+msgstr "Zeile"
+
+#: views/import.php:128
+msgid "Message"
+msgstr "Nachricht"

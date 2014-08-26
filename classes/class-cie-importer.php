@@ -23,43 +23,46 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 	/**
 	 * Imports a CSV handle. 
 	 * 
-	 * @param $handle
+	 * @param $file
+     * @throws Exception
 	 * @return array An array of import errors.
 	 */
 	public function import( $file )
 	{
-		if ( !is_resource( $file ) ) {
-			if ( !file_exists( $file ) ) {
+		if ( ! is_resource( $file ) ) {
+			if ( ! file_exists( $file ) ) {
 				throw new Exception(
 					'File "' . htmlspecialchars( $file ) . '" does not exist!' 
 				);
 			}
-		
-	    	$handle = fopen( $file , 'r' );
+
+			$handle = fopen( $file , 'r' );
 		} else {
 			$handle = $file; 
 		}
-	    	
-	    	
+
 		$count = 0;
 		
 		$errors = array();
-		$max_ex_time = intval( ini_get( 'max_execution_time' ) ) - 6; 
-		$interrupted = false;
-		
+		$max_ex_time = intval( ini_get( 'max_execution_time' ) ) - 6;
+		// HHVM returns so, so default to 30 in this case
+		if ( 0 > $max_ex_time ) {
+			$max_ex_time = 30;
+		}
+
 		$start = microtime( true );
 		
 		while ( false !== ($data = fgetcsv( $handle ) ) ) {
 			$count ++;
-			
+
 			try {
 				$this->handle_row( $data, $count );
 			} catch (CIE_Hander_Exception $e) {
 				if ( $count < 3 ) {
-					$errors[$count] = $e->getMessage();
+					$errors[ $count ] = $e->getMessage();
 					break;
 				} else {
-					$errors[$count] = $e->getMessage();
+					$errors[ $count ] = $e->getMessage();
 				}
 			}
 			
@@ -110,7 +113,7 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 		$return = array();
 		
 		foreach ( $handlers as $id => $handler ) {
-			$return[$id] = $handler->get_resume_data();
+			$return[ $id ] = $handler->get_resume_data();
 		}
 		
 		return $return;
@@ -121,7 +124,7 @@ class CIE_Importer extends CIE_CSV_Processor_Abstract
 		$handlers = clone $this->get_handlers();
 		
 		foreach ( $handlers as $id => $handler ) {
-			$handler->set_resume_date( $data[$id] );
+			$handler->set_resume_date( $data[ $id ] );
 		}
 		
 		return $this;

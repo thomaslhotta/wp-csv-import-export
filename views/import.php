@@ -12,20 +12,18 @@
  * @copyright 2013 Your Name or Company Name
  */
 
-$ps = $this->get_plugin_slug();
+	$ps = $this->get_plugin_slug();
 
-$url = get_admin_url( get_current_blog_id(), get_current_screen()->parent_file );
-$url = add_query_arg( 'import' , '', $url );
+	$url = get_admin_url( get_current_blog_id(), get_current_screen()->parent_file );
+	$url = add_query_arg( 'import' , '', $url );
 
-if ( !isset( $batch_size ) ) {
-	$batch_size = 50;
-}
+	if ( ! isset( $batch_size ) ) {
+		$batch_size = 50;
+	}
 
-
-if ( !isset( $errors ) ) {
-	$errors = array();
-}
-
+	if ( ! isset( $errors ) ) {
+		$errors = array();
+	}
 ?>
 
 <div class="wrap">
@@ -51,33 +49,62 @@ if ( !isset( $errors ) ) {
 					</td>
 				</tr>
 				<?php endif;?>
-				<?php if( !isset( $stopped_at ) ||  0 === $stopped_at ):?>
-				<tr valign="top">
-					<th scope="row"><label for="renames"><?php _e( 'Rename fields', $ps )?></label></th>
-					<td>
-						<textarea rows="5" cols="50" id="renames" name="renames">{}</textarea>
-					</td>
-				</tr>
-				<tr valign="top">
-					<th <label for="transforms"><?php _e( 'Transform fields', $ps )?></label></th>
-					<td>
-						<textarea rows="5" cols="50" id="transforms" name="transforms">{}</textarea>
-					</td>
-				</tr>
-						
+				<?php if ( is_network_admin() ) : ?>
+					<?php if ( ! isset( $stopped_at ) ||  0 === $stopped_at ):?>
+					<tr valign="top">
+						<th scope="row"><label for="renames"><?php _e( 'Rename fields', $ps )?></label></th>
+						<td>
+							<textarea rows="5" cols="50" id="renames" name="renames">{}</textarea>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th><label for="transforms"><?php _e( 'Transform fields', $ps )?></label></th>
+						<td>
+							<textarea rows="5" cols="50" id="transforms" name="transforms">{}</textarea>
+						</td>
+					</tr>
 					<?php else :?>
-						<li>
-							<?php ?>
-						</li>
 						<input type="hidden" name="renames" value="<?php echo esc_attr( $renames ) ?>" />
 						<input type="hidden" name="transforms" value="<?php echo esc_attr( $transforms ) ?>" />
 						<input type="hidden" name="stopped_at" value="<?php echo esc_attr( $stopped_at ) ?>" />
 						<input type="hidden" name="checksum" value="<?php echo esc_attr( $checksum ) ?>" />
 						<input type="hidden" name="resume_data" value="<?php echo esc_attr( $resume_data ) ?>" />
-				
+
 					<?php endif;?>
+				<?php else: ?>
+					<tr valign="top">
+						<th><?php _e( 'File format', $ps ) ?></th>
+						<td>
+							<p>
+								<?php
+									_e(
+										'Your CSV file must at least contain column row that identifies the user. The column name must be on the first row. The following column names are valid:',
+										$ps
+									);
+								?>
+								<table>
+									<tr>
+										<td><strong>ID</strong></td>
+										<td><?php _e( 'Numeric user ID', $ps ); ?></td>
+									</tr>
+									<tr>
+										<td><strong>created_by</strong></td>
+										<td><?php _e( 'Numeric user ID', $ps ); ?></td>
+									</tr>
+									<tr>
+										<td><strong>user_login</strong></td>
+										<td><?php _e( 'Username', $ps ); ?></td>
+									</tr>
+									<tr>
+										<td><strong>user_email</strong></td>
+										<td><?php _e( 'User email addresse', $ps ); ?></td>
+									</tr>
+								</table>
+							</p>
+						</td>
+					</tr>
+				<?php endif;?>
 		    	<?php wp_nonce_field( 'upload-csv', 'verify' )?>
-			    
 		    </tbody>
 	    </table>
 	    <p class="submit"><input id="submit-csv" name="submit-csv" class="button-primary" type="submit" value="<?php _e( 'Import', $ps )?>"></input></p>
@@ -91,7 +118,7 @@ if ( !isset( $errors ) ) {
 		}
     ?>
     
-    <?php if( !empty( $errors ) || isset( $use_ajax ) ):?>
+    <?php if( ! empty( $errors ) || isset( $use_ajax ) ):?>
     	<div id="errors"<? echo empty( $errors) ? ' style="display:none;"' : ''?>>
 	    	<h3><?php _e( 'Errors', $ps )?></h3>
 		    <table class="widefat">
@@ -102,7 +129,7 @@ if ( !isset( $errors ) ) {
 		    		</tr>
 		    	</thead>
 				<tbody>
-					<?php foreach ($errors as $row => $message):?>
+					<?php foreach ( $errors as $row => $message ):?>
 					<tr>
 						<td><?php echo esc_html( $row )?></td>
 						<td><?php echo esc_html( $message )?></td>

@@ -47,6 +47,6 @@ abstract class CIE_Handler_Abstract
 	protected function throw_exception( $text )
 	{
 		require_once  dirname( __FILE__ ) . '/class-cie-handler-exception.php';
-		throw new CIE_Hander_Exception( htmlspecialchars( $text ) );
+		throw new CIE_Hander_Exception( htmlspecialchars( strip_tags( $text ) ) );
 	}
 }

@@ -31,7 +31,7 @@ class CIE_Attachment_Processor
 		if ( $info = wp_check_filetype( $upload['file'] ) )
 			$post['post_mime_type'] = $info['type'];
 		else
-			return new WP_Error( 'attachment_processing_error', __('Invalid file type', 'wordpress-importer') );
+			return new WP_Error( 'attachment_processing_error', __( 'Invalid file type', 'wordpress-importer' ) );
 	
 		$post['guid'] = $upload['url'];
 	
@@ -47,7 +47,7 @@ class CIE_Attachment_Processor
 			$parts_new = pathinfo( $upload['url'] );
 			$name_new = basename( $parts_new['basename'], ".{$parts_new['extension']}" );
 	
-			$this->url_remap[$parts['dirname'] . '/' . $name] = $parts_new['dirname'] . '/' . $name_new;
+			$this->url_remap[ $parts['dirname'] . '/' . $name ] = $parts_new['dirname'] . '/' . $name_new;
 		}
 	
 		return $post_id;
@@ -75,13 +75,13 @@ class CIE_Attachment_Processor
 		// request failed
 		if ( ! $headers ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __('Remote server did not respond', 'wordpress-importer') );
+			return new WP_Error( 'import_file_error', __( 'Remote server did not respond', 'wordpress-importer' ) );
 		}
 	
 		// make sure the fetch was successful
 		if ( $headers['response'] != '200' ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', sprintf( __('Remote server returned error response %1$d %2$s', 'wordpress-importer'), esc_html($headers['response']), get_status_header_desc($headers['response']) ) );
+			return new WP_Error( 'import_file_error', sprintf( __( 'Remote server returned error response %1$d %2$s', 'wordpress-importer'), esc_html( $headers['response'] ), get_status_header_desc( $headers['response'] ) ) );
 		}
 	
 		$filesize = filesize( $upload['file'] );

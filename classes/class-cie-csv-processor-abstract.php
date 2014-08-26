@@ -11,14 +11,14 @@ class CIE_CSV_Processor_Abstract
 	 * @var SplPriorityQueue
 	 */
 	protected $handlers;
-	
+
 	/**
 	 * Stores the import execution time.
 	 *
 	 * @var number
 	 */
 	protected $execution_time = null;
-	
+
 	/**
 	 * Process one row.
 	 *
@@ -27,10 +27,10 @@ class CIE_CSV_Processor_Abstract
 	 */
 	public function handle_row( $row, $number )
 	{
-		if ( !$row instanceof ArrayObject ) {
+		if ( ! $row instanceof ArrayObject ) {
 			$row = new ArrayObject( $row );
 		}
-		
+
 		foreach ( clone $this->get_handlers() as $handler ) {
 			// Stop loop if handler returns true.
 			if ( $handler( $row, $number ) ) {
@@ -38,7 +38,7 @@ class CIE_CSV_Processor_Abstract
 			}
 		}
 	}
-	
+
 	/**
 	 * Get hander queue.
 	 *
@@ -46,10 +46,10 @@ class CIE_CSV_Processor_Abstract
 	 */
 	public function get_handlers()
 	{
-		if ( !$this->handlers instanceof SplPriorityQueue ) {
+		if ( ! $this->handlers instanceof SplPriorityQueue ) {
 			$this->handlers = new SplPriorityQueue();
 		}
-	
+
 		return $this->handlers;
 	}
 	
@@ -61,10 +61,10 @@ class CIE_CSV_Processor_Abstract
 	 */
 	public function get_exexution_time( $round = 2 )
 	{
-		if ( !$round ) {
+		if ( ! $round ) {
 			return $this->execution_time;
 		}
-	
+
 		return round( $this->execution_time, $round );
 	}
 }

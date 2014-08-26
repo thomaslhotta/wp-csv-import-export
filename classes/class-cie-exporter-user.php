@@ -22,14 +22,14 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 			'fields'      => 'all',
 			'count_total' => true,
 		);
-		
 
-	    // Only export subscribers if not in network admin
-        if ( is_multisite() && !$this->is_network_admin() ) {
-        	$params['role'] = $role;
-        } else {
-        	$params['blog_id'] = 0;
-        }
+
+		// Only export subscribers if not in network admin
+		if ( is_multisite() && ! $this->is_network_admin() ) {
+			$params['role'] = $role;
+		} else {
+			$params['blog_id'] = 0;
+		}
 
 		$query = new WP_User_Query( $params );
 
@@ -38,8 +38,7 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 
 		// Calculate range header
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		
-			$total = $query->total_users; 
+			$total = $query->total_users;
 
 			$range_end = $offset + $limit;
 			if ( $range_end > $total ) {
@@ -58,17 +57,17 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 		}
 
 		$first_row = array();
-		if ( !empty( $fields['user'] ) ) {
+		if ( ! empty( $fields['user'] ) ) {
 			foreach ( $fields['user'] as $field ) {
 				$first_row[] = $field;
 			}
 		}
-		if ( !empty( $fields['meta'] ) ) {
+		if ( ! empty( $fields['meta'] ) ) {
 			foreach ( $fields['meta'] as $field ) {
 				$first_row[] = $field;
 			}
 		}
-		if ( !empty( $fields['buddypress'] ) ) {
+		if ( ! empty( $fields['buddypress'] ) ) {
 			foreach ( $fields['buddypress'] as $field_id ) {
 				$first_row[] = $this->get_bp_field_name( $field_id );
 			}
@@ -83,30 +82,30 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 			$row = array();
 			foreach ( $fields['user'] as $field ) {
 				if ( isset( $user->$field ) ) {
-					$row[$field] = @$user->$field;
+					$row[ $field ] = @$user->$field;
 				} else {
-					$row[$field] = '';
+					$row[ $field ] = '';
 				}
 			}
 
-			if ( !empty( $fields['meta'] ) ) {
+			if ( ! empty( $fields['meta'] ) ) {
 				foreach ( $fields['meta'] as $meta ) {
 					$value = get_user_meta( $user->ID, $meta );
 
 					if ( 1 < count( $value ) ) {
-						$row[$meta] = json_encode( $value );
+						$row[ $meta ] = json_encode( $value );
 					} else {
 						$value = reset( $value );
 
 						if ( is_array( $value ) ) {
 							$value = json_encode( $value );
 						}
-						$row[$meta] = $value;
+						$row[ $meta ] = $value;
 					}
 				}
 			}
 
-			if ( !empty( $fields['buddypress'] ) ) {
+			if ( ! empty( $fields['buddypress'] ) ) {
 				$xprofile_data = new BP_XProfile_ProfileData();
 
 				$xprofile_ids = $fields['buddypress'];
@@ -114,37 +113,24 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 				// Ensure that we are only using integers
 				array_walk( $xprofile_ids, 'intval' );
 
-				$xprofile_data  = $xprofile_data->get_data_for_user( $user->ID, $xprofile_ids );
+				$xprofile_data = $xprofile_data->get_data_for_user( $user->ID, $xprofile_ids );
 
-
-				foreach ( $xprofile_data  as $data ) {
-					$value = $data->value;
-
-					$unserialize = array(
-						'multiselectbox',
-						'radio',
-						'selectbox',
-						'checkbox',
-					);
-
-					if ( in_array( $this->get_bp_field_type( $data->field_id ), $unserialize ) ) {
-						$value = @unserialize( $value );
-					}
+				foreach ( $xprofile_data as $data ) {
+					$value = maybe_unserialize( $data->value );
 
 					if ( is_array( $value ) ) {
 						$value = json_encode( $value );
 					}
 
-					$row[$this->get_bp_field_name( $data->field_id )] = $value;
+					$row[ $this->get_bp_field_name( $data->field_id ) ] = $value;
 				}
 			}
 
 			$output = array();
 
 			foreach ( $first_row as $title ) {
-				$output[] = $row[$title];
+				$output[] = $row[ $title ];
 			}
-
 
 			fputcsv( $handle, $output );
 		}
@@ -178,7 +164,7 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 
 
 		$ignore_meta = '';
-		if ( is_multisite() && !is_network_admin() ) {
+		if ( is_multisite() && ! is_network_admin() ) {
 			$ignore_meta = 'wp_' . get_current_blog_id() . '_';
 		}
 
@@ -192,7 +178,7 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 				continue;
 			}
 
-			$meta[$key->meta_key] = $key->meta_key;
+			$meta[ $key->meta_key ] = $key->meta_key;
 		}
 
 		$buddypress = array();
@@ -202,23 +188,23 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 			$wpdb->query( "SELECT id, name FROM {$bp->profile->table_name_fields} WHERE NOT type = 'option'" );
 
 			foreach ( $wpdb->last_result as $key ) {
-				$buddypress[$key->name] = $key->id;
+				$buddypress[ $key->name ] = $key->id;
 			}
 		}
 
 		return array(
 			'buddypress'  => $buddypress,
-		    'user'        => $fields,
+			'user'        => $fields,
 			'meta'        => $meta,
 		);
 	}
 
 	protected function get_bp_field( $id )
 	{
-		if ( !isset( $this->xprofile_fields[$id] ) ) {
-			$this->xprofile_fields[$id] = xprofile_get_field( $id );
+		if ( ! isset( $this->xprofile_fields[ $id ] ) ) {
+			$this->xprofile_fields[ $id ] = xprofile_get_field( $id );
 		}
-		return $this->xprofile_fields[$id];
+		return $this->xprofile_fields[ $id ];
 	}
 
 	protected function get_bp_field_name( $id )
@@ -237,10 +223,10 @@ class CIE_Exporter_User extends CIE_CSV_Processor_Abstract
 	 */
 	public function is_network_admin()
 	{
-		if ( defined('DOING_AJAX') && DOING_AJAX ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return ( is_multisite() && preg_match( '#^' . network_admin_url(). '#i', $_SERVER['HTTP_REFERER'] ) );
 		}
-		
+
 		return is_network_admin();
 	}
 }
