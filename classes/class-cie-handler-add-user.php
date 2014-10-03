@@ -52,6 +52,10 @@ class CIE_Handler_Add_User extends CIE_Handler_Creator_Abstract
 
 		$user->add_role( $role );
 
+		if ( ! $row->offsetExists( 'ID' ) ) {
+			$row->offsetSet( 'ID', $user->ID );
+		}
+
 		wp_cache_delete( $user->get( 'ID' ), 'user_meta' );
 
 		$this->success_count ++;

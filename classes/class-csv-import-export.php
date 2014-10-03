@@ -19,6 +19,8 @@ class CSV_Import_Export {
 	 */
 	protected static $instance = null;
 
+	protected $importer;
+
 	protected $plugin_slug = 'cie';
 
 	/**
@@ -80,6 +82,20 @@ class CSV_Import_Export {
 	public function get_plugin_slug()
 	{
 		return $this->plugin_slug;
+	}
+
+	/**
+	 * @return CIE_Importer
+	 */
+	public function get_importer()
+	{
+		if ( ! $this->importer instanceof CIE_Importer ) {
+			$this->include_class( 'CIE_Importer' );
+
+			$this->importer = new CIE_Importer();
+		}
+
+		return $this->importer;
 	}
 
 	/**
@@ -160,11 +176,14 @@ class CSV_Import_Export {
 			return;
 		}
 
+		// @todo: network admin detection might not work when using ajax
 		if ( function_exists( 'is_network_admin' ) && is_network_admin() ) {
 			$this->include_class( 'CIE_Handler_Create_User' );
 			$user_handler = new CIE_Handler_Create_User();
 		} else {
 			$this->include_class( 'CIE_Handler_Add_User' );
+			$this->include_class( 'CIE_Handler_Option' );
+			$this->get_importer()->get_handlers()->insert( new CIE_Handler_Option( 'user' ), 1 );
 			$user_handler = new CIE_Handler_Add_User();
 		}
 
@@ -189,7 +208,6 @@ class CSV_Import_Export {
 		$this->include_class( 'CIE_Exporter_User' );
 
 		$exporter = new CIE_Exporter_User();
-
 
 		$posted = array();
 
@@ -349,21 +367,20 @@ class CSV_Import_Export {
 			}
 		}
 
-		$this->include_class( 'CIE_Importer' );
 		$this->include_class( 'CIE_Handler_Fieldname' );
 		$this->include_class( 'CIE_Handler_Transform' );
 
-		$importer = new CIE_Importer();
+		$importer = $this->get_importer();
 
 		if ( isset( $_POST['stopped_at'] ) ) {
 			$importer->set_stopped_at( intval( $_POST['stopped_at'] ) );
 		}
 
 
-		$importer->get_handlers()->insert( new CIE_Handler_Fieldname( $renames ), 3 );
-		$importer->get_handlers()->insert( new CIE_Handler_Transform( $transforms ), 2 );
+		$importer->get_handlers()->insert( new CIE_Handler_Fieldname( $renames ), 300 );
+		$importer->get_handlers()->insert( new CIE_Handler_Transform( $transforms ), 200 );
 
-		$importer->get_handlers()->insert( $handler , 1 );
+		$importer->get_handlers()->insert( $handler , 100 );
 
 		if ( is_array( $resume_data ) ) {
 			$importer->set_resume_data( $resume_data );
@@ -380,7 +397,6 @@ class CSV_Import_Export {
 			rewind( $file );
 		}
 
-
 		return array_merge(
 			$return,
 			array(
@@ -395,16 +411,18 @@ class CSV_Import_Export {
 
 	protected function include_class( $class )
 	{
-		require_once dirname( __FILE__ ) . '/class-' . strtolower( str_replace( '_' , '-' , $class ) ) . '.php';
+		if ( ! class_exists( $class ) ) {
+			require_once dirname( __FILE__ ) . '/class-' . strtolower( str_replace( '_' , '-' , $class ) ) . '.php';
+		}
 	}
 
 	protected function get_json( $key )
 	{
-		if ( ! isset( $_POST[$key] ) ) {
+		if ( ! isset( $_POST[ $key ] ) ) {
 			return null;
 		}
 
-		$json = stripcslashes( $_POST[$key] );
+		$json = stripcslashes( $_POST[ $key ] );
 
 		return json_decode( $json, true );
 	}
