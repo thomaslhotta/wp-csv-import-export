@@ -11,7 +11,7 @@
 class CIE_Attachment_Processor
 {
 	public $url_remap;
-	
+
 	/**
 	 * If fetching attachments is enabled then attempt to create a new attachment
 	 *

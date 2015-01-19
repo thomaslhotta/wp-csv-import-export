@@ -10,7 +10,35 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
-        "fancyguy/webroot-installer": "1.1.0"
-    }
+	"repositories": [
+		{
+			"type": "package",
+			"package": {
+				"name": "wordpress-developer",
+				"version": "4.1",
+				"source": {
+					"type": "svn",
+					"url": "http://develop.svn.wordpress.org/",
+					"reference": "trunk"
+				}
+			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "buddypress-test-suite",
+				"version": "2.1",
+				"source": {
+					"type": "svn",
+					"url": "https://buddypress.svn.wordpress.org/",
+					"reference": "trunk"
+				}
+			}
+		}
+	],
+	"require-dev": {
+		"10up/wp_mock": "dev-master",
+		"wordpress-developer": "4.1",
+		"buddypress-test-suite": "2.1"
+	}
 }

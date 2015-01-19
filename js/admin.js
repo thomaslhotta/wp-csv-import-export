@@ -1,191 +1,229 @@
-(function ( $ ) {
+// the semi-colon before the function invocation is a safety
+// net against concatenated scripts and/or other plugins
+// that are not closed properly.
+;(function ( $, window, document, undefined ) {
 	"use strict";
 
-	var batchSize = 10;
-	
-	$(function () {
-	    var form = $( '#csv-import-form' );
-	    batchSize = $( 'input[name="batch_size"]' ).val();
+	// Create the defaults once
+	var pluginName = 'cieexporter',
+		defaults = {};
 
-	    form.submit( function( event ) {
-	        if ( 0 === $( '#use-ajax:checked', form ).length ) {
-	            return;
-	        }
-	        event.preventDefault();
-	        if (!window.File || !window.FileReader ) {
-	            alert( 'You cannot use ajax with this browser.' );
-	        }
-	        
-	        var reader = new FileReader();
-	        reader.onload = handleCsv;
-	        reader.readAsText( $( '#csv', form ).get(0).files[0] );
-	    });
-	    
+	// The actual plugin constructor
+	function Plugin( element, options ) {
+		this.element = $(element);
+		this._defaults = defaults;
+		this._name = pluginName;
+		if('string' !== $.type(options)) {
+			this.options = $.extend( {}, defaults, options) ;
+		}
+	}
+
+	Plugin.prototype = {
+		download: function() {
+			var element = this.element,
+				target = $(element.data('target')),
+			 	data = {},
+				csv = [];
+
+			target.find('input').each( function() {
+				var input = $(this);
+				if ( input.is(':checkbox') && !input.prop('checked') ) {
+					return;
+				}
+				data[input.attr('name')] = input.val();
+			});
+
+			var progress = element.find('.progress');
+			if ( 0 === progress.length ) {
+				progress = $('<span class="progress"></span>');
+				element.append(progress);
+			}
+
+			var addPart = function() {
+				var time = Date.now();
+
+				$.ajax({
+					url: ajaxurl,
+					type: 'POST',
+					dataType: 'json',
+					data: data,
+					success: function( result ) {
+						element.prop('disabled',true);
+						var total = result.total;
+						var current = result.offset + result.elements.length;
+
+						$.merge( csv, result.elements );
+
+						time = Math.round( ( 300 / ( ( Date.now() - time ) / 1000 ) ) );
+
+						var progressText = ' ' + Math.round( current / total * 100 ) + '%';
+						progressText = progressText + ' (' + time + '\/s)';
+						progress.text( progressText );
+
+						if ( current < total ) {
+							data.offset = current;
+							data.limit  = 100;
+							addPart();
+						} else {
+							var blob = new Blob([Papa.unparse(csv)], {type: "text/csv;charset=utf-8"});
+							saveAs(blob,'export.csv');
+							element.prop('disabled',false);
+							progress.remove();
+						}
+					},
+				});
+			};
+
+			addPart(data);
+		},
+		'import': function() {
+			var that = this,
+				textarea = $(this.element).find('textarea'),
+				file = $(this.element).find('input[type=file]'),
+				// Converted CSV data
+				data = [],
+				// The column titles
+				firstRow = [],
+
+				// CSV Parser configuration
+			 	config = {
+					step: function(results, handle) {
+						// Extract the first row
+						if (0 === firstRow.length) {
+							firstRow = results.data[0];
+							return;
+						}
+
+						// Process data rows
+						var row = {};
+						$.each(firstRow, function( i, name ) {
+							row[name] = results.data[0][i];
+						});
+
+						data.push(row);
+
+						// Send batch for every 100 rows
+						if (100 === data.length) {
+							that.sendData(data,handle);
+						}
+					},
+					complete: function(results, file) {
+						// Flush any remaining data
+						if (0 < data.length) {
+							that.sendData(data);
+						}
+					},
+					error: function(err, file, inputElem, reason)
+					{
+						//@todo Do something on errors
+					}
+				}
+
+			this.resetErrors();
+
+
+			if ($.trim(textarea.val())) {
+				Papa.parse( textarea.val(), config );
+			} else if ( window.FileReader && 0 < file[0].files.length ) {
+				file.parse({config:config});
+			} else {
+				alert('No file selected');
+			}
+		},
+
+		sendData: function(data, handle) {
+			var that = this;
+			if(handle) {
+				handle.pause();
+			}
+
+			var batch = data;
+			if ( JSON ) {
+				batch = JSON.stringify(data);
+			}
+
+			$.post(
+				ajaxurl,
+				{
+					action: this.element.data('action'),
+					data: batch,
+					mode: this.element.find('[name=mode]').val()
+				},
+				function(response) {
+					data = [];
+
+					that.addErrors(response.data.errors);
+
+					if(handle) {
+						handle.resume();
+					}
+				}
+			);
+		},
+		addErrors: function(errors) {
+			var table = this.element.find('#errors').show().slideDown().find('tbody');
+			$.each(errors, function( rowNumber, rowErrors ) {
+				table.show();
+				var row = $('<tr>');
+				var ul = $('<ul>');
+				row.append($('<td>').text(rowNumber));
+
+				$.each(rowErrors, function(i, error){
+					ul.append($('<li>').text(error));
+				});
+				row.append($('<td>').append(ul));
+				table.append(row);
+			});
+		},
+		resetErrors: function()	{
+			this.element.find('#errors').hide().find('tbody').html('');
+		}
+	};
+
+	$.fn[pluginName] = function ( options ) {
+		return this.each(function () {
+			if (!$.data(this, "plugin_" + pluginName)) {
+				$.data(this, "plugin_" + pluginName,
+					new Plugin( this, options ));
+			}
+
+			if('string' === $.type(options)) {
+				var instance = $.data(this,"plugin_" + pluginName);
+
+				if(instance[options] && $.isFunction(instance[options])) {
+					instance[options]();
+				}
+			}
+		});
+	};
+
+	// Data API
+	$(document).on('click', '[data-toggle="export"]', function (e) {
+		e.preventDefault()
+		$(this).cieexporter('download');
 	});
 
-	
-	var rowCount = 0;
-	
-	
-	function handleCsv( e ) {
-	    var reader = e.target;
-	    var csv = reader.result;
-	    
-	    // Deal with JSON in cells
-	    csv = csv.split( "\n" )
-	    
-	    if ( 1 === csv.length ) {
-	        alert( 'No data found.' );
-	        return;
-	    }
-	    
-	    var rowNames = csv.shift();
-	    
-	    rowCount = csv.length;
-	    
-	    $( '#ajax-progress' ).addClass( 'button-primary' ).text( '0%' ).css({
-	        "text_align": "center",
-	        "width":      "auto",
-	    });
-	    clearErrors();
-	    
-	    post_csv( csv, rowNames, {} )
-	}
-	
-	function post_csv( csv, rowNames, resumeData ) {
-	    if ( 1 > csv.length ) {
-	        $('#submit-csv', this).removeAttr('disabled');
-	        return;
-	    } else {
-	        $('#submit-csv', this).attr('disabled', 'disabled');
-	    }
-	    
-	    var rowOffset = rowCount - csv.length
-	    
-	    var csvPart = csv.splice( 0, batchSize );
-	    csvPart = rowNames + "\n"  + csvPart.join( "\n" )
-	    
-	    var data = {
-	        renames:    $('#renames').val(),
-	        transforms: $('#transforms').val(),
-	        csv: csvPart,
-	        action: $('#use-ajax').val(),
-	        rowOffset: rowOffset,
-	        typenow: typenow,
-	        resume_data: resumeData
-	    };
-	    
-	    $.post( ajaxurl, data, function( result ) {
-	        var progress = 100 - ( csv.length * 100 / rowCount );
-	 
-	        if ( result.errors && 0 < result.errors.length ) {
-	            addErrors( result.errors );
-	        }
+	$(document).on('submit', '[data-toggle="import-csv"]', function (e) {
+		if (window.FileReader || $.trim($(this).find('textarea').val())) {
+			e.preventDefault();
+			$(this).cieexporter('import');
+		}
+	});
 
-			$('#progressbar').progressbar({
-				value: progress
-			});
-	        post_csv( csv, rowNames, result.resume_data );
-	    });
-	    
-	}
-	
-	function addErrors( errors )
-	{
-	    var table = $( '#errors' );
-	    table.css( 'display', 'block' );
-	    table = $( 'tbody', table );
-	    
-	    if ( 0 === table.length  ) {
-	        return;
-	    }
-	    
-	    $.each( errors, function( row, message ) {
-	        var row = $('<tr></tr>').append( $('<td></td>').text( row ) ).append( $('<td></td>').text( message ) );
-	        table.append( row );
-	    });
-	}
-	
-	function clearErrors()
-	{
-	    $( '#errors' ).css( 'display', 'none' ).find( 'tbody' ).empty();
-	}
-	
-	
-	
-}(jQuery));
+})(jQuery, window, document );
 
-(function ( $ ) {
-    "use strict";
+(function ( $, document ) {
+	"use strict";
+	$.fn['checkAll'] = function () {
+		return this.each(function () {
+			var target = $(this).data('target');
+			$(target).find('input[type=checkbox]').prop('checked',$(this).prop('checked'));
+		});
+	};
 
-    $(function () {
-        // Check all inputs
-        $( '.select-all' ).click( function() {
-            $(  '#options-' + $(this).val() + ' input').prop( 'checked', $(this).prop( 'checked' ) );
-        });
+	// Data API
+	$(document).on('click', '[data-toggle="checked"]', function() {
+		$(this).checkAll();
+	});
+})(jQuery, document);
 
-        $( '#export-csv' ).click( function() {
-			$( '#progressbar').progressbar({
-				value: 0,
-				max: 100
-			});
-
-            var form = $( '#export' );
-
-            var csv = '';
-            var data = form.serializeObject();
-            data.action = 'export_users';
-            data.offset = 0;
-            data.limit = 300;
-
-            var addPart = function() {
-				$.get( ajaxurl, data, function( result, status, xhr ) {
-					var range = xhr.getResponseHeader( 'Content-Range' );
-					var total = parseInt( range.split( '/' )[1], 10);
-					var current = parseInt( range.split( '/' )[0].split( '-' )[1], 10);
-
-					if ( ''  !== csv ) {
-						result = result.split( '\n' );
-						result.shift();
-						result = result.join( "\n" );
-					}
-
-					csv += result;
-
-					var progress = Math.round( current / total * 100 );
-
-					$('#progressbar').progressbar({
-						value: progress
-					});
-
-					if ( current < total ) {
-						data.offset = current;
-						addPart();
-					} else {
-						var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
-						saveAs(blob, "export.csv");
-					}
-				});
-        	};
-            
-        	addPart();
-        });
-        
-        $.fn.serializeObject = function()
-        {
-            var o = {};
-            var a = this.serializeArray();
-            $.each(a, function() {
-                if (o[this.name] !== undefined) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
-                }
-            });
-            return o;
-        };
-    });
-}(jQuery));

@@ -8,7 +8,7 @@
  * @license   GPL-2.0+
  * @copyright 2013 Thomas Lhotta
  */
-abstract class CIE_Handler_Abstract
+abstract class CIE_Handler
 {
 	/**
 	 * Perform operations in row.
@@ -19,12 +19,12 @@ abstract class CIE_Handler_Abstract
 	 * @param boolean $number
 	 */
 	abstract public function __invoke( ArrayObject $row, $number );
-	
+
 	/**
 	 * Called when all rows have been processed.
 	 */
 	public function end() {}
-	
+
 	/**
 	 * Should return any data that is required to resume the importing process.
 	 * 
@@ -34,9 +34,9 @@ abstract class CIE_Handler_Abstract
 	{
 		return null;
 	}
-	
+
 	public function set_resume_date( $data ) {}
-	
+
 	/**
 	 * Throws a handler exception.
 	 * 
@@ -47,5 +47,21 @@ abstract class CIE_Handler_Abstract
 	{
 		require_once  dirname( __FILE__ ) . '/class-cie-handler-exception.php';
 		throw new CIE_Hander_Exception( htmlspecialchars( strip_tags( $text ) ) );
+	}
+
+	protected function get_field_type_object( $field_type )
+	{
+		if ( empty( $this->field_type_objects[ $field_type ] ) ) {
+			$class = 'CIE_Field_' . ucfirst( $field_type );
+			if ( ! class_exists( $class ) ) {
+				throw new Exception(
+					'No class found for field type ' . strip_tags( $class )
+				);
+			}
+
+			$this->field_type_objects[ $field_type ] = $class;
+		}
+
+		return new $this->field_type_objects[ $field_type ];
 	}
 }

@@ -1,0 +1,202 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: tom
+ * Date: 18.12.14
+ * Time: 12:30
+ */
+abstract class CIE_Module_Abstract
+{
+	public function register_menus() {}
+
+	public function register_ajax() {}
+
+	public function render_export_ui( array $fields, array $hidden_fields = array() )
+	{
+		$html = '';
+		foreach ( $fields as $group_name => $group ) {
+			$options = '';
+
+			foreach ( $group as $field_id => $field_name ) {
+				$string = '<div><label title="%s"><input type="checkbox" name="fields[%s][%s]" value="1">%s</label></div>';
+
+				$options .= sprintf(
+					$string,
+					$field_name,
+					esc_attr( $group_name ),
+					esc_attr( $field_id ),
+					esc_attr( $field_name )
+				);
+			}
+
+			$id = sanitize_title( $group_name ) . '-options';
+
+			$html .= sprintf(
+				'<tr><th>%s<br><label><input type="checkbox" data-toggle="checked" data-target="#%s">%s</label></th><td id="%s">%s</td></tr>',
+				esc_html( ucfirst( $group_name ) ),
+				$id,
+				__( 'All' ),
+				$id,
+				$options
+			);
+		}
+
+		foreach( $hidden_fields as $name => $value ) {
+			$html .= sprintf( '<input type="hidden" name="%s" value="%s">', esc_attr( $name ), esc_attr( $value ) );
+		}
+
+		$html = sprintf(
+			'<table class="form-table">%s</table>',
+			$html
+		);
+
+		$html = sprintf(
+			'<div id="export-settings">%s</div>',
+			$html
+		);
+
+		$html .= sprintf(
+			'<button class="button-secondary" data-toggle="export" data-target="#export-settings">%s</button>',
+			__( 'Export' )
+		);
+
+		wp_enqueue_script( 'cie-admin-script' );
+
+		return $html;
+	}
+
+	public function render_import_ui( $action )
+	{
+		$csv = '';
+		$csv_valid = true;
+		if ( ! empty( $_FILES['csv'] ) && check_admin_referer( 'upload-csv', 'nonce' ) ) {
+			$finfo = finfo_open( FILEINFO_MIME_TYPE );
+			finfo_file($finfo, $_FILES['csv']['tmp_name']);
+			$csv_valid = 0 === strpos( finfo_file( $finfo, $_FILES['csv']['tmp_name'] ), 'text/' );
+
+			if ( $csv_valid ) {
+				$csv = file_get_contents( $_FILES['csv']['tmp_name'] );
+			}
+		}
+
+		$url = remove_query_arg( 'nonce' );
+
+		$html = '';
+
+		$html .= sprintf(
+			'<h2>%s</h2>',
+			esc_html( get_admin_page_title() )
+		);
+
+		$mode = CIE_Importer::MODE_IMPORT;
+		if ( ! empty( $_GET['mode'] ) ) {
+			$mode = intval( $_GET['mode'] );
+		}
+
+		if ( CIE_Importer::MODE_BOTH === $this->get_importer()->get_supported_mode() ) {
+			$html .= sprintf(
+				'<h2 class="nav-tab-wrapper"><a href="%s" class="nav-tab%s">%s</a><a href="%s" class="nav-tab%s">%s</a></h2>',
+				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_IMPORT, $url )  ),
+			    CIE_Importer::MODE_IMPORT === $mode ? ' nav-tab-active' : '',
+				__( 'Import', 'cie' ),
+				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_UPDATE, $url )  ),
+				CIE_Importer::MODE_UPDATE === $mode  ? ' nav-tab-active' : '',
+				__( 'Update', 'cie' )
+			);
+		}
+
+		if ( empty( $csv ) || empty ( $csv_valid ) ) {
+			// If no file was uploaded show default UI
+			$required = '';
+			foreach ( $this->get_importer()->get_required_fields( $mode ) as $field ) {
+				$required .= sprintf(
+					'<tr><td>%s</td><td>%s</td></tr>',
+					join( ', ', $field['columns'] ),
+					$field['description']
+				);
+			}
+
+			$html .= sprintf(
+				'<tr><th>%s</th><td><table>%s</table></td></tr>',
+				__( 'Required columns', 'cie' ),
+				$required
+			);
+
+			$html .= sprintf(
+				'<tr><th>%s</th><td><input type="file" name="csv" id="file" class="csv" accept=".csv"/><p class="description">%s</p></td></tr>',
+				__( 'Select a CSV file', 'cie' ),
+				$csv_valid ? '' : __( 'The uploaded file is not a valid CSV file.', 'cie' )
+			);
+
+			$html .= __(
+				'<tr><th>or copy & paste the CSV data from your spreadsheet software.</th>'
+			);
+
+			$html .= '<td><textarea class="widefat" name="csv_fallback" rows="5"></textarea></td></tr>';
+
+
+		} else {
+			// Show fallback UI for non FileReader browsers if file was uploaded
+			$html .= sprintf( '<tr><th>%s</th>', __( 'Uploaded CSV', 'cie' ) );
+
+			$html .= sprintf(
+				'<td><textarea class="widefat" name="csv_fallback" rows="5" readonly>%s</textarea></td></tr>',
+				esc_textarea( $csv )
+			);
+		}
+
+		$errors = '<table><thead><tr><td>%s</td><td>%s</td></tr></thead><tbody></tbody></table>';
+		$errors = '<tr id="errors" style="display: none"><th>%s</th><td><div style="max-height: 400px; overflow: scroll">' . $errors . '</div></td></tr>';
+
+		$html .= sprintf(
+			$errors,
+			__( 'Errors' ),
+			__( 'Errors' ),
+			__( 'Row number', 'csv' )
+		);
+
+		$html = sprintf(
+			'<table class="form-table">%s</table>',
+			$html
+		);
+
+
+		// Import button
+		$html .= sprintf(
+			'<button type="submit" class="button-primary">%s</button>',
+			empty( $csv ) ? __( 'Import' ) : __( 'Continue' )
+		);
+
+		// Reset form button
+		$html .= sprintf(
+			'&nbsp;<a href="%s" class="button-secondary">%s</a>',
+			esc_url( $url ),
+			__( 'Clear' )
+		);
+
+
+
+		$html = sprintf(
+			'<form id="csv-import-form" class="wrap" action="%s" method="post" enctype="multipart/form-data" data-toggle="import-csv" data-action="%s">%s</form>',
+			esc_url( wp_nonce_url( $_SERVER['REQUEST_URI'], 'upload-csv', 'nonce' ) ),
+			esc_attr( $action ),
+			$html
+		);
+
+		wp_enqueue_script( 'cie-admin-script' );
+
+		return $html;
+	}
+
+	/**
+	 * Detect network admin in an AJAX safe way
+	 */
+	public function is_network_admin()
+	{
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return ( is_multisite() && false !== strpos( $_SERVER['HTTP_REFERER'], network_admin_url() ) );
+		}
+
+		return is_network_admin();
+	}
+}
