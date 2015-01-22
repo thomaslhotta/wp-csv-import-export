@@ -14,8 +14,8 @@ class CIE_Field_Usermeta extends CIE_Field_Abstract
 			$sql .= 'SELECT post_author FROM ' . $wpdb->posts . ' WHERE post_type = %s )';
 			$sql = $wpdb->prepare( $sql, $search['post_type'] );
 		} elseif( ! empty( $search['post_id'] ) ) {
-			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' WHERE user_id IN ( ';
-			$sql .= 'SELECT user_id FROM ' . $wpdb->comments . ' WHERE comment_post_ID = %s AND ( user_id <> \'\' OR user_id IS NOT NULL ) )';
+			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' AS m INNER JOIN ' . $wpdb->comments . ' AS c '
+				 . 'ON c.comment_post_ID = %d AND m.user_id = c.user_id';
 			$sql = $wpdb->prepare( $sql, $search['post_id'] );
 		} else {
 			$sql = $sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta;
