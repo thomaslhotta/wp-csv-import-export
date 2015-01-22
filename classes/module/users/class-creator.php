@@ -32,7 +32,8 @@ class CIE_Module_Users_Creator extends CIE_Importer
 	{
 		return array(
 			'buddypress',
-			'usermeta'
+			'usermeta',
+			'option'
 		);
 	}
 

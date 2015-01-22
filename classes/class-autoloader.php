@@ -1,7 +1,6 @@
 <?php
 /**
- * Date: 18.12.14
- * Time: 12:13
+ * Auto loader class
  */
 class CIE_Autoloader
 {
@@ -13,6 +12,13 @@ class CIE_Autoloader
 		spl_autoload_register( array( $this, 'autoload' ) );
 	}
 
+	/**
+	 * Auto loads classes
+	 *
+	 * @param $class
+	 *
+	 * @return bool
+	 */
 	public function autoload( $class )
 	{
 		if ( 0 !== strpos( $class, 'CIE' ) ) {

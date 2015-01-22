@@ -1,7 +1,6 @@
 <?php
 /**
- * Date: 13.01.15
- * Time: 11:06
+ * Provides basic import processing functionality
  */
 abstract class CIE_Importer extends CIE_Processor
 {
@@ -9,17 +8,45 @@ abstract class CIE_Importer extends CIE_Processor
 	const MODE_UPDATE = 2;
 	const MODE_BOTH   = 3;
 
+	/**
+	 * By default importers support no field types
+	 *
+	 * @return array
+	 */
 	public function get_supported_fields()
 	{
 		return array();
 	}
 
+	/**
+	 * Returns the field names that are required for importing
+	 *
+	 * @param $mode
+	 *
+	 * @return array
+	 */
 	abstract public function get_required_fields( $mode );
 
+	/**
+	 * Returns MODE_IMPORT, MODE_EXPORT or MODE_BOTH, depending on what the importer is capable of.
+	 *
+	 * @return mixed
+	 */
 	abstract public function get_supported_mode();
 
+	/**
+	 * Creates an element from a CSV row
+	 *
+	 * @param array $row
+	 * @param int   $mode
+	 *
+	 * @return array
+	 */
 	abstract public function create_element( array $row, $mode = self::MODE_IMPORT );
 
+	/**
+	 * Handles uploaded JSON data
+	 */
 	public function import_json()
 	{
 		$data = false;
@@ -32,6 +59,7 @@ abstract class CIE_Importer extends CIE_Processor
 			return;
 		}
 
+		// Default mode is import
 		$mode = self::MODE_IMPORT;
 		if ( ! empty( $_POST['mode'] ) ) {
 			$mode = intval( $_POST['mode'] );
@@ -42,6 +70,12 @@ abstract class CIE_Importer extends CIE_Processor
 		wp_send_json_success( $result );
 	}
 
+	/**
+	 * @param array $data
+	 * @param       $mode
+	 *
+	 * @return array
+	 */
 	public function import( array $data, $mode )
 	{
 		$return = array(
@@ -63,6 +97,7 @@ abstract class CIE_Importer extends CIE_Processor
 
 			$element = $this->create_element( $row, $mode );
 
+			// Check if element could be created
 			if ( $element->has_error() ) {
 				$return['errors'][ $number ][] = $element->get_error();
 				continue;
@@ -74,7 +109,6 @@ abstract class CIE_Importer extends CIE_Processor
 
 			if ( ! empty ( $errors ) ) {
 				$return['errors'][ $number ] = $errors;
-				continue;
 			}
 		}
 
@@ -93,6 +127,14 @@ abstract class CIE_Importer extends CIE_Processor
 		return $errors;
 	}
 
+	/**
+	 * Checks if  all required columns of the current row exist
+	 *
+	 * @param array $row
+	 * @param array $required
+	 *
+	 * @return array
+	 */
 	public function check_required_fields( array $row, array $required )
 	{
 		$errors = array();
@@ -105,10 +147,10 @@ abstract class CIE_Importer extends CIE_Processor
 				}
 			}
 
+			// Required field was found
 			if ( $found ) {
 				continue;
 			}
-
 
 			if ( 1 === count( $missing['columns'] ) ) {
 				$errors[] = sprintf(

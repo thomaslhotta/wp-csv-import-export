@@ -1,7 +1,8 @@
 <?php
 /**
- * Date: 18.12.14
- * Time: 12:28
+ * Handles posts import and export
+ *
+ * @todo Implement importer
  */
 class CIE_Module_Posts extends CIE_Module_Abstract
 {
@@ -30,6 +31,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 			);
 		}
 
+		// Extra handling for media pages
 		add_media_page(
 			__( 'Export CSV', 'cie' ),
 			__( 'Export CSV', 'cie' ),
@@ -37,6 +39,8 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 			'export-' . $post_type . '',
 			array( $this, 'display_post_export_page' )
 		);
+
+		do_action( 'cie_register_post_menus', $this );
 	}
 
 	public function register_ajax()
@@ -44,10 +48,12 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 		add_action( 'wp_ajax_export_posts', array( $this, 'process_export' ) );
 	}
 
-
-
-	public function display_post_export_page()
+	public function display_post_export_page( $searches = array() )
 	{
+		if ( ! is_array( $searches ) ) {
+			$searches = array();
+		}
+
 		$post_type = 'attachment';
 		if ( ! empty( $_GET['post_type'] ) )  {
 			$post_type = $_GET['post_type'];
@@ -57,12 +63,18 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 			array( 'post_type' => $post_type )
 		);
 
+		$hidden = array(
+			'search[post_type]' => $post_type,
+			'action'            => 'export_posts',
+		);
+
+		foreach ( $searches as $name => $value ) {
+			$hidden[ 'search[' . $name . ']' ] = $value;
+		}
+
 		echo $this->render_export_ui(
 			$fields,
-			array(
-				'search[post_type]' => $post_type,
-				'action'            => 'export_posts'
-			)
+			$hidden
 		);
 	}
 

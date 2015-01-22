@@ -65,6 +65,7 @@
 							data.limit  = 100;
 							addPart();
 						} else {
+							//@todo Mike IE 8 compatible
 							var blob = new Blob([Papa.unparse(csv)], {type: "text/csv;charset=utf-8"});
 							saveAs(blob,'export.csv');
 							element.prop('disabled',false);
@@ -80,37 +81,24 @@
 			var that = this,
 				textarea = $(this.element).find('textarea'),
 				file = $(this.element).find('input[type=file]'),
-				// Converted CSV data
-				data = [],
-				// The column titles
-				firstRow = [],
 
 				// CSV Parser configuration
 			 	config = {
-					step: function(results, handle) {
-						// Extract the first row
-						if (0 === firstRow.length) {
-							firstRow = results.data[0];
-							return;
-						}
-
-						// Process data rows
-						var row = {};
-						$.each(firstRow, function( i, name ) {
-							row[name] = results.data[0][i];
-						});
-
-						data.push(row);
-
-						// Send batch for every 100 rows
-						if (100 === data.length) {
-							that.sendData(data,handle);
-						}
-					},
+					header: true,
 					complete: function(results, file) {
 						// Flush any remaining data
-						if (0 < data.length) {
-							that.sendData(data);
+						var batch = [];
+						$.each( results.data,function( i, data ) {
+							batch.push(data);
+							if (100 === batch.length ) {
+								that.sendData(batch);
+								batch = [];
+							}
+						});
+
+						// Send rest
+						if (0 < batch.length) {
+							that.sendData(batch);
 						}
 					},
 					error: function(err, file, inputElem, reason)
@@ -121,7 +109,6 @@
 
 			this.resetErrors();
 
-
 			if ($.trim(textarea.val())) {
 				Papa.parse( textarea.val(), config );
 			} else if ( window.FileReader && 0 < file[0].files.length ) {
@@ -131,34 +118,26 @@
 			}
 		},
 
-		sendData: function(data, handle) {
+		sendData: function(batch, handle) {
 			var that = this;
-			if(handle) {
-				handle.pause();
-			}
-
-			var batch = data;
 			if ( JSON ) {
-				batch = JSON.stringify(data);
+				batch = JSON.stringify(batch);
 			}
 
-			$.post(
-				ajaxurl,
-				{
+			$.ajax({
+				async: false,
+				url: ajaxurl,
+				data: {
 					action: this.element.data('action'),
 					data: batch,
 					mode: this.element.find('[name=mode]').val()
 				},
-				function(response) {
-					data = [];
-
+				dataType: 'json',
+				type: 'POST',
+				success: function(response) {
 					that.addErrors(response.data.errors);
-
-					if(handle) {
-						handle.resume();
-					}
 				}
-			);
+			});
 		},
 		addErrors: function(errors) {
 			var table = this.element.find('#errors').show().slideDown().find('tbody');

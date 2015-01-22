@@ -1,7 +1,6 @@
 <?php
 /**
- * Date: 15.01.15
- * Time: 17:45
+ * Exports posts
  */
 class CIE_Module_Posts_Exporter extends CIE_Exporter
 {
@@ -12,7 +11,7 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 			'user',
 			'usermeta',
 			'buddypress',
-			'attachment',
+			//'attachment', // @todo Implement attachment importing and exporting
 		);
 	}
 
@@ -20,6 +19,8 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 	{
 		return array(
 			'post_type',
+			'meta_key',
+			'meta_value',
 		);
 	}
 
@@ -42,8 +43,17 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 			'posts_per_page'       => $limit,
 			'offset'               => $offset,
 			'ignore_sticky_posts'  => true,
-
 		);
+
+		if ( ! empty( $search['meta_key'] ) ) {
+			$args['meta_key'] = $search['meta_key'];
+
+			if ( ! empty( $search['meta_value'] ) ) {
+				$args['meta_value'] = $search['meta_value'];
+			}
+		}
+
+		$args = apply_filters( 'cie_export_posts_args', $args );
 
 		$query = new WP_Query( $args );
 

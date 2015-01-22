@@ -80,3 +80,9 @@ if (!Array.prototype.indexOf) {
 		return -1;
 	};
 }
+
+if (!Date.now) {
+	console.log('filling');
+	Date.now = function() { return +new Date; };
+}
+

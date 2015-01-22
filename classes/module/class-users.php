@@ -1,7 +1,6 @@
 <?php
 /**
- * Date: 18.12.14
- * Time: 12:28
+ * Handles import and export
  */
 class CIE_Module_Users extends CIE_Module_Abstract
 {

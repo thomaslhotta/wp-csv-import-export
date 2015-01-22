@@ -37,24 +37,28 @@ class Module_Users_Adder_Test extends WP_UnitTestCase
 		$data = array(
 			array(
 				'ID' => $user_id_1,  // Should default to subscriber role, should fail because user already has subscriber role
+				'user_option_test' => 'user_1',
 			),
 			array(
-				'user_login' => 'u2',
-				'role'       => 'editor',
+				'user_login'       => 'u2',
+				'role'             => 'editor',
+				'user_option_test' => 'user_2',
 			),
 			array(
-				'user_email' => 'u3@email.com',
-				'role'       => 'administrator',
+				'user_email'       => 'u3@email.com',
+				'role'             => 'administrator',
+				'user_option_test' => 'user_3',
 			),
 			array(
-				'role'       => 'administrator', // Should fail because no id is provided
+				'role'             => 'administrator', // Should fail because no id is provided
+				'user_option_test' => 'user_3',
 			),
 		);
 
 		$result = $this->importer->import( $data, $this->importer->get_supported_mode() );
 
-		$this->assertCount( 2, $result['errors'] );
-		$this->assertEquals( 2, $result['imported'] );
+		$this->assertCount( 1, $result['errors'] );
+		$this->assertEquals( 3, $result['imported'] );
 
 		$user_1 = get_user_by( 'id', $user_id_1 );
 		$user_2 = get_user_by( 'id', $user_id_2 );
@@ -63,5 +67,9 @@ class Module_Users_Adder_Test extends WP_UnitTestCase
 		$this->assertContains( 'subscriber', $user_1->roles );
 		$this->assertContains( 'editor', $user_2->roles );
 		$this->assertContains( 'administrator', $user_3->roles );
+
+		$this->assertEquals( 'user_1', get_option( 'user_option_test_' . $user_id_1 ) );
+		$this->assertEquals( 'user_2', get_option( 'user_option_test_' . $user_id_2 ) );
+		$this->assertEquals( 'user_3', get_option( 'user_option_test_' . $user_id_3 ) );
 	}
 }

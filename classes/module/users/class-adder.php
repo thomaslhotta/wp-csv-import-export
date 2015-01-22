@@ -1,7 +1,5 @@
 <?php
 /**
- * Date: 13.01.15
- * Time: 12:08
  */
 class CIE_Module_Users_Adder extends CIE_Importer
 {
@@ -12,6 +10,13 @@ class CIE_Module_Users_Adder extends CIE_Importer
 				'columns'     => array( 'ID', 'user_login', 'user_email' ),
 				'description' => __( 'User ID, login name or email.', 'cie' )
 			)
+		);
+	}
+
+	public function get_supported_fields()
+	{
+		return array(
+			'option'
 		);
 	}
 
@@ -42,14 +47,10 @@ class CIE_Module_Users_Adder extends CIE_Importer
 				$role = $data['role'];
 			}
 
-			if ( in_array( $role, $user->roles ) ) {
-				$element->set_error(
-					sprintf( __( 'User has already been added with role "%s"', 'cie' ), strip_tags( $role ) )
-				);
-			} else {
-				$element->set_element( $user, $user->ID, $user->ID );
+			if ( ! in_array( $role, $user->roles ) ) {
 				$user->add_role( $role );
 			}
+			$element->set_element( $user, $user->ID, $user->ID );
 		} else {
 			$element->set_error( __( 'User could be found', 'cie' ) );
 		}

@@ -1,16 +1,27 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: tom
- * Date: 18.12.14
- * Time: 12:30
+ * Base class for modules
  */
 abstract class CIE_Module_Abstract
 {
+	/**
+	 * Registers admin menus
+	 */
 	public function register_menus() {}
 
+	/**
+	 * Registers AJAX handlers
+	 */
 	public function register_ajax() {}
 
+	/**
+	 * Renders the export UI
+	 *
+	 * @param array $fields
+	 * @param array $hidden_fields
+	 *
+	 * @return string
+	 */
 	public function render_export_ui( array $fields, array $hidden_fields = array() )
 	{
 		$html = '';
@@ -65,6 +76,13 @@ abstract class CIE_Module_Abstract
 		return $html;
 	}
 
+	/**
+	 * Renders the import UI
+	 *
+	 * @param $action
+	 *
+	 * @return string
+	 */
 	public function render_import_ui( $action )
 	{
 		$csv = '';

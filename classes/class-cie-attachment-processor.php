@@ -3,7 +3,7 @@
  * Processes attachments. 
  * 
  * Taken from the Wordpress Importer plugin.
- * 
+ * @todo Rewrite implementation
  * @author Thomas Lhotta
  * @author: wordpressdotorg
  *

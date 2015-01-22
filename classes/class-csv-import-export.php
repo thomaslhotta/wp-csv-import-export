@@ -19,49 +19,34 @@ class CSV_Import_Export {
 	 */
 	protected static $instance = null;
 
-	protected $plugin_slug = 'cie';
-
-	protected $modules = array();
-
 	/**
-	 * Slug of the plugin screen.
-	 *
-	 * @since    1.0.0
-	 * @var      array
+	 * @var array
 	 */
-	protected $plugin_screen_hook_suffix = array();
+	protected $modules = array();
 
 	/**
 	 * Initialize the plugin by loading admin scripts & styles and adding a
 	 * settings page and menu.
 	 */
 	private function __construct() {
-		// @todo Add capabilities
+		// @todo Add capabilities checking
 		if ( ! is_admin() || ! is_super_admin() ) {
 			return;
 		}
 
+		// Init auto loader
 		require __DIR__ . DIRECTORY_SEPARATOR . 'class-autoloader.php';
 		$autoloader = new CIE_Autoloader();
 		$autoloader->register();
 
 		add_action( 'network_admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'network_admin_menu', array( $this, 'admin_menu' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		add_action( 'admin_init', array( $this, 'load_plugin_textdomain' ) );
 
-		// Only allow ajax for super admins for now
-		if ( is_super_admin() ) {
-			add_action( 'wp_ajax_import_user', array( $this, 'display_user_import_page' ) );
-			add_action( 'wp_ajax_import_comments', array( $this, 'display_comment_import_page' ) );
-			add_action( 'wp_ajax_import_posts', array( $this, 'display_post_import_page' ) );
-
-			//add_action( 'wp_ajax_export_users', array( $this, 'display_user_export_page' ) );
-		}
-
+		// Register AJAX actions
 		foreach ( $this->get_modules() as $module ) {
 			$module->register_ajax();
 		}
@@ -85,17 +70,9 @@ class CSV_Import_Export {
 	}
 
 	/**
-	 * Returns the plugin slug
-	 * 
-	 * @return string
-	 */
-	public function get_plugin_slug()
-	{
-		return $this->plugin_slug;
-	}
-
-	/**
 	 * Load the plugin text domain for translation.
+	 *
+	 * @todo Improve conditional loading of text domain
 	 *
 	 * @since	1.0.0
 	 */
@@ -105,9 +82,8 @@ class CSV_Import_Export {
 			return;
 		}
 
-		$domain = $this->get_plugin_slug();
 		load_plugin_textdomain(
-			$domain,
+			'cie',
 			true,
 			basename( dirname( __DIR__ ) ) . '/lang/'
 		);
@@ -145,30 +121,31 @@ class CSV_Import_Export {
 		);
 
 		wp_register_script(
-			'cie-filesaver',
+			'blob.js',
 			plugins_url( $script_url . '/js/FileSaver.js' )
 		);
 
 		wp_register_script(
+			'cie-filesaver',
+			plugins_url( $script_url . '/js/blob.js' ),
+			array( 'blob.js' )
+		);
+
+		wp_register_script(
 			'cie-polyfill',
-			plugins_url( $script_url . '/js/polyfill.min.js' )
+			plugins_url( $script_url . '/js/polyfill.js' )
 		);
 
 		if ( empty( $this->plugin_screen_hook_suffix ) ) {
 			return;
 		}
-
-		$screen = str_replace( '-network', '', get_current_screen()->id );
-		if ( in_array( $screen, $this->plugin_screen_hook_suffix ) ) {
-			wp_enqueue_script( $this->plugin_slug .'-admin-script' );
-			wp_enqueue_script( $this->plugin_slug .'-filesaver' );
-			wp_enqueue_style(
-				$this->plugin_slug .'-jquery-ui',
-				'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css'
-			);
-		}
 	}
 
+	/**
+	 * Returns module objects
+	 *
+	 * @return array
+	 */
 	public function get_modules()
 	{
 		if ( empty( $this->modules ) ) {

@@ -1,7 +1,6 @@
 <?php
 /**
- * Date: 18.12.14
- * Time: 12:28
+ * Handles comments import and export
  */
 class CIE_Module_Comments extends CIE_Module_Abstract
 {
@@ -17,6 +16,12 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 		add_action( 'wp_ajax_export_comments', array( $this, 'process_ajax' ) );
 	}
 
+	/**
+	 * Adds comment export to every post
+	 *
+	 * @param         $post_type
+	 * @param WP_Post $post
+	 */
 	public function add_meta_boxes( $post_type, WP_Post $post )
 	{
 		// Only useful for posts that have comments

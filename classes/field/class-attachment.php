@@ -1,7 +1,7 @@
 <?php
 /**
- * Date: 16.01.15
- * Time: 17:37
+ * Handles attachment image import and export
+ * @todo Implement this
  */
 class CIE_Field_Attachment extends CIE_Field_Abstract
 {
