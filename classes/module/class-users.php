@@ -59,7 +59,7 @@ class CIE_Module_Users extends CIE_Module_Abstract
 			$this->render_export_ui(
 				$fields,
 				array(
-					'action'          => 'export_users'
+					'ajax-action' => 'export_users'
 				)
 			)
 		);

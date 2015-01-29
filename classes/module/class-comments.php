@@ -44,7 +44,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 			$fields,
 			array(
 				'search[post_id]' => $post->ID,
-				'action'          => 'export_comments'
+				'ajax-action'     => 'export_comments'
 			)
 		);
 	}

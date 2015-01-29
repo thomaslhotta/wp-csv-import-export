@@ -22,7 +22,7 @@
 		download: function() {
 			var element = this.element,
 				target = $(element.data('target')),
-			 	data = {},
+			 	data = { action: target.find('[name="ajax-action"]').val() },
 				csv = [];
 
 			target.find('input').each( function() {
@@ -128,7 +128,7 @@
 				async: false,
 				url: ajaxurl,
 				data: {
-					action: this.element.data('action'),
+					action: this.element.data('ajax-action'),
 					data: batch,
 					mode: this.element.find('[name=mode]').val()
 				},

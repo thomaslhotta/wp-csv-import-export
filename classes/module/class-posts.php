@@ -65,7 +65,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 
 		$hidden = array(
 			'search[post_type]' => $post_type,
-			'action'            => 'export_posts',
+			'ajax-action'       => 'export_posts',
 		);
 
 		foreach ( $searches as $name => $value ) {
