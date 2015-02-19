@@ -1,7 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: tom
+ * Exports comments
+ *
  * Date: 18.12.14
  * Time: 12:24
  */
@@ -9,18 +9,16 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter
 {
 	public function get_supported_fields()
 	{
-		return array (
+		return array(
 			'commentmeta',
 			'buddypress',
 			'user',
-			'usermeta'
+			'usermeta',
 		);
 	}
 
 	public function get_available_fields( array $search = array() )
 	{
-		global $wpdb;
-
 		$fields['comment'] = array(
 			'comment_ID'            => 'comment_ID',
 			'comment_post_ID'       => 'comment_post_ID',

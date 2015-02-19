@@ -115,9 +115,32 @@ class CSV_Import_Export {
 		);
 
 		wp_register_script(
+			'jszip-utils',
+			plugins_url( $script_url . '/js/jszip-utils.min.js' )
+		);
+
+		wp_register_script(
+			'jszip',
+			plugins_url( $script_url . '/js/jszip.min.js' ),
+			array( 'jszip-utils' )
+		);
+
+		wp_register_script(
+			'backbone-localstorage',
+			plugins_url( $script_url . '/js/backbone.localStorage-min.js' ),
+			array( 'backbone' )
+		);
+
+		wp_register_script(
+			'backbone-paginator',
+			plugins_url( $script_url . '/js/backbone.paginator.min.js' ),
+			array( 'backbone' )
+		);
+
+		wp_register_script(
 			'cie-admin-script',
 			plugins_url( $script_url . '/js/admin.js' ),
-			array( 'jquery-ui-progressbar', 'cie-filesaver', 'papaparse' )
+			array( 'jquery-ui-progressbar', 'cie-filesaver', 'papaparse', 'jszip', 'backbone-localstorage', 'backbone-paginator' )
 		);
 
 		wp_register_script(

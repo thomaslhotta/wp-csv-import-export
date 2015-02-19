@@ -9,11 +9,19 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 	public function register_menus()
 	{
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
+		add_comments_page(
+			__( 'Import CSV', 'cie' ),
+			__( 'Import CSV', 'cie' ),
+			'activate_plugins',
+			'export-comments',
+			array( $this, 'display_import_ui' )
+		);
 	}
 
 	public function register_ajax()
 	{
 		add_action( 'wp_ajax_export_comments', array( $this, 'process_ajax' ) );
+		add_action( 'wp_ajax_import_comments', array( $this, 'process_import' ) );
 	}
 
 	/**
@@ -44,9 +52,14 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 			$fields,
 			array(
 				'search[post_id]' => $post->ID,
-				'ajax-action'     => 'export_comments'
+				'ajax-action'     => 'export_comments',
 			)
 		);
+	}
+
+	public function display_import_ui()
+	{
+		echo $this->render_import_ui( 'import_comments' );
 	}
 
 	/**
@@ -65,5 +78,22 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 	{
 		$this->get_exporter()->process_ajax();
 		die();
+	}
+
+	/**
+	 * @return CIE_Importer
+	 */
+	public function get_importer()
+	{
+		if ( ! $this->exporter instanceof CIE_Importer ) {
+			$this->importer = new CIE_Module_Comments_Importer();
+		}
+
+		return $this->importer;
+	}
+
+	public function process_import()
+	{
+		$this->get_importer()->import_json();
 	}
 }

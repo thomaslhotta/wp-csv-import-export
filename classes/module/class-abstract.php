@@ -52,14 +52,14 @@ abstract class CIE_Module_Abstract
 			);
 		}
 
-		foreach( $hidden_fields as $name => $value ) {
-			$html .= sprintf( '<input type="hidden" name="%s" value="%s">', esc_attr( $name ), esc_attr( $value ) );
-		}
-
 		$html = sprintf(
 			'<table class="form-table">%s</table>',
 			$html
 		);
+
+		foreach ( $hidden_fields as $name => $value ) {
+			$html .= sprintf( '<input type="hidden" name="%s" value="%s">', esc_attr( $name ), esc_attr( $value ) );
+		}
 
 		$html = sprintf(
 			'<div id="export-settings">%s</div>',
@@ -67,8 +67,13 @@ abstract class CIE_Module_Abstract
 		);
 
 		$html .= sprintf(
-			'<button class="button-secondary" data-toggle="export" data-target="#export-settings">%s</button>',
+			'<button type="button" class="button-secondary export" data-toggle="export" data-target="#export-settings">%s</button>',
 			__( 'Export' )
+		);
+
+		$html = sprintf(
+			'<div id="csv-export">%s</div>',
+			$html
 		);
 
 		wp_enqueue_script( 'cie-admin-script' );
@@ -89,7 +94,7 @@ abstract class CIE_Module_Abstract
 		$csv_valid = true;
 		if ( ! empty( $_FILES['csv'] ) && check_admin_referer( 'upload-csv', 'nonce' ) ) {
 			$finfo = finfo_open( FILEINFO_MIME_TYPE );
-			finfo_file($finfo, $_FILES['csv']['tmp_name']);
+			finfo_file( $finfo, $_FILES['csv']['tmp_name'] );
 			$csv_valid = 0 === strpos( finfo_file( $finfo, $_FILES['csv']['tmp_name'] ), 'text/' );
 
 			if ( $csv_valid ) {
@@ -115,7 +120,7 @@ abstract class CIE_Module_Abstract
 			$html .= sprintf(
 				'<h2 class="nav-tab-wrapper"><a href="%s" class="nav-tab%s">%s</a><a href="%s" class="nav-tab%s">%s</a></h2>',
 				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_IMPORT, $url )  ),
-			    CIE_Importer::MODE_IMPORT === $mode ? ' nav-tab-active' : '',
+				CIE_Importer::MODE_IMPORT === $mode ? ' nav-tab-active' : '',
 				__( 'Import', 'cie' ),
 				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_UPDATE, $url )  ),
 				CIE_Importer::MODE_UPDATE === $mode  ? ' nav-tab-active' : '',

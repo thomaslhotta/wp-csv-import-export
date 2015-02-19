@@ -46,7 +46,7 @@ abstract class CIE_Exporter extends CIE_Processor
 
 	public function process_ajax()
 	{
-		$fields           = $_POST['fields'];
+		$fields           = $_REQUEST['fields'];
 
 		// Sanitize given field names to export
 		$sanitized_fields = array();
@@ -61,40 +61,47 @@ abstract class CIE_Exporter extends CIE_Processor
 		// Sanitized search fields if any are given
 		$search = array();
 		foreach ( $this->get_available_searches() as $search_key ) {
-			if ( ! empty( $_POST['search'] ) && ! empty( $_POST['search'][ $search_key ] ) ) {
-				$search[ $search_key ] = $_POST['search'][ $search_key ];
+			if ( ! empty( $_REQUEST['search'] ) && ! empty( $_REQUEST['search'][ $search_key ] ) ) {
+				$search[ $search_key ] = $_REQUEST['search'][ $search_key ];
 			}
 		}
 
-		$offset = 0;
-		if ( ! empty( $_POST['offset'] ) && is_numeric( $_POST['offset'] ) ) {
-			$offset = intval( $_POST['offset'] );
+		$limit = 100;
+		if ( isset( $_REQUEST['per_page'] ) && is_numeric( $_REQUEST['per_page'] ) && $_REQUEST['per_page'] <= $limit ) {
+			$limit = intval( $_REQUEST['per_page'] );
 		}
 
-		$limit = 100;
-		if ( ! empty( $_POST['limit'] ) && is_numeric( $_POST['limit'] ) ) {
-			$limit = intval( $_POST['limit'] );
+		$page = 1;
+		if ( ! empty( $_REQUEST['page'] ) && is_numeric( $_REQUEST['page'] ) ) {
+			$page = $_REQUEST['page'];
 		}
 
 		// Export
-		$this->print_export( $sanitized_fields, $search, $offset, $limit );
+		$this->print_export( $sanitized_fields, $search, $page, $limit );
 	}
 
-	public function print_export( $sanitized_fields, $search = array(), $offset = '', $limit = '' )
+	public function print_export( $sanitized_fields, $search = array(), $page = 1, $per_page = 100 )
 	{
-		$elements = $this->get_main_elements( $search, $offset, $limit );
+		$offset = $per_page * ( intval( $page ) - 1 );
+		if ( 0 > $offset ) {
+			$offset = 0;
+		}
+
+		$elements = $this->get_main_elements( $search, $offset, $per_page );
 		$total = $elements['total'];
 		$elements = $elements['elements'];
 
 		$first_row = $this->create_first_row( $sanitized_fields );
 
-		header('Content-Type: application/json');
+
+		header( 'Content-Type: application/json' );
 
 		// We build our own JSON to be able to use flush()
 		printf(
-			'{"total":%d,"offset":%d,"elements":[',
+			'[{"total_entries":%d,"page":%d, "per_page":%d}, [',
 			$total,
-			$offset
+			$page,
+			100
 		);
 
 		$not_first = false;
@@ -112,14 +119,13 @@ abstract class CIE_Exporter extends CIE_Processor
 			}
 
 			$row_data = apply_filters( 'cie_export_row', $row_data, $search, $sanitized_fields, $first_row );
-
-			echo json_encode( $row_data );
+			echo json_encode( $row_data, JSON_UNESCAPED_UNICODE );
 
 			// Flush every row
 			flush();
 		}
 
-		echo ']}';
+		echo ']]';
 	}
 
 	/**
@@ -184,7 +190,7 @@ abstract class CIE_Exporter extends CIE_Processor
 		// Sanitize output
 		foreach ( $row as $key => $value ) {
 			if ( is_array( $value ) ) {
-				$value = join( ';', $value );
+				$value = implode( ';', $value );
 			}
 			$row[ $key ] = htmlspecialchars_decode( $value );
 		}

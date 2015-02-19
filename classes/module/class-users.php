@@ -51,7 +51,7 @@ class CIE_Module_Users extends CIE_Module_Abstract
 
 	public function display_user_export_page()
 	{
-		$fields = $this->get_exporter()->get_available_fields( array( ) );
+		$fields = $this->get_exporter()->get_available_fields( array() );
 
 		printf(
 			'<div class="wrap"><h2>%s</h2>%s</div>',
@@ -59,7 +59,7 @@ class CIE_Module_Users extends CIE_Module_Abstract
 			$this->render_export_ui(
 				$fields,
 				array(
-					'ajax-action' => 'export_users'
+					'ajax-action' => 'export_users',
 				)
 			)
 		);
