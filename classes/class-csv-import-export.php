@@ -109,9 +109,8 @@ class CSV_Import_Export {
 		$script_url = basename( dirname( dirname( __FILE__ ) ) );
 
 		wp_register_script(
-			'cie-admin-script',
-			plugins_url( $script_url . '/js/admin.js' ),
-			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'zip-ext.js' )
+			'cie-polyfill',
+			plugins_url( $script_url . '/js/polyfill.min.js' )
 		);
 
 		wp_register_script(

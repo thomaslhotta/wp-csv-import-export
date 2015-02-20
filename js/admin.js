@@ -8,18 +8,18 @@
 	var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem;
 
 	var createTempFile = function (callback) {
-			var tmpFilename = 'tmp.zip';
-			requestFileSystem( TEMPORARY, 4 * 1024 * 1024 * 1024, function( filesystem ) {
-				function create() {
-					filesystem.root.getFile(tmpFilename, {
-						create : true
-					}, function(zipFile) {
-						callback(zipFile);
-					});
-				}
-				filesystem.root.getFile( tmpFilename, null, function() {}, create);
-			});
-		};
+		var tmpFilename = 'tmp.zip';
+		requestFileSystem( TEMPORARY, 4 * 1024 * 1024 * 1024, function( filesystem ) {
+			var create = function() {
+				filesystem.root.getFile(tmpFilename, {
+					create : true
+				}, function(zipFile) {
+					callback(zipFile);
+				});
+			}
+			filesystem.root.getFile( tmpFilename, null, function(entry) { entry.remove(create, create); }, create);
+		});
+	};
 
 	var getLocation = function(href) {
 		var l = document.createElement("a");
@@ -377,11 +377,11 @@
 
 			this.model.getPage(page).done(function(){
 				that.addElements( that.model );
-					if (that.model.hasNextPage()) {
-						that.exportCSV();
-					} else {
-						that.saveCSV();
-					}
+				if (that.model.hasNextPage()) {
+					that.exportCSV();
+				} else {
+					that.saveCSV();
+				}
 			});
 		},
 		/**
@@ -455,7 +455,7 @@
 		 */
 		appendError: function( model ) {
 			var row = $( '<tr>' ),
-			    ul = $( '<ul>' );
+				ul = $( '<ul>' );
 
 			row.append( $( '<td>' ).text( model.get( 'row' ) ) );
 
@@ -500,7 +500,7 @@
 				textarea = this.$el.find( 'textarea' ),
 				file = this.$el.find( 'input[type=file]' ),
 
-				// CSV Parser configuration
+			// CSV Parser configuration
 				config = {
 					header: true,
 					complete: function(results, file) {
@@ -573,7 +573,7 @@
 		}
 	});
 
-	// Instanciate views
+	// Instantiates views
 
 	var importPage = $( '#csv-import-form' );
 	if ( 0 < importPage.length ) {
@@ -605,4 +605,3 @@
 		$( this ).checkAll();
 	});
 })(jQuery, document);
-
