@@ -11,7 +11,7 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 			'user',
 			'usermeta',
 			'buddypress',
-			//'attachment', // @todo Implement attachment importing and exporting
+			'attachment',
 		);
 	}
 
@@ -43,6 +43,9 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 			'posts_per_page'       => $limit,
 			'offset'               => $offset,
 			'ignore_sticky_posts'  => true,
+			'post_status'          => 'any',
+			'orderby'              => 'ID',
+			'order'                => 'ASC',
 		);
 
 		if ( ! empty( $search['meta_key'] ) ) {
@@ -54,13 +57,16 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 		}
 
 		$args = apply_filters( 'cie_export_posts_args', $args );
-
 		$query = new WP_Query( $args );
 
 		$return = array(
 			'total'    => $query->found_posts,
 			'elements' => array(),
 		);
+
+		if ( 0 === $limit ) {
+			return $return;
+		}
 
 		foreach ( $query->get_posts() as $post ) {
 			$element = new CIE_Element();

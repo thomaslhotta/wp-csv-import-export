@@ -109,15 +109,38 @@ class CSV_Import_Export {
 		$script_url = basename( dirname( dirname( __FILE__ ) ) );
 
 		wp_register_script(
+			'cie-admin-script',
+			plugins_url( $script_url . '/js/admin.js' ),
+			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'zip-ext.js' )
+		);
+
+		wp_register_script(
 			'papaparse',
 			plugins_url( $script_url . '/js/papaparse.min.js' ),
 			array( 'cie-polyfill' )
 		);
 
 		wp_register_script(
-			'cie-admin-script',
-			plugins_url( $script_url . '/js/admin.js' ),
-			array( 'jquery-ui-progressbar', 'cie-filesaver', 'papaparse' )
+			'zip.js',
+			plugins_url( $script_url . '/js/zip.js/zip.js' )
+		);
+
+		wp_register_script(
+			'zip-ext.js',
+			plugins_url( $script_url . '/js/zip.js/zip-ext.js' ),
+			array( 'zip.js' )
+		);
+
+		wp_register_script(
+			'backbone-localstorage',
+			plugins_url( $script_url . '/js/backbone.localStorage.min.js' ),
+			array( 'backbone' )
+		);
+
+		wp_register_script(
+			'backbone-paginator',
+			plugins_url( $script_url . '/js/backbone.paginator.min.js' ),
+			array( 'backbone' )
 		);
 
 		wp_register_script(
@@ -132,13 +155,10 @@ class CSV_Import_Export {
 		);
 
 		wp_register_script(
-			'cie-polyfill',
-			plugins_url( $script_url . '/js/polyfill.js' )
+			'cie-admin-script',
+			plugins_url( $script_url . '/js/admin.js' ),
+			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'zip-ext.js' )
 		);
-
-		if ( empty( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
 	}
 
 	/**

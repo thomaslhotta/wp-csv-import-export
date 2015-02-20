@@ -18,10 +18,14 @@ class CIE_Field_Attachment extends CIE_Field_Abstract
 			return array();
 		}
 
+		if ( 'attachment' === $element->get_element()->post_type ) {
+			return array( array(  $element->get_element()->guid ) );
+		}
+
 		foreach ( get_attached_media( $element->get_element(), 'image' ) as $attachment ) {
 			$url = wp_get_attachment_url( $attachment );
 			if ( $url ) {
-				$urls[] = $url;
+				$urls[ $attachment->ID ] = $url;
 			}
 		}
 

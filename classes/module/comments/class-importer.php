@@ -1,7 +1,6 @@
 <?php
 /**
- * Date: 08.01.15
- * Time: 16:28
+ * Imports comments
  */
 class CIE_Module_Comments_Importer extends CIE_Importer
 {
@@ -14,6 +13,13 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		return self::MODE_BOTH;
 	}
 
+	public function get_supported_fields()
+	{
+		return array(
+			'commentmeta',
+		);
+	}
+
 	public function get_required_fields( $mode )
 	{
 		if ( parent::MODE_UPDATE === $mode ) {
@@ -21,10 +27,9 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 				array(
 					'columns'     => array( 'comment_ID' ),
 					'description' => __( 'Comment ID.', 'cie' )
-				)
+				),
 			);
 		}
-
 
 		return array(
 			array(
@@ -64,9 +69,6 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 			$element->set_error( __( 'Could not find parent post', 'cie' ) );
 			return $element;
 		}
-
-
-
 
 		// Find comment parent
 		if ( ! empty( $data['comment_parent'] ) ) {
@@ -141,7 +143,6 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		}
 
 		return intval( $post->ID );
-
 	}
 
 	/**

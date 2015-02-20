@@ -33,7 +33,7 @@ class CIE_Module_Users_Creator extends CIE_Importer
 		return array(
 			'buddypress',
 			'usermeta',
-			'option'
+			'option',
 		);
 	}
 
@@ -49,7 +49,7 @@ class CIE_Module_Users_Creator extends CIE_Importer
 				array(
 					'columns'     => array( 'ID', 'user_login', 'user_email' ),
 					'description' => __( 'User ID, login name or email.', 'cie' )
-				)
+				),
 			);
 		}
 
@@ -65,7 +65,7 @@ class CIE_Module_Users_Creator extends CIE_Importer
 			array(
 				'columns'     => array( 'user_pass' ),
 				'description' => __( 'Hashed user passwords', 'cie' )
-			)
+			),
 		);
 	}
 

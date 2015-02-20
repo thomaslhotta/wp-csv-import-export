@@ -23,7 +23,7 @@ class CIE_Field_Commentmeta extends CIE_Field_Abstract
 		$meta_keys = $wpdb->get_results( $sql, ARRAY_N );
 
 		$return = array();
-		foreach( $meta_keys as $meta_key ) {
+		foreach ( $meta_keys as $meta_key ) {
 			$return[ $meta_key[0] ] = $meta_key[0];
 		}
 
@@ -34,7 +34,7 @@ class CIE_Field_Commentmeta extends CIE_Field_Abstract
 	{
 		$data = array();
 		foreach ( $fields as $field_id ) {
-			$data[] = get_comment_meta( $element->get_element_id(), $field_id, true ) ;
+			$data[] = get_comment_meta( $element->get_element_id(), $field_id, true );
 		}
 		return $data;
 	}
@@ -49,7 +49,7 @@ class CIE_Field_Commentmeta extends CIE_Field_Abstract
 
 			$field_id = str_replace( 'meta_', '', $field_id );
 
-			if ( ! update_comment_meta( $element->get_user_id(), $field_id, $value ) ) {
+			if ( ! update_comment_meta( $element->get_element_id(), $field_id, $value ) ) {
 				$errors[] = sprintf(
 					__( 'User comment value %s could not be set', 'cie' ),
 					strip_tags( $value )

@@ -36,7 +36,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 			__( 'Export CSV', 'cie' ),
 			__( 'Export CSV', 'cie' ),
 			'activate_plugins',
-			'export-' . $post_type . '',
+			'export-media',
 			array( $this, 'display_post_export_page' )
 		);
 
