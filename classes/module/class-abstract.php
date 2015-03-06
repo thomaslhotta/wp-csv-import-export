@@ -78,6 +78,7 @@ abstract class CIE_Module_Abstract
 
 		wp_enqueue_script( 'cie-admin-script' );
 
+
 		return $html;
 	}
 

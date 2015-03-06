@@ -158,6 +158,8 @@ class CSV_Import_Export {
 			plugins_url( $script_url . '/js/admin.js' ),
 			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'zip-ext.js' )
 		);
+
+		wp_localize_script( 'cie-admin-script', 'zipJsWorkerScriptsPath', plugins_url( $script_url . '/js/zip.js/' ) );
 	}
 
 	/**

@@ -27,7 +27,7 @@
 		return l.pathname.replace('admin.js','');
 	};
 
-	zip.workerScriptsPath = getLocation( document.currentScript.src ) + 'zip.js/';
+	zip.workerScriptsPath = zipJsWorkerScriptsPath;
 
 	wp.csvie = {
 		model: {},
