@@ -44,6 +44,8 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 			'offset'               => $offset,
 			'ignore_sticky_posts'  => true,
 			'post_status'          => 'any',
+			'orderby'              => 'ID',
+			'order'                => 'ASC',
 		);
 
 		if ( ! empty( $search['meta_key'] ) ) {

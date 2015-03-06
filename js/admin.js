@@ -1,85 +1,85 @@
 // the semi-colon before the function invocation is a safety
 // net against concatenated scripts and/or other plugins
 // that are not closed properly.
-;(function ( $, window, document, undefined ) {
+;(function ( $, Backbone, window, document, wp, zip, undefined ) {
 	"use strict";
 
-	/**
-	 * Register ajax transports for blob send/recieve and array buffer send/receive via XMLHttpRequest Level 2
-	 * within the comfortable framework of the jquery ajax request, with full support for promises.
-	 *
-	 * Notice the +* in the dataType string? The + indicates we want this transport to be prepended to the list
-	 * of potential transports (so it gets first dibs if the request passes the conditions within to provide the
-	 * ajax transport, preventing the standard transport from hogging the request), and the * indicates that
-	 * potentially any request with any dataType might want to use the transports provided herein.
-	 *
-	 * Remember to specify 'processData:false' in the ajax options when attempting to send a blob or arraybuffer -
-	 * otherwise jquery will try (and fail) to convert the blob or buffer into a query string.
-	 */
-	$.ajaxTransport("+*", function(options, originalOptions, jqXHR){
-		// Test for the conditions that mean we can/want to send/receive blobs or arraybuffers - we need XMLHttpRequest
-		// level 2 (so feature-detect against window.FormData), feature detect against window.Blob or window.ArrayBuffer,
-		// and then check to see if the dataType is blob/arraybuffer or the data itself is a Blob/ArrayBuffer
-		if (window.FormData && ((options.dataType && (options.dataType === 'blob' || options.dataType === 'arraybuffer')) ||
-			(options.data && ((window.Blob && options.data instanceof Blob) ||
-			(window.ArrayBuffer && options.data instanceof ArrayBuffer)))
-			))
-		{
-			return {
-				/**
-				 * Return a transport capable of sending and/or receiving blobs - in this case, we instantiate
-				 * a new XMLHttpRequest and use it to actually perform the request, and funnel the result back
-				 * into the jquery complete callback (such as the success function, done blocks, etc.)
-				 *
-				 * @param headers
-				 * @param completeCallback
-				 */
-				send: function(headers, completeCallback){
-					var xhr = new XMLHttpRequest(),
-						url = options.url || window.location.href,
-						type = options.type || 'GET',
-						dataType = options.dataType || 'text',
-						data = options.data || null,
-						async = options.async || true,
-						key;
+	// Setup zip.js
+	var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem;
 
-					xhr.addEventListener('load', function(){
-						var response = {}, status, isSuccess;
+	var createTempFile = function (callback) {
+		var tmpFilename = 'tmp.zip';
+		requestFileSystem( TEMPORARY, 4 * 1024 * 1024 * 1024, function( filesystem ) {
+			var create = function() {
+				filesystem.root.getFile(tmpFilename, {
+					create : true
+				}, function(zipFile) {
+					callback(zipFile);
+				});
+			}
+			filesystem.root.getFile( tmpFilename, null, function(entry) { entry.remove(create, create); }, create);
+		});
+	};
 
-						isSuccess = xhr.status >= 200 && xhr.status < 300 || xhr.status === 304;
+	var getLocation = function(href) {
+		var l = document.createElement("a");
+		l.href = href;
+		return l.pathname.replace('admin.js','');
+	};
 
-						if (isSuccess) {
-							response[dataType] = xhr.response;
-						} else {
-							// In case an error occured we assume that the response body contains
-							// text data - so let's convert the binary data to a string which we can
-							// pass to the complete callback.
-							response.text = String.fromCharCode.apply(null, new Uint8Array(xhr.response));
-						}
-
-						completeCallback(xhr.status, xhr.statusText, response, xhr.getAllResponseHeaders());
-					});
-
-					xhr.open(type, url, async);
-					xhr.responseType = dataType;
-
-					for (key in headers) {
-						if (headers.hasOwnProperty(key)) xhr.setRequestHeader(key, headers[key]);
-					}
-					xhr.send(data);
-				},
-				abort: function(){
-					jqXHR.abort();
-				}
-			};
-		}
-	});
-
+	zip.workerScriptsPath = getLocation( document.currentScript.src ) + 'zip.js/';
 
 	wp.csvie = {
 		model: {},
 		view: {}
 	};
+
+	/**
+	 * Http File Reader for zip.js
+	 *
+	 * It is based on the HttpReader of zip.js, but does not rely on the Content-Length header. This makes it work
+	 * with Google Pagespeed
+	 *
+	 * @param url
+	 * @constructor
+	 */
+	var HttpReaderGet = function(url) {
+		var that = this,
+			error = false;
+
+		function getData(callback, onerror) {
+			if ( that.error ) {
+				return onerror();
+			}
+			callback();
+		}
+
+		function init(callback, onerror) {
+			var request = new XMLHttpRequest();
+
+			request.addEventListener("load", function() {
+				that.data = new Uint8Array(request.response);
+				that.size = that.data.length
+				callback();
+			}, false);
+			request.addEventListener("error", onerror, false);
+			request.open("GET", url);
+			request.responseType = "arraybuffer";
+			request.send();
+		}
+
+		function readUint8Array(index, length, callback, onerror) {
+			getData(function() {
+				callback(new Uint8Array(that.data.subarray(index, index + length)));
+			}, onerror);
+		}
+
+		that.size = 0;
+		that.init = init;
+		that.readUint8Array = readUint8Array;
+	}
+	HttpReaderGet.prototype = new zip.Reader();
+	HttpReaderGet.prototype.constructor = HttpReaderGet;
 
 	/**
 	 * Model for handling and persisting settings
@@ -93,9 +93,15 @@
 		}
 	});
 
+	/**
+	 * Errors of a single row/element
+	 */
 	wp.csvie.model.Error = Backbone.Model.extend({
 	});
 
+	/**
+	 * Errors collection
+	 */
 	wp.csvie.model.Errors = Backbone.Collection.extend({
 		model : wp.csvie.model.Error
 	});
@@ -104,40 +110,38 @@
 	 * Model that holds a single element that is to be converted to a CSV row
 	 */
 	wp.csvie.model.Element = Backbone.Model.extend({
-		defaults: {
-			blobs: {}
-		},
 		/**
-		 * Fetchs attachments of the current element as array buffers
+		 * Fetches attachments of the current element as array buffers
+		 *
+		 * @todo Error handling when downloading attachment fails
 		 * @returns {*}
 		 */
 		getAttachments: function() {
-			var that = this,
-				calls = [],
+			var calls = [],
 				deferred = $.Deferred();
 
-			if ( this.get('Attachments') ) {
+			if ( this.get( 'Attachments' ) ) {
 				_.each( this.get( 'Attachments' ).split( ';' ), function( url ) {
-					if( 'https:' === window.location.protocol ){
+					// Use HTTPS if available
+					if ( 'https:' === window.location.protocol ) {
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					calls.push($.ajax({
-						dataType:'arraybuffer',
-						type:'GET',
-						url: url,
-						async: false,
-						success: function( data ) {
-							// Use the name of the current image as index
-							that.get( 'blobs' )[ url.replace( /^.*[\\\/]/, '' ) ] = data;
-						}
-					}));
+					var callback = $.Deferred();
+					// Use the file name from the url
+
+					this.collection.zipWriter.add( url.replace( /^.*[\\\/]/, '' ), new HttpReaderGet( url ) , function () {
+						callback.resolve();
+					}, function(){}, { level: 0 });
+
+					calls.push( callback.promise() );
 				}, this );
 
 				// Resolve the current defer once all
-				$.when.apply( $, calls ).done(function() {
+				$.when.apply( $, calls ).always(function() {
 					deferred.resolve( this );
 				});
+
 			} else {
 				deferred.resolve( this );
 			}
@@ -163,7 +167,6 @@
 			// Setup correct url
 			this.url = ajaxurl + '?action=' + options.settings.get( 'ajax-action' );
 		},
-
 		/**
 		 * Overwrites original fetch to process all elements after loading
 		 * @param options
@@ -206,6 +209,10 @@
 				this.processElementsDeferred.resolve();
 			}
 			return this;
+		},
+		reset: function() {
+			this.state.currentPage = 0;
+			return Backbone.PageableCollection.prototype.reset.apply( this );
 		}
 	});
 
@@ -274,13 +281,15 @@
 					return;
 				}
 
-				if ( input.is(':checkbox') ) {
-					input.prop('checked',true);
+				if ( input.is( ':checkbox' ) ) {
+					input.prop( 'checked', true );
 					return;
 				}
 
 				that.model.set( input.attr( 'name' ), input.val() );
 			});
+
+			return this;
 		},
 		/**
 		 * Read and store settings
@@ -290,9 +299,9 @@
 				id = this.model.id;
 
 			// Reset model and restore id
-			this.model.clear().set('id', id);
+			this.model.clear().set( 'id', id );
 
-			this.$el.find('input').each( function() {
+			this.$el.find( 'input' ).each( function() {
 				var input = $( this );
 				if ( input.is( ':checkbox' ) && !input.prop( 'checked' ) ) {
 					return;
@@ -302,6 +311,7 @@
 			});
 
 			this.model.save();
+			return this;
 		}
 	});
 
@@ -320,7 +330,7 @@
 		 * @returns {wp.csvie.view.Progress}
 		 */
 		render: function() {
-			this.$el.text( ' (' + this.model.getPercent() + '%)');
+			this.$el.text( ' (' + this.model.getPercent() + '%)' );
 			this.$el.parent().prop( 'disabled', true );
 			return this;
 		},
@@ -331,6 +341,7 @@
 			this.model.clear();
 			this.$el.text('');
 			this.$el.parent().prop( 'disabled', false );
+			return this;
 		}
 	});
 
@@ -339,11 +350,10 @@
 	 */
 	wp.csvie.view.View = Backbone.View.extend({
 		events: {
-			'click .export': 'exportCSV'
+			'click .export': 'startExport'
 		},
 		initialize: function() {
 			this.csv = [];
-			this.attachments = null;
 
 			// Initialize settings
 			this.settingsView = new wp.csvie.view.Settings({
@@ -373,6 +383,35 @@
 			} );
 		},
 		/**
+		 * Starts the CSV export
+		 *
+		 * @returns {wp.csvie.view.View}
+		 */
+		startExport: function() {
+			var that = this;
+			// If attachments should be exported start the ZIP saving process
+			if ( this.settingsView.model.get( 'fields[attachment][attachment_attachments]' ) ) {
+				if ( requestFileSystem ) {
+					// If available use temporary file
+					createTempFile( function( tmpFilename ) {
+						zip.createWriter(new zip.FileWriter( tmpFilename ), function( writer ) {
+							that.model.zipWriter = writer;
+							that.exportCSV();
+						});
+					});
+				} else {
+					// Else use blobs
+					zip.createWriter(new zip.BlobWriter(), function( writer ) {
+						that.model.zipWriter = writer;
+						that.exportCSV();
+					});
+				}
+			} else {
+				this.exportCSV();
+			}
+			return this;
+		},
+		/**
 		 * Runs CSV export
 		 */
 		exportCSV: function() {
@@ -386,11 +425,11 @@
 
 			this.model.getPage(page).done(function(){
 				that.addElements( that.model );
-					if (that.model.hasNextPage()) {
-						that.exportCSV();
-					} else {
-						that.saveCSV();
-					}
+				if (that.model.hasNextPage()) {
+					that.exportCSV();
+				} else {
+					that.saveCSV();
+				}
 			});
 		},
 		/**
@@ -400,71 +439,71 @@
 		 * @returns {wp.csvie.view.View}
 		 */
 		addElements: function( collection ) {
-			var that = this;
-			$.each( collection.models, function() {
-				that.addAttachments( this.get( 'blobs' ) );
-			});
-
 			$.merge( this.csv,collection.toJSON() );
-			return this;
-		},
-		/**
-		 * A
-		 *
-		 * @param attachments
-		 * @returns {wp.csvie.view.View}
-		 */
-		addAttachments: function( attachments ){
-			if ($.isEmptyObject( attachments ) ) {
-				return this;
-			}
-
-			if ( !this.attachments ) {
-				this.attachments = new JSZip();
-			}
-
-			var that = this;
-			$.each( attachments, function( name,blob ) {
-				that.attachments.file( 'attachments/'+ name, blob );
-			});
-
 			return this;
 		},
 		/**
 		 * Saves the current export
 		 */
 		saveCSV: function() {
-			var name = 'export.csv',
-				csv  = Papa.unparse( this.csv),
-				blob;
+			var name = 'export',
+				csv  = Papa.unparse( this.csv );
 
-			if ( this.attachments ) {
-				// If attachments where downloaded save the files as zip
-				this.attachments.file( name, csv );
-				name = name + '.zip';
-				blob = this.attachments.generate( { type:'blob' } );
+			if ( this.model.zipWriter ) {
+				var that = this;
+				this.model.zipWriter.add( name + '.csv', new zip.TextReader( csv ), function() {
+					that.model.zipWriter.close( function( blob ) {
+						saveAs( blob, name + '.zip' );
+						that.progressView.reset();
+					});
+				});
+
 			} else {
-				// Else save as namel text
-				 blob = new Blob([ csv ], { type: 'text/csv;charset=utf-8' });
+				// Else save as csv
+				saveAs( new Blob( [ csv ], { type: 'text/csv;charset=utf-8' } ), name + '.csv' );
+				this.reset();
 			}
-			saveAs(blob,name);
-
+		},
+		/**
+		 * Resets the export view
+		 *
+		 * @returns {wp.csvie.view.View}
+		 */
+		reset: function() {
+			this.csv = [];
+			this.model.reset();
 			this.progressView.reset();
+			return this;
 		}
 	});
 
+	/**
+	 * Handles errors display
+	 */
 	wp.csvie.view.Errors = Backbone.View.extend({
 		initialize: function() {
 			this.model = new wp.csvie.model.Errors();
 			this.model.on( 'add', _.bind( this.appendError, this ) );
 		},
+		/**
+		 * Resets the progress indicator
+		 *
+		 * @returns {wp.csvie.view.Errors}
+		 */
 		reset: function() {
 			this.model.reset();
 			this.$el.hide().find( 'tr' ).remove();
+			return this;
 		},
+		/**
+		 * Appends an error to the current list
+		 *
+		 * @param model
+		 * @returns {wp.csvie.view.Errors}
+		 */
 		appendError: function( model ) {
 			var row = $( '<tr>' ),
-			    ul = $( '<ul>' );
+				ul = $( '<ul>' );
 
 			row.append( $( '<td>' ).text( model.get( 'row' ) ) );
 
@@ -474,10 +513,9 @@
 			row.append( $( '<td>' ).append( ul ) );
 
 			this.$el.show().find('table').append(row);
+			return this;
 		}
-
 	});
-
 
 	/**
 	 * Main view for CSV import export
@@ -501,12 +539,16 @@
 
 			this.$el.find( 'button' ).append( this.progressView.$el );
 		},
+		/**
+		 * Starts CSV import
+		 * @param e
+		 */
 		importCSV: function(e) {
 			var that = this,
 				textarea = this.$el.find( 'textarea' ),
 				file = this.$el.find( 'input[type=file]' ),
 
-				// CSV Parser configuration
+			// CSV Parser configuration
 				config = {
 					header: true,
 					complete: function(results, file) {
@@ -533,9 +575,13 @@
 			} else if ( window.FileReader && 0 < file[0].files.length ) {
 				file.parse( { config:config } );
 			} else {
+				// @todo Translate this
 				alert ('No file selected' );
 			}
 		},
+		/**
+		 * Sends data by iterating over this.elements
+		 */
 		sendData: function() {
 			var that = this,
 				batch;
@@ -552,7 +598,7 @@
 				data: {
 					action: this.$el.data( 'action' ),
 					data: batch,
-					mode: this.$el.find('[name=mode]').val()
+					mode: this.$el.find( '[name=mode]' ).val()
 				},
 				dataType: 'json',
 				type: 'POST',
@@ -575,6 +621,8 @@
 		}
 	});
 
+	// Instantiates views
+
 	var importPage = $( '#csv-import-form' );
 	if ( 0 < importPage.length ) {
 		var view = new wp.csvie.view.ImportView({
@@ -588,20 +636,20 @@
 			el: exportPage
 		});
 	}
-})(jQuery, window, document );
+
+})(jQuery, Backbone, window, document, wp, zip );
 
 (function ( $, document ) {
 	"use strict";
 	$.fn['checkAll'] = function () {
 		return this.each(function () {
-			var target = $(this).data('target');
-			$(target).find('input[type=checkbox]').prop('checked',$(this).prop('checked')).trigger('change');
+			var target = $( this ).data( 'target' );
+			$( target ).find( 'input[type=checkbox]' ).prop( 'checked', $( this ).prop( 'checked' ) ).trigger( 'change' );
 		});
 	};
 
 	// Data API
-	$(document).on('click', '[data-toggle="checked"]', function() {
-		$(this).checkAll();
+	$(document).on( 'click', '[data-toggle="checked"]', function() {
+		$( this ).checkAll();
 	});
 })(jQuery, document);
-

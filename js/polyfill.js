@@ -82,7 +82,6 @@ if (!Array.prototype.indexOf) {
 }
 
 if (!Date.now) {
-	console.log('filling');
 	Date.now = function() { return +new Date; };
 }
 

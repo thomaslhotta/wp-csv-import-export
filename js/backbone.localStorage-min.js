@@ -84,7 +84,6 @@
 		// have an id of it's own.
 		create: function(model) {
 			if (!model.id && model.id !== 0) {
-				console.log( 'creating guid' );
 				model.id = guid();
 				model.set(model.idAttribute, model.id);
 			}

@@ -49,12 +49,11 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_2->ID, 'post_type' => 'page' ) );
 	}
 
-
 	public function test_get_main_elements()
 	{
 		$elements = $this->exporter->get_main_elements(
 			array(
-				'post_type' => 'post'
+				'post_type' => 'post',
 			),
 			0,
 			100
@@ -65,17 +64,17 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 
 		$this->check_posts( $elements, 'post' );
 
-		$this->assertEquals( $elements['elements'][3]->get_user_id(), $this->user_1->ID );
-		$this->assertEquals( $elements['elements'][2]->get_user_id(), $this->user_2->ID );
-		$this->assertEquals( $elements['elements'][1]->get_user_id(), $this->user_3->ID );
-		$this->assertEquals( $elements['elements'][0]->get_user_id(), $this->user_4->ID );
+		$this->assertEquals( $elements['elements'][0]->get_user_id(), $this->user_1->ID );
+		$this->assertEquals( $elements['elements'][1]->get_user_id(), $this->user_2->ID );
+		$this->assertEquals( $elements['elements'][2]->get_user_id(), $this->user_3->ID );
+		$this->assertEquals( $elements['elements'][3]->get_user_id(), $this->user_4->ID );
 	}
 
 	public function test_get_main_elements_offset()
 	{
 		$elements = $this->exporter->get_main_elements(
 			array(
-				'post_type' => 'post'
+				'post_type' => 'post',
 			),
 			1,
 			2
@@ -86,8 +85,8 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 
 		$this->check_posts( $elements, 'post' );
 
-		$this->assertEquals( $elements['elements'][1]->get_user_id(), $this->user_2->ID );
-		$this->assertEquals( $elements['elements'][0]->get_user_id(), $this->user_3->ID );
+		$this->assertEquals( $elements['elements'][0]->get_user_id(), $this->user_2->ID );
+		$this->assertEquals( $elements['elements'][1]->get_user_id(), $this->user_3->ID );
 	}
 
 	public function test_process_row()
@@ -97,18 +96,18 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 
 		$fields = array(
 			'post' => array(
-				'ID'          => 'ID' ,
+				'ID'          => 'ID',
 				'post_title'  => 'post_title',
 				'post_author' => 'post_author',
 			),
 			'user' => array(
-				'ID' => 'ID'
+				'ID' => 'ID',
 			),
 			'buddypress' => array(
 				'1' => 'Name',
 			),
 			'usermeta' => array(
-				'user_meta_2' => 'user_meta_2'
+				'user_meta_2' => 'user_meta_2',
 			),
 		);
 
