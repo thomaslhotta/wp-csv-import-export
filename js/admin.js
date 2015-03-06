@@ -21,12 +21,6 @@
 		});
 	};
 
-	var getLocation = function(href) {
-		var l = document.createElement("a");
-		l.href = href;
-		return l.pathname.replace('admin.js','');
-	};
-
 	zip.workerScriptsPath = zipJsWorkerScriptsPath;
 
 	wp.csvie = {
@@ -122,15 +116,16 @@
 
 			if ( this.get( 'Attachments' ) ) {
 				_.each( this.get( 'Attachments' ).split( ';' ), function( url ) {
+					var callback = $.Deferred(),
+						// Follow the Wordpress structure for directory naming
+						name = url.split('/').slice( -3 ).join('/');
+
 					// Use HTTPS if available
 					if ( 'https:' === window.location.protocol ) {
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					var callback = $.Deferred();
-					// Use the file name from the url
-
-					this.collection.zipWriter.add( url.replace( /^.*[\\\/]/, '' ), new HttpReaderGet( url ) , function () {
+					this.collection.zipWriter.add( name, new HttpReaderGet( url ) , function () {
 						callback.resolve();
 					}, function(){}, { level: 0 });
 
