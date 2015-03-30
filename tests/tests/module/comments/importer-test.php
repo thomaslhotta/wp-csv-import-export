@@ -218,7 +218,7 @@ class Module_Comments_Creator_Test extends WP_UnitTestCase {
 			'comment_author'       => 'Author',
 			'comment_author_email' => 'email' . $post->ID . '@mail.com',
 			'comment_content'      => sprintf( 'Comment 1 on post %d', $post->ID ),
-			'comment_parent'       => 999
+			'comment_parent'       => 999,
 		);
 
 		$element = $this->importer->create_element( $data, CIE_Module_Comments_Importer::MODE_IMPORT );

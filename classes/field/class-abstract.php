@@ -32,4 +32,33 @@ abstract class CIE_Field_Abstract
 	 * @return array
 	 */
 	abstract public function set_field_values( array $fields, CIE_Element $element );
+
+	public function extract_meta( array $fields )
+	{
+		$meta_fields = array();
+		foreach ( $fields as $key => $value ) {
+			if ( 0 !== strpos( $key, 'meta_' ) ) {
+				continue;
+			}
+			$meta_fields[ str_replace( 'meta_', '', $key ) ] = $value;
+		}
+
+		$meta_to_set = array();
+		foreach ( $meta_fields as $key => $value ) {
+			// Ignore empty values that are not 0
+			if ( ! is_numeric( $value ) && empty( $value ) ) {
+				continue;
+			}
+
+			$matches = array();
+			if ( 1 === preg_match( '/(.*)\[(\d*)\]$/', $key, $matches ) ) {
+				$meta_to_set[ $matches[1] ][ intval( $matches[2] ) ] = $value;
+				continue;
+			}
+
+			$meta_to_set[ $key ] = $value;
+		}
+
+		return $meta_to_set;
+	}
 }

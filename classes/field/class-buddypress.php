@@ -62,7 +62,17 @@ class CIE_Field_Buddypress extends CIE_Field_Abstract
 				continue;
 			}
 
-   			$name = str_replace( 'bp_', '', $name );
+			$name = str_replace( 'bp_', '', $name );
+
+			if ( ! is_numeric( $name ) ) {
+				$name = xprofile_get_field_id_from_name( $name );
+			}
+
+			$field = xprofile_get_field( $name );
+			if ( 'checkbox' === $field->type ) {
+				$value = explode( ';', $value );
+			}
+
 			if ( ! xprofile_set_field_data( $name, $element->get_user_id(), $value ) ) {
 				$errors[] = sprintf(
 					__( 'BuddyPress profile field "%s" could not be set', 'cie' ),

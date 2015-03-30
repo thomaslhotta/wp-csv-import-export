@@ -174,6 +174,7 @@ class CSV_Import_Export {
 				'comments' => new CIE_Module_Comments(),
 				'users' => new CIE_Module_Users(),
 				'posts' => new CIE_Module_Posts(),
+				'gforms' => new CIE_Module_Gforms(),
 			);
 		}
 

@@ -42,21 +42,34 @@ class CIE_Field_Commentmeta extends CIE_Field_Abstract
 	public function set_field_values( array $fields, CIE_Element $element )
 	{
 		$errors = array();
+
+		$fields = $this->extract_meta( $fields );
+
 		foreach ( $fields as $field_id => $value ) {
-			if ( 0 !== strpos( $field_id, 'meta_' ) ) {
-				continue;
-			}
+			$field_id = apply_filters( 'cie_import_comment_meta_key', $field_id, $value, $element );
 
-			$field_id = str_replace( 'meta_', '', $field_id );
+			$value = apply_filters( 'cie_import_comment_meta_value_' . $field_id, $value, $element );
 
-			if ( ! update_comment_meta( $element->get_element_id(), $field_id, $value ) ) {
-				$errors[] = sprintf(
-					__( 'User comment value %s could not be set', 'cie' ),
-					strip_tags( $value )
-				);
+
+			if ( is_array( $value ) ) {
+				foreach ( array_reverse( $value ) as $v ) {
+					if ( ! add_comment_meta( $element->get_element_id(), $field_id, $v ) ) {
+						$errors[] = sprintf(
+							__( 'User comment value %s could not be set', 'cie' ),
+							strip_tags( $v )
+						);
+					}
+				}
+			} else {
+				if ( ! update_comment_meta( $element->get_element_id(), $field_id, $value ) ) {
+					$errors[] = sprintf(
+						__( 'User comment value %s could not be set', 'cie' ),
+						strip_tags( $value )
+					);
+				}
 			}
 		}
-
+		
 		return $errors;
 	}
 }
