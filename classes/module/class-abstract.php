@@ -184,6 +184,7 @@ abstract class CIE_Module_Abstract
 			$html
 		);
 
+		$html .= sprintf( '<input name="mode" value="%d" type="hidden">', $mode );
 
 		// Import button
 		$html .= sprintf(

@@ -138,6 +138,7 @@ abstract class CIE_Importer extends CIE_Processor
 	public function check_required_fields( array $row, array $required )
 	{
 		$errors = array();
+
 		foreach ( $required as $missing ) {
 			$found = false;
 			foreach ( $missing['columns'] as $column ) {
@@ -146,6 +147,8 @@ abstract class CIE_Importer extends CIE_Processor
 					break;
 				}
 			}
+
+
 
 			// Required field was found
 			if ( $found ) {
