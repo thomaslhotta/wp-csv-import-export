@@ -42,10 +42,13 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter
 		return $fields;
 	}
 
-	public function get_available_searches()
+	public function get_available_searches( array $search = array() )
 	{
 		return array(
-			'post_id',
+			'post'        => array(
+				'post_id' => 'post_id',
+			),
+			'commentmeta' => $this->get_field_type_object( 'commentmeta' )->get_searchable_fields( $search ),
 		);
 	}
 
@@ -56,8 +59,19 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter
 			'number' => $limit,
 		);
 
-		if ( ! empty( $search['post_id'] ) ) {
-			$query_args['post_id'] = $search['post_id'];
+		if ( ! empty( $search['post'] ) ) {
+			if ( ! empty( $search['post']['post_id'] ) ) {
+				$query_args['post_id'] = $search['post']['post_id'];
+			}
+		}
+
+		if ( ! empty( $search['commentmeta'] ) ) {
+			foreach ( $search['commentmeta'] as $key => $value ) {
+				$query_args['meta_query'][] = array(
+					'key'   => $key,
+					'value' => $value,
+				);
+			}
 		}
 
 		$query = new WP_Comment_Query();
@@ -70,7 +84,8 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter
 		$total = $query->query( $query_args );
 
 		$return = array(
-			'total' => $total,
+			'total'    => $total,
+			'elements' => array(),
 		);
 
 		foreach ( $comments as $comment ) {

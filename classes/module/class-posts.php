@@ -59,22 +59,19 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 			$post_type = $_GET['post_type'];
 		}
 
+		$searches['post']['post_type'] = $post_type;
+
 		$fields = $this->get_exporter()->get_available_fields(
-			array( 'post_type' => $post_type )
+			$searches
 		);
 
-		$hidden = array(
-			'search[post_type]' => $post_type,
-			'ajax-action'       => 'export_posts',
-		);
-
-		foreach ( $searches as $name => $value ) {
-			$hidden[ 'search[' . $name . ']' ] = $value;
-		}
+		$hidden['search']      = $searches;
+		$hidden['ajax-action'] = 'export_posts';
 
 		echo $this->render_export_ui(
 			$fields,
-			$hidden
+			$hidden,
+			$this->get_exporter()->get_available_searches( $searches )
 		);
 	}
 

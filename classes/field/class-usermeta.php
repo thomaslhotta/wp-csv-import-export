@@ -5,27 +5,43 @@
  */
 class CIE_Field_Usermeta extends CIE_Field_Abstract
 {
+	protected $ignored_keys = array(
+		'metabox',
+		'meta-box',
+		'closedpostboxes',
+		'screen_layout',
+	);
+
 	public function get_available_fields( array $search = array() )
 	{
 		global $wpdb;
 
-		if ( ! empty( $search['post_type'] ) ) {
-			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' WHERE user_id IN ( ';
-			$sql .= 'SELECT post_author FROM ' . $wpdb->posts . ' WHERE post_type = %s )';
-			$sql = $wpdb->prepare( $sql, $search['post_type'] );
-		} elseif( ! empty( $search['post_id'] ) ) {
-			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' AS m INNER JOIN ' . $wpdb->comments . ' AS c '
-				 . 'ON c.comment_post_ID = %d AND m.user_id = c.user_id';
-			$sql = $wpdb->prepare( $sql, $search['post_id'] );
-		} else {
-			$sql = $sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta;
+		$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta;
+
+		if ( ! empty( $search['post'] ) ) {
+			if ( ! empty( $search['post']['post_type'] ) ) {
+				$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' WHERE user_id IN ( ';
+				$sql .= 'SELECT post_author FROM ' . $wpdb->posts . ' WHERE post_type = %s )';
+				$sql = $wpdb->prepare( $sql, $search['post']['post_type'] );
+			} elseif ( ! empty( $search['post']['post_id'] ) ) {
+				$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' AS m INNER JOIN ' . $wpdb->comments . ' AS c '
+				       . 'ON c.comment_post_ID = %d AND m.user_id = c.user_id';
+				$sql = $wpdb->prepare( $sql, $search['post']['post_id'] );
+			}
 		}
 
 		$meta_keys = $wpdb->get_results( $sql, ARRAY_N );
 
 		$return = array();
-		foreach( $meta_keys as $meta_key ) {
+		foreach ( $meta_keys as $meta_key ) {
 			$meta_key = $meta_key[0];
+
+			foreach ( $this->ignored_keys as $ignored ) {
+				if ( 0 === strpos( $meta_key, $ignored ) ) {
+					continue 2;
+				}
+			}
+
 			$blog_prefix = 'wp_' . get_current_blog_id() . '_';
 			if ( ! is_network_admin() && 0 === strpos( $meta_key, 'wp_' ) && 0 !== strpos( $meta_key, $blog_prefix ) ) {
 				continue;
@@ -34,6 +50,7 @@ class CIE_Field_Usermeta extends CIE_Field_Abstract
 			$return[ $meta_key ] = $meta_key;
 		}
 
+
 		return $return;
 	}
 
@@ -41,7 +58,7 @@ class CIE_Field_Usermeta extends CIE_Field_Abstract
 	{
 		$data = array();
 		foreach ( $fields as $field_id ) {
-			$data[] = get_user_meta( $element->get_user_id(), $field_id, true ) ;
+			$data[] = get_user_meta( $element->get_user_id(), $field_id, true );
 		}
 		return $data;
 	}

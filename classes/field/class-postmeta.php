@@ -9,26 +9,38 @@ class CIE_Field_Postmeta extends CIE_Field_Abstract
 	{
 		global $wpdb;
 
-		if ( ! empty( $search['post_type'] ) ) {
-			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->postmeta . ' WHERE post_id IN ( ';
-			$sql .= 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = %s )';
-			$sql = $wpdb->prepare( $sql, $search['post_type'] );
-		} elseif( ! empty( $search['post_id'] ) ) {
-			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' WHERE post_id = %d ';
-			$sql = $wpdb->prepare( $sql, $search['post_id'] );
-		} else {
-			$sql = $sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->postmeta;
+		$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->postmeta;
+
+		if ( ! empty( $search['post'] ) ) {
+			if ( ! empty( $search['post']['post_type'] ) ) {
+				$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->postmeta . ' WHERE post_id IN ( ';
+				$sql .= 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = %s )';
+				$sql = $wpdb->prepare( $sql, $search['post']['post_type'] );
+			} elseif ( ! empty( $search['post']['post_id'] ) ) {
+				$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta . ' WHERE post_id = %d ';
+				$sql = $wpdb->prepare( $sql, $search['post']['post_id'] );
+			}
 		}
 
 		$meta_keys = $wpdb->get_results( $sql, ARRAY_N );
 
 		$return = array();
-		foreach( $meta_keys as $meta_key ) {
+		foreach ( $meta_keys as $meta_key ) {
 			$meta_key = $meta_key[0];
 			$return[ $meta_key ] = $meta_key;
 		}
 
 		return $return;
+	}
+
+	public function get_searchable_fields( array $search = array() )
+	{
+		$searches = array();
+		foreach ( $this->get_available_fields( $search ) as $search ) {
+			$searches[ $search ] = $search;
+		}
+
+		return $searches;
 	}
 
 	public function get_field_values( array $fields, CIE_Element $element )
@@ -47,7 +59,7 @@ class CIE_Field_Postmeta extends CIE_Field_Abstract
 		foreach ( $fields as $field_id ) {
 			$value = '';
 			if ( is_numeric( $id ) ) {
-				$value = get_post_meta( $id, $field_id, true ) ;
+				$value = get_post_meta( $id, $field_id, true );
 			}
 
 			$data[] = $value;

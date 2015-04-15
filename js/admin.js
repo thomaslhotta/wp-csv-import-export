@@ -153,7 +153,7 @@
 		model: wp.csvie.model.Element,
 		mode: 'server',
 		state: {
-			pageSize: 100,
+			pageSize: 1000,
 			currentPage: 1
 		},
 		initialize: function( models, options ){
@@ -281,7 +281,7 @@
 					return;
 				}
 
-				that.model.set( input.attr( 'name' ), input.val() );
+				input.val( settings[ input.attr( 'name' ) ] );
 			});
 
 			return this;
@@ -302,7 +302,9 @@
 					return;
 				}
 
-				that.model.set( input.attr( 'name' ), input.val() );
+				if ( input.val() ) {
+					that.model.set( input.attr( 'name' ), input.val() );
+				}
 			});
 
 			this.model.save();

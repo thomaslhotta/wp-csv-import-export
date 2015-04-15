@@ -39,7 +39,7 @@ abstract class CIE_Exporter extends CIE_Processor
 	 *
 	 * @return array
 	 */
-	public function get_available_searches()
+	public function get_available_searches( array $searches = array() )
 	{
 		return array();
 	}
@@ -58,15 +58,12 @@ abstract class CIE_Exporter extends CIE_Processor
 			}
 		}
 
-		// Sanitized search fields if any are given
 		$search = array();
-		foreach ( $this->get_available_searches() as $search_key ) {
-			if ( ! empty( $_REQUEST['search'] ) && ! empty( $_REQUEST['search'][ $search_key ] ) ) {
-				$search[ $search_key ] = $_REQUEST['search'][ $search_key ];
-			}
+		if ( ! empty( $_REQUEST['search'] ) ) {
+			$search = $_REQUEST['search'];
 		}
 
-		$limit = 100;
+		$limit = 1000;
 		if ( isset( $_REQUEST['per_page'] ) && is_numeric( $_REQUEST['per_page'] ) && $_REQUEST['per_page'] <= $limit ) {
 			$limit = intval( $_REQUEST['per_page'] );
 		}
@@ -101,7 +98,7 @@ abstract class CIE_Exporter extends CIE_Processor
 			'[{"total_entries":%d,"page":%d, "per_page":%d}, [',
 			$total,
 			$page,
-			100
+			$per_page
 		);
 
 		$not_first = false;

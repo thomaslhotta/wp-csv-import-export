@@ -11,13 +11,13 @@ class CIE_Field_Commentmeta extends CIE_Field_Abstract
 	{
 		global $wpdb;
 
-		if ( empty( $search['post_id'] ) ) {
+		if ( empty( $search['post']['post_id'] ) || empty( $search['post']['post_id'] ) ) {
 			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->commentmeta;
 		} else {
 			$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->commentmeta . ' WHERE comment_id IN ( ';
 			$sql .= 'SELECT comment_ID FROM ' . $wpdb->comments . ' WHERE comment_post_ID = %d )';
 
-			$sql = $wpdb->prepare( $sql, $search['post_id'] );
+			$sql = $wpdb->prepare( $sql, $search['post']['post_id'] );
 		}
 
 		$meta_keys = $wpdb->get_results( $sql, ARRAY_N );
@@ -28,6 +28,11 @@ class CIE_Field_Commentmeta extends CIE_Field_Abstract
 		}
 
 		return $return;
+	}
+
+	public function get_searchable_fields( array $search = array() )
+	{
+		return $this->get_available_fields( $search );
 	}
 
 	public function get_field_values( array $fields, CIE_Element $element )

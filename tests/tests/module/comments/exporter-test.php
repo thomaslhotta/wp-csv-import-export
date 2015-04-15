@@ -45,14 +45,13 @@ class Module_Comments_Exporter_Test extends WP_UnitTestCase
 				'user_email' => 'user3@email.com',
 				'user_pass'  => 'pw3',
 				'comments'   => array( $post_3, $post_3 )
-			)
-
+			),
 		);
 
 		foreach ( $users as $key => $user ) {
 			$id = wp_create_user( $user['user_login'], $user['user_pass'], $user['user_email'] );
 			$user['ID'] = $id;
-			$this->users[$id] = $user;
+			$this->users[ $id ] = $user;
 
 			foreach ( $user['comments'] as $post_id ) {
 				$comment = $this->factory->comment->create_and_get(
@@ -80,15 +79,39 @@ class Module_Comments_Exporter_Test extends WP_UnitTestCase
 
 	public function test_get_for_post()
 	{
-		$elements = $this->exporter->get_main_elements( array( 'post_id' => $this->posts[0] ), 0, 100 );
+		$elements = $this->exporter->get_main_elements(
+			array(
+				'post' => array(
+					'post_id' => $this->posts[0],
+				)
+			),
+			0,
+			100
+		);
 		$this->assertEquals( 1 , $elements['total'] );
 		$this->check_comments( $elements['elements'], $this->posts[0] );
 
-		$elements = $this->exporter->get_main_elements( array( 'post_id' => $this->posts[1] ), 0, 100 );
+		$elements = $this->exporter->get_main_elements(
+			array(
+				'post' => array(
+					'post_id' => $this->posts[1],
+				)
+			),
+			0,
+			100
+		);
 		$this->assertEquals( 3 , $elements['total'] );
 		$this->check_comments( $elements['elements'], $this->posts[1] );
 
-		$elements = $this->exporter->get_main_elements( array( 'post_id' => $this->posts[2] ), 0, 100 );
+		$elements = $this->exporter->get_main_elements(
+			array(
+				'post' => array(
+					'post_id' => $this->posts[2],
+				)
+			),
+			0,
+			100
+		);
 		$this->assertEquals( 5 , $elements['total'] );
 		$this->check_comments( $elements['elements'], $this->posts[2] );
 	}
@@ -104,13 +127,17 @@ class Module_Comments_Exporter_Test extends WP_UnitTestCase
 		}
 
 		// Check if all meta key that where set are available
-		foreach( $this->posts as $post_id ) {
+		foreach ( $this->posts as $post_id ) {
 			$this->assertContains( 'comment_post_meta' . $post_id , $fields['commentmeta'] );
 		}
 
 		// Check if only the meta keys for a specific post are available
-		foreach( $this->posts as $post_id ) {
-			$fields = $this->exporter->get_available_fields( array( 'post_id' => $post_id ) );
+		foreach ( $this->posts as $post_id ) {
+			$fields = $this->exporter->get_available_fields(
+				array(
+					'post' => array( 'post_id' => $post_id ),
+				)
+			);
 			$this->assertEquals(
 				array( 'comment_post_meta' . $post_id => 'comment_post_meta' . $post_id ),
 				$fields['commentmeta']
@@ -118,6 +145,10 @@ class Module_Comments_Exporter_Test extends WP_UnitTestCase
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 * @todo finish
+	 */
 	public function test_export_row()
 	{
 		$fields = $this->exporter->get_available_fields();
@@ -128,7 +159,6 @@ class Module_Comments_Exporter_Test extends WP_UnitTestCase
 		$element->set_element( $comment, $comment->comment_ID, $comment->user_id );
 
 		$result = $this->exporter->create_row( $element, $fields );
-
 
 	}
 

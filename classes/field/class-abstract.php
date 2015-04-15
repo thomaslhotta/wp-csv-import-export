@@ -61,4 +61,9 @@ abstract class CIE_Field_Abstract
 
 		return $meta_to_set;
 	}
+
+	public function get_searchable_fields()
+	{
+		return array();
+	}
 }

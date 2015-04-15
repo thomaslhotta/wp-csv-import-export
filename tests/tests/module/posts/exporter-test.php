@@ -53,7 +53,9 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 	{
 		$elements = $this->exporter->get_main_elements(
 			array(
-				'post_type' => 'post',
+				'post' => array(
+					'post_type' => 'post',
+				),
 			),
 			0,
 			100
@@ -74,7 +76,9 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 	{
 		$elements = $this->exporter->get_main_elements(
 			array(
-				'post_type' => 'post',
+				'post' => array(
+					'post_type' => 'post',
+				),
 			),
 			1,
 			2

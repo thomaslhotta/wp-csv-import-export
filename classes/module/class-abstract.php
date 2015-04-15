@@ -22,8 +22,10 @@ abstract class CIE_Module_Abstract
 	 *
 	 * @return string
 	 */
-	public function render_export_ui( array $fields, array $hidden_fields = array() )
+	public function render_export_ui( array $fields, array $hidden_fields = array(), array $searchable = array() )
 	{
+		$hidden_fields = $this->flatten_hidden( $hidden_fields );
+
 		$html = '';
 		foreach ( $fields as $group_name => $group ) {
 			$options = '';
@@ -49,6 +51,30 @@ abstract class CIE_Module_Abstract
 				__( 'All' ),
 				$id,
 				$options
+			);
+		}
+
+		$search_html = '';
+		foreach ( $searchable as $group => $fields ) {
+			foreach ( $fields as $id => $label ) {
+				$key = sprintf( 'search[%s][%s]', esc_attr( $group ), esc_attr( $id ) );
+				if ( array_key_exists( $key, $hidden_fields ) ) {
+					// Don't show search fields for keys that are already present as hidden values
+					continue;
+				}
+
+				$search_html .= sprintf(
+					'<tr><td>%s</td><td><input name="%s" type="text"></td></tr>',
+					esc_html( $label ),
+					$key
+				);
+			}
+		}
+
+		if ( ! empty( $search_html ) ) {
+			$html .= sprintf(
+				'<tr><th>Search</th><td><table>%s</table></td></tr>',
+				$search_html
 			);
 		}
 
@@ -80,6 +106,31 @@ abstract class CIE_Module_Abstract
 
 
 		return $html;
+	}
+
+	public function flatten_hidden( array $hidden )
+	{
+		$return = array();
+
+		foreach ( $hidden as $k1 => $v1 ) {
+			if ( is_array( $v1 ) ) {
+				foreach ( $v1 as $k2 => $v2 ) {
+					$key = $k1 .  '[' . $k2 . ']';
+					dump( $key );
+					if ( is_array( $v2 ) ) {
+						foreach ( $v2 as $k3 => $v3 ) {
+							$return[ $key . '[' . $k3 . ']' ] = $v3;
+						}
+					} else {
+						$return[ $key ] = $v2;
+					}
+				}
+			} else {
+				$return[ $k1 ] = $v1;
+			}
+		}
+
+		return $return;
 	}
 
 	/**

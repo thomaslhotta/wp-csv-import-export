@@ -51,14 +51,22 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 
 	public function display_metabox( WP_Post $post )
 	{
-		$fields = $this->get_exporter()->get_available_fields( array( 'post_id' => $post->ID ) );
+		$search = array(
+			'post' => array(
+				'post_id' => $post->ID,
+			),
+		);
+
+		$fields = $this->get_exporter()->get_available_fields( $search );
+
 
 		echo $this->render_export_ui(
 			$fields,
 			array(
-				'search[post_id]' => $post->ID,
-				'ajax-action'     => 'export_comments',
-			)
+				'search'      => $search,
+				'ajax-action' => 'export_comments',
+			),
+			$this->get_exporter()->get_available_searches( $search )
 		);
 	}
 

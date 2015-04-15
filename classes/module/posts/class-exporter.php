@@ -15,12 +15,11 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 		);
 	}
 
-	public function get_available_searches()
+	public function get_available_searches( array $searches = array() )
 	{
 		return array(
-			'post_type',
-			'meta_key',
-			'meta_value',
+			'post' => array( 'post_type' => 'post_type' ),
+			'postmeta' => $this->get_field_type_object( 'postmeta' )->get_searchable_fields( $searches )
 		);
 	}
 
@@ -28,7 +27,7 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 	{
 		$post = new WP_Post( new stdClass() );
 
-		foreach  ( array_keys( get_object_vars( $post ) ) as $field ) {
+		foreach ( array_keys( get_object_vars( $post ) ) as $field ) {
 			$fields['post'][ $field ] = $field;
 		}
 
@@ -38,8 +37,12 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 
 	public function get_main_elements( array $search, $offset, $limit )
 	{
+		if ( empty( $search['post'] ) || empty( $search['post']['post_type'] ) ) {
+			throw new Exception( 'No post type provided.' );
+		}
+
 		$args = array(
-			'post_type'            => $search['post_type'],
+			'post_type'            => $search['post']['post_type'],
 			'posts_per_page'       => $limit,
 			'offset'               => $offset,
 			'ignore_sticky_posts'  => true,
@@ -48,11 +51,12 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 			'order'                => 'ASC',
 		);
 
-		if ( ! empty( $search['meta_key'] ) ) {
-			$args['meta_key'] = $search['meta_key'];
-
-			if ( ! empty( $search['meta_value'] ) ) {
-				$args['meta_value'] = $search['meta_value'];
+		if ( ! empty( $search['postmeta'] ) ) {
+			foreach ( $search['postmeta'] as $key => $value ) {
+				$args['meta_query'][] = array(
+					'key'   => $key,
+					'value' => $value,
+				);
 			}
 		}
 
@@ -68,10 +72,14 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 			return $return;
 		}
 
-		foreach ( $query->get_posts() as $post ) {
+		$posts = apply_filters( 'cie_export_posts', $query->get_posts(), $args );
+
+		foreach ( $posts as $post ) {
 			$element = new CIE_Element();
 			$return['elements'][] = $element->set_element( $post, $post->ID, $post->post_author );
 		}
+
+		$return = apply_filters( 'cie_export_posts_elements', $return, $args );
 
 		return $return;
 	}
