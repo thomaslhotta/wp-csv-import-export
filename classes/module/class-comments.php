@@ -13,8 +13,16 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 			__( 'Import CSV', 'cie' ),
 			__( 'Import CSV', 'cie' ),
 			'activate_plugins',
-			'export-comments',
+			'import-comments',
 			array( $this, 'display_import_ui' )
+		);
+
+		add_comments_page(
+			__( 'Export CSV', 'cie' ),
+			__( 'Export CSV', 'cie' ),
+			'activate_plugins',
+			'export-comments',
+			array( $this, 'display_export_ui' )
 		);
 	}
 
@@ -73,6 +81,19 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 	public function display_import_ui()
 	{
 		echo $this->render_import_ui( 'import_comments' );
+	}
+
+	public function display_export_ui()
+	{
+		$fields = $this->get_exporter()->get_available_fields();
+
+		echo $this->render_export_ui(
+			$fields,
+			array(
+				'ajax-action' => 'export_comments',
+			),
+			$this->get_exporter()->get_available_searches()
+		);
 	}
 
 	/**

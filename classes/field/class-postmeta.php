@@ -3,7 +3,7 @@
  * Date: 16.01.15
  * Time: 12:21
  */
-class CIE_Field_Postmeta extends CIE_Field_Abstract
+class CIE_Field_Postmeta extends CIE_Field_Meta
 {
 	public function get_available_fields( array $search = array() )
 	{
@@ -55,16 +55,13 @@ class CIE_Field_Postmeta extends CIE_Field_Abstract
 			$id = $element->comment_post_ID;
 		}
 
-
-		foreach ( $fields as $field_id ) {
-			$value = '';
-			if ( is_numeric( $id ) ) {
-				$value = get_post_meta( $id, $field_id, true );
+		if ( ! is_numeric( $id ) ) {
+			foreach ( $fields as $field_id ) {
+				$data[] = '';
 			}
-
-			$data[] = $value;
 		}
-		return $data;
+
+		return $this->get_meta_values( $fields, 'post', $id );
 	}
 
 	public function set_field_values( array $fields, CIE_Element $element )

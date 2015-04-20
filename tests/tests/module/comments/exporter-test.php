@@ -64,7 +64,6 @@ class Module_Comments_Exporter_Test extends WP_UnitTestCase
 				$this->comments[ $comment->comment_ID ] = $comment;
 
 				update_comment_meta( $comment->comment_ID, 'comment_post_meta' . $post_id, 'value' );
-
 			}
 		}
 	}

@@ -5,7 +5,7 @@
  * Date: 08.01.15
  * Time: 15:42
  */
-class CIE_Field_Commentmeta extends CIE_Field_Abstract
+class CIE_Field_Commentmeta extends CIE_Field_Meta
 {
 	public function get_available_fields( array $search = array() )
 	{
@@ -37,11 +37,7 @@ class CIE_Field_Commentmeta extends CIE_Field_Abstract
 
 	public function get_field_values( array $fields, CIE_Element $element )
 	{
-		$data = array();
-		foreach ( $fields as $field_id ) {
-			$data[] = get_comment_meta( $element->get_element_id(), $field_id, true );
-		}
-		return $data;
+		return $this->get_meta_values( $fields, 'comment', $element->get_element_id() );
 	}
 
 	public function set_field_values( array $fields, CIE_Element $element )

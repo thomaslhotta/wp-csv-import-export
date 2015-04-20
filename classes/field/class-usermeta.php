@@ -3,7 +3,7 @@
  * Date: 08.01.15
  * Time: 15:42
  */
-class CIE_Field_Usermeta extends CIE_Field_Abstract
+class CIE_Field_Usermeta extends CIE_Field_Meta
 {
 	protected $ignored_keys = array(
 		'metabox',
@@ -56,11 +56,7 @@ class CIE_Field_Usermeta extends CIE_Field_Abstract
 
 	public function get_field_values( array $fields, CIE_Element $element )
 	{
-		$data = array();
-		foreach ( $fields as $field_id ) {
-			$data[] = get_user_meta( $element->get_user_id(), $field_id, true );
-		}
-		return $data;
+		return $this->get_meta_values( $fields, 'user', $element->get_user_id() );
 	}
 
 	public function set_field_values( array $fields, CIE_Element $element )
