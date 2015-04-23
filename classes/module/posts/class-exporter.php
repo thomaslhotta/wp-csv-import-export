@@ -53,6 +53,9 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter
 
 		if ( ! empty( $search['postmeta'] ) ) {
 			foreach ( $search['postmeta'] as $key => $value ) {
+				if ( empty( $value ) ) {
+					continue;
+				}
 				$args['meta_query'][] = array(
 					'key'   => $key,
 					'value' => $value,
