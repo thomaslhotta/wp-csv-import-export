@@ -10,12 +10,15 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 
 	public function register_menus()
 	{
+		$import = __( 'Import CSV', 'cie' );
+		$export = __( 'Export CSV', 'cie' );
+
 		// Import/Export Posts
 		foreach ( get_post_types() as $post_type ) {
 			$slugs[] = add_submenu_page(
 				'edit.php?post_type=' . $post_type,
-				__( 'Import CSV', 'cie' ),
-				__( 'Import CSV', 'cie' ),
+				$import,
+				$import,
 				'activate_plugins',
 				'import-' . $post_type . '',
 				array( $this, 'display_post_import_page' )
@@ -23,8 +26,8 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 
 			$slugs[] = add_submenu_page(
 				'edit.php?post_type=' . $post_type,
-				__( 'Export CSV', 'cie' ),
-				__( 'Export CSV', 'cie' ),
+				$export,
+				$export,
 				'activate_plugins',
 				'export-' . $post_type . '',
 				array( $this, 'display_post_export_page' )
@@ -33,8 +36,8 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 
 		// Extra handling for media pages
 		add_media_page(
-			__( 'Export CSV', 'cie' ),
-			__( 'Export CSV', 'cie' ),
+			$export,
+			$export,
 			'activate_plugins',
 			'export-media',
 			array( $this, 'display_post_export_page' )
@@ -55,7 +58,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 		}
 
 		$post_type = 'attachment';
-		if ( ! empty( $_GET['post_type'] ) )  {
+		if ( ! empty( $_GET['post_type'] ) ) {
 			$post_type = $_GET['post_type'];
 		}
 

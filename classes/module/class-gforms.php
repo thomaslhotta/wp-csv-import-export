@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles gforms import
+ * Handles GravityForms import
  */
 class CIE_Module_Gforms extends CIE_Module_Abstract
 {
@@ -8,77 +8,49 @@ class CIE_Module_Gforms extends CIE_Module_Abstract
 
 	public function register_menus()
 	{
-		$that = $this;
-
-		add_filter(
-			'gform_addon_navigation',
-			function($array) use( $that ) {
-				$array[] = array(
-					'name'       => 'import_csv',
-					'label'      => __( 'Import CSV', 'cie' ),
-					'callback'   => array( $that, 'display_import_ui' ),
-					'permission' => 'activate_plugins',
-				);
-				return $array;
-			}
-		);
-
-		return;
+		add_filter( 'gform_export_menu', array( $this, 'gform_export_menu' ) );
+		add_action( 'gform_export_page_import_entry', array( $this, 'display_import_ui' ) );
 	}
+
 
 	public function register_ajax()
 	{
 		add_action( 'wp_ajax_import_gforms', array( $this, 'process_import' ) );
 	}
 
-	/**
-	 * Adds comment export to every post
-	 *
-	 * @param         $post_type
-	 * @param WP_Post $post
-	 */
-	public function add_meta_boxes( $post_type, $post )
+
+	public function gform_export_menu( array $entries )
 	{
-		// Only for posts
-		if ( ! $post instanceof WP_Post ) {
-			return;
-		}
-
-		// Only useful for posts that have comments
-		if  ( empty( $post->comment_count ) ) {
-			return;
-		}
-
-		add_meta_box(
-			'export_comments',
-			__( 'Export comments', 'cie' ),
-			array( $this, 'display_metabox' )
+		$entries[11] = array(
+			'name'  => 'import_entry',
+			'label' => __( 'Import entries', 'cie' ),
 		);
+
+		return $entries;
 	}
 
-	public function display_metabox( WP_Post $post )
-	{
-		$fields = $this->get_exporter()->get_available_fields( array( 'post_id' => $post->ID ) );
-
-		echo $this->render_export_ui(
-			$fields,
-			array(
-				'search[post_id]' => $post->ID,
-				'ajax-action'     => 'export_comments',
-			)
-		);
-	}
 
 	public function display_import_ui()
 	{
-		echo $this->render_import_ui( 'import_gforms' );
+		if ( ! GFCommon::current_user_can_any( 'gravityforms_export_entries' ) ) {
+			wp_die( 'You do not have permission to access this page ' );
+		}
+
+		// Using GForms functions to display markup
+		GFExport::page_header( __( 'Import entries', 'cie' ) );
+
+		echo $this->render_import_ui( 'import_gforms', false );
+
+		GFExport::page_footer( __( 'Import entries', 'cie' ) );
 	}
+
 
 	public function process_ajax()
 	{
 		$this->get_exporter()->process_ajax();
 		die();
 	}
+
 
 	/**
 	 * @return CIE_Importer

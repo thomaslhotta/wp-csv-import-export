@@ -4,28 +4,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress CSV Import Export\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/plugins/plugin-name\n"
-"POT-Creation-Date: 2014-08-26 12:37+0100\n"
-"PO-Revision-Date: 2014-08-26 13:26+0100\n"
+"POT-Creation-Date: 2015-05-15 19:20+0100\n"
+"PO-Revision-Date: 2015-05-15 20:03+0100\n"
 "Last-Translator: Thomas Lhotta <th.lhotta@gmail.com>\n"
 "Language-Team:  <th.lhotta@gmail.com>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.5\n"
 "X-Poedit-KeywordsList: __;_e;_n;_x;esc_html_e;esc_html__;esc_attr_e;"
 "esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
 "X-Poedit-Basepath: ../\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SearchPath-0: .\n"
-
-#: classes/class-cie-handler-add-user.php:38
-msgid ""
-"No user identification column found. Valid columns are ID, user_email or "
-"user_login"
-msgstr ""
-"Keine Spalte zur Benutzeridentifikation gefunden. Erlaubte Spalten sind ID, "
-"user_email oder user_login."
 
 #: classes/class-cie-attachment-processor.php:34
 msgid "Invalid file type"
@@ -48,31 +40,200 @@ msgstr ""
 msgid "Zero size file downloaded"
 msgstr ""
 
-#: classes/class-csv-import-export.php:90
-#: classes/class-csv-import-export.php:91
-#: classes/class-csv-import-export.php:110
-#: classes/class-csv-import-export.php:111
-#: classes/class-csv-import-export.php:119
-#: classes/class-csv-import-export.php:120
+#: classes/class-importer.php:161
+#, php-format
+msgid "\"%s\" is missing or empty"
+msgstr ""
+
+#: classes/class-importer.php:169
+#, php-format
+msgid "One of the following columns must be present: %s "
+msgstr ""
+
+#: classes/field/class-attachment.php:11
+msgid "Attachments"
+msgstr "Dateianhänge"
+
+#: classes/field/class-buddypress.php:54
+msgid "User id required to set BuddyPress profile values"
+msgstr ""
+
+#: classes/field/class-buddypress.php:78
+#, php-format
+msgid "BuddyPress profile field \"%s\" could not be set"
+msgstr ""
+
+#: classes/field/class-commentmeta.php:59
+#: classes/field/class-commentmeta.php:67
+#, php-format
+msgid "User comment value %s could not be set"
+msgstr ""
+
+#: classes/field/class-option.php:48
+msgid "User id required to set user options"
+msgstr ""
+
+#: classes/field/class-option.php:69
+#, php-format
+msgid "User option \"%s\" could not be set"
+msgstr ""
+
+#: classes/field/class-postmeta.php:80
+#, php-format
+msgid "User post value %s could not be set"
+msgstr ""
+
+#: classes/field/class-usermeta.php:75
+#, php-format
+msgid "User meta value %s could not be set"
+msgstr "User Metawert %s konnte nicht gesetzt werden."
+
+#: classes/module/class-abstract.php:51
+msgid "All"
+msgstr ""
+
+#: classes/module/class-abstract.php:97 views/export.php:38
+msgid "Export"
+msgstr "Export"
+
+#: classes/module/class-abstract.php:176 classes/module/class-abstract.php:244
+#: views/import.php:110
+msgid "Import"
+msgstr "Import"
+
+#: classes/module/class-abstract.php:179
+msgid "Update"
+msgstr ""
+
+#: classes/module/class-abstract.php:196
+msgid "Required columns"
+msgstr "Benötigte Spalten"
+
+#: classes/module/class-abstract.php:202
+msgid "Select a CSV file"
+msgstr "Wählen Sie eine CSV Datei"
+
+#: classes/module/class-abstract.php:203
+msgid "The uploaded file is not a valid CSV file."
+msgstr ""
+
+#: classes/module/class-abstract.php:208
+msgid "or copy & paste the CSV data from your spreadsheet software."
+msgstr "oder kopieren Sie die Daten aus ihrer Tabellenkalkulationssoftware."
+
+#: classes/module/class-abstract.php:216
+msgid "Uploaded CSV"
+msgstr "Hochgeladenes CSV"
+
+#: classes/module/class-abstract.php:229 classes/module/class-abstract.php:230
+#: views/import.php:123
+msgid "Errors"
+msgstr "Fehler"
+
+#: classes/module/class-abstract.php:231
+msgid "Row number"
+msgstr "Zeilenummer"
+
+#: classes/module/class-abstract.php:244
+msgid "Continue"
+msgstr ""
+
+#: classes/module/class-abstract.php:251
+msgid "Clear"
+msgstr ""
+
+#: classes/module/class-comments.php:13 classes/module/class-comments.php:14
+#: classes/module/class-posts.php:17 classes/module/class-posts.php:18
+#: classes/module/class-users.php:14 classes/module/class-users.php:15
 msgid "Import CSV"
 msgstr "CSV importieren"
 
-#: classes/class-csv-import-export.php:99
-#: classes/class-csv-import-export.php:100
+#: classes/module/class-comments.php:21 classes/module/class-comments.php:22
+#: classes/module/class-posts.php:26 classes/module/class-posts.php:27
+#: classes/module/class-posts.php:36 classes/module/class-posts.php:37
+#: classes/module/class-users.php:23 classes/module/class-users.php:24
 msgid "Export CSV"
 msgstr "CSV exportieren"
 
-#: classes/class-csv-import-export.php:326
-msgid "Wrong file uploaded. Please upload the correct file"
-msgstr "Falsche Datei hochgeladen. Bitte laden sie die korrekte Datei hoch."
+#: classes/module/class-comments.php:55 classes/module/class-users.php:47
+msgid "Export comments"
+msgstr "Kommentare exportieren"
+
+#: classes/module/class-gforms.php:26 classes/module/class-gforms.php:40
+#: classes/module/class-gforms.php:44
+msgid "Import entries"
+msgstr "Einträge importieren"
+
+#: classes/module/comments/class-importer.php:29
+msgid "Comment ID."
+msgstr ""
+
+#: classes/module/comments/class-importer.php:37
+#: classes/module/users/class-creator.php:59
+msgid "User login name."
+msgstr ""
+
+#: classes/module/comments/class-importer.php:49
+msgid "comment_ID is missing"
+msgstr ""
+
+#: classes/module/comments/class-importer.php:57
+#, php-format
+msgid "Comment with ID %d could not be found"
+msgstr ""
+
+#: classes/module/comments/class-importer.php:69
+msgid "Could not find parent post"
+msgstr ""
+
+#: classes/module/comments/class-importer.php:78
+msgid "Comment parent could not be found"
+msgstr ""
+
+#: classes/module/comments/class-importer.php:88
+msgid "Comment author could not be found"
+msgstr ""
+
+#: classes/module/comments/class-importer.php:106
+msgid "Comment author name is missing"
+msgstr ""
+
+#: classes/module/comments/class-importer.php:124
+msgid "Comment could not be inserted"
+msgstr ""
+
+#: classes/module/gforms/class-importer.php:26
+msgid "Form ID"
+msgstr "Formular ID"
+
+#: classes/module/users/class-adder.php:11
+#: classes/module/users/class-creator.php:51
+msgid "User ID, login name or email."
+msgstr ""
+
+#: classes/module/users/class-adder.php:55
+msgid "User could be found"
+msgstr ""
+
+#: classes/module/users/class-creator.php:63
+msgid "User email address."
+msgstr "Benutzer Email Adresse"
+
+#: classes/module/users/class-creator.php:67
+msgid "Hashed user passwords"
+msgstr ""
+
+#: classes/module/users/class-creator.php:87
+msgid "No user could be found"
+msgstr ""
+
+#: classes/module/users/class-creator.php:114
+msgid "User could not be created for an unknown reason"
+msgstr ""
 
 #: views/export.php:17
 msgid "Select all"
 msgstr "Alle auswählen"
-
-#: views/export.php:38
-msgid "Export"
-msgstr "Export"
 
 #: views/import.php:36
 msgid "CSV File"
@@ -124,18 +285,10 @@ msgstr "Benutzername"
 msgid "User email addresse"
 msgstr "Email Adresse"
 
-#: views/import.php:110
-msgid "Import"
-msgstr "Import"
-
 #: views/import.php:117
 #, php-format
 msgid "%d successfull insertions in %s seconds"
 msgstr "%d Datensätze in %s Sekunden eingefügt"
-
-#: views/import.php:123
-msgid "Errors"
-msgstr "Fehler"
 
 #: views/import.php:127
 msgid "Row"
@@ -144,3 +297,13 @@ msgstr "Zeile"
 #: views/import.php:128
 msgid "Message"
 msgstr "Nachricht"
+
+#~ msgid ""
+#~ "No user identification column found. Valid columns are ID, user_email or "
+#~ "user_login"
+#~ msgstr ""
+#~ "Keine Spalte zur Benutzeridentifikation gefunden. Erlaubte Spalten sind "
+#~ "ID, user_email oder user_login."
+
+#~ msgid "Wrong file uploaded. Please upload the correct file"
+#~ msgstr "Falsche Datei hochgeladen. Bitte laden sie die korrekte Datei hoch."

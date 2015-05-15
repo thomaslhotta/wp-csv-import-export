@@ -44,7 +44,7 @@ class CSV_Import_Export {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
-		add_action( 'admin_init', array( $this, 'load_plugin_textdomain' ) );
+		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
 		// Register AJAX actions
 		foreach ( $this->get_modules() as $module ) {
@@ -78,10 +78,6 @@ class CSV_Import_Export {
 	 */
 	public function load_plugin_textdomain()
 	{
-		if ( empty( $_GET['page'] ) || ! ( 'import' === $_GET['page'] || 'export' === $_GET['page'] )  ) {
-			return;
-		}
-
 		load_plugin_textdomain(
 			'cie',
 			true,

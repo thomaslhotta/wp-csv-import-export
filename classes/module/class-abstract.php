@@ -137,17 +137,18 @@ abstract class CIE_Module_Abstract
 	 * Renders the import UI
 	 *
 	 * @param $action
+	 * @param $show_title
 	 *
 	 * @return string
 	 */
-	public function render_import_ui( $action )
+	public function render_import_ui( $action, $show_title = true )
 	{
 		$csv = '';
 		$csv_valid = true;
 		if ( ! empty( $_FILES['csv'] ) && check_admin_referer( 'upload-csv', 'nonce' ) ) {
 			$finfo = finfo_open( FILEINFO_MIME_TYPE );
 			finfo_file( $finfo, $_FILES['csv']['tmp_name'] );
-			$csv_valid = 0 === strpos( finfo_file( $finfo, $_FILES['csv']['tmp_name'] ), 'text/' );
+			$csv_valid = strpos( finfo_file( $finfo, $_FILES['csv']['tmp_name'] ), 'text/' ) === 0;
 
 			if ( $csv_valid ) {
 				$csv = file_get_contents( $_FILES['csv']['tmp_name'] );
@@ -158,10 +159,12 @@ abstract class CIE_Module_Abstract
 
 		$html = '';
 
-		$html .= sprintf(
-			'<h2>%s</h2>',
-			esc_html( get_admin_page_title() )
-		);
+		if ( $show_title ) {
+			$html .= sprintf(
+				'<h2>%s</h2>',
+				esc_html( get_admin_page_title() )
+			);
+		}
 
 		$mode = CIE_Importer::MODE_IMPORT;
 		if ( ! empty( $_GET['mode'] ) ) {
@@ -171,10 +174,10 @@ abstract class CIE_Module_Abstract
 		if ( CIE_Importer::MODE_BOTH === $this->get_importer()->get_supported_mode() ) {
 			$html .= sprintf(
 				'<h2 class="nav-tab-wrapper"><a href="%s" class="nav-tab%s">%s</a><a href="%s" class="nav-tab%s">%s</a></h2>',
-				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_IMPORT, $url )  ),
+				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_IMPORT, $url ) ),
 				CIE_Importer::MODE_IMPORT === $mode ? ' nav-tab-active' : '',
 				__( 'Import', 'cie' ),
-				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_UPDATE, $url )  ),
+				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_UPDATE, $url ) ),
 				CIE_Importer::MODE_UPDATE === $mode  ? ' nav-tab-active' : '',
 				__( 'Update', 'cie' )
 			);
@@ -203,8 +206,9 @@ abstract class CIE_Module_Abstract
 				$csv_valid ? '' : __( 'The uploaded file is not a valid CSV file.', 'cie' )
 			);
 
-			$html .= __(
-				'<tr><th>or copy & paste the CSV data from your spreadsheet software.</th>'
+			$html .= sprintf(
+				'<tr><th>%s</th>',
+				__( 'or copy & paste the CSV data from your spreadsheet software.', 'cie' )
 			);
 
 			$html .= '<td><textarea class="widefat" name="csv_fallback" rows="5"></textarea></td></tr>';
@@ -249,8 +253,6 @@ abstract class CIE_Module_Abstract
 			esc_url( $url ),
 			__( 'Clear' )
 		);
-
-
 
 		$html = sprintf(
 			'<form id="csv-import-form" class="wrap" action="%s" method="post" enctype="multipart/form-data" data-toggle="import-csv" data-action="%s">%s</form>',

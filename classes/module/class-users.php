@@ -38,7 +38,7 @@ class CIE_Module_Users extends CIE_Module_Abstract
 	public function add_meta_boxes( $post_type, WP_Post $post )
 	{
 		// Only useful for posts that have comments
-		if  ( empty( $post->comment_count ) ) {
+		if ( empty( $post->comment_count ) ) {
 			return;
 		}
 
