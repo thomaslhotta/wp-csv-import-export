@@ -53,8 +53,6 @@
         <ini name="error_append_string" value="" />
         <ini name="memory_limit" value="1024M" />
         <ini name="short_open_tag" value="0" />
-        <const name="BP_TESTS_DIR" value="../../../../../vendor/buddypress-test-suite/tests/phpunit" />
-        <const name="WP_TEST_DIR" value="../../../../../vendor/wordpress-developer/tests/phpunit"/>
-
+        <!--<const name="BP_TESTS_DIR" value="" /> define this -->
     </php>
 </phpunit>

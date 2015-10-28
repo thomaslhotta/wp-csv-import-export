@@ -1,18 +1,25 @@
 <?php
+
 /**
  * Handles comments import and export
  */
-class CIE_Module_Comments extends CIE_Module_Abstract
-{
-	protected $exporter;
+class CIE_Module_Comments extends CIE_Module_Abstract {
 
-	public function register_menus()
-	{
+	/**
+	 * @var CIE_Module_Comments_Exporter
+	 */
+	protected $exporter;
+	/**
+	 * @var CIE_Module_Comments_Importer
+	 */
+	protected $importer;
+
+	public function register_menus() {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
 		add_comments_page(
 			__( 'Import CSV', 'cie' ),
 			__( 'Import CSV', 'cie' ),
-			'activate_plugins',
+			'import',
 			'import-comments',
 			array( $this, 'display_import_ui' )
 		);
@@ -20,16 +27,19 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 		add_comments_page(
 			__( 'Export CSV', 'cie' ),
 			__( 'Export CSV', 'cie' ),
-			'activate_plugins',
+			'export',
 			'export-comments',
 			array( $this, 'display_export_ui' )
 		);
 	}
 
-	public function register_ajax()
-	{
-		add_action( 'wp_ajax_export_comments', array( $this, 'process_ajax' ) );
-		add_action( 'wp_ajax_import_comments', array( $this, 'process_import' ) );
+	public function register_ajax() {
+		if ( current_user_can( 'import' ) ) {
+			add_action( 'wp_ajax_import_comments', array( $this, 'process_import' ) );
+		}
+		if ( current_user_can( 'export' ) ) {
+			add_action( 'wp_ajax_export_comments', array( $this, 'process_ajax' ) );
+		}
 	}
 
 	/**
@@ -38,15 +48,14 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 	 * @param         $post_type
 	 * @param WP_Post $post
 	 */
-	public function add_meta_boxes( $post_type, $post )
-	{
+	public function add_meta_boxes( $post_type, $post ) {
 		// Only for posts
 		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 
 		// Only useful for posts that have comments
-		if  ( empty( $post->comment_count ) ) {
+		if ( empty( $post->comment_count ) ) {
 			return;
 		}
 
@@ -57,8 +66,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 		);
 	}
 
-	public function display_metabox( WP_Post $post )
-	{
+	public function display_metabox( WP_Post $post ) {
 		$search = array(
 			'post' => array(
 				'post_id' => $post->ID,
@@ -78,13 +86,11 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 		);
 	}
 
-	public function display_import_ui()
-	{
+	public function display_import_ui() {
 		echo $this->render_import_ui( 'import_comments' );
 	}
 
-	public function display_export_ui()
-	{
+	public function display_export_ui() {
 		$fields = $this->get_exporter()->get_available_fields();
 
 		echo $this->render_export_ui(
@@ -99,8 +105,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 	/**
 	 * @return CIE_Module_Comments_Exporter
 	 */
-	public function get_exporter()
-	{
+	public function get_exporter() {
 		if ( ! $this->exporter instanceof CIE_Module_Comments_Exporter ) {
 			$this->exporter = new CIE_Module_Comments_Exporter();
 		}
@@ -108,8 +113,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 		return $this->exporter;
 	}
 
-	public function process_ajax()
-	{
+	public function process_ajax() {
 		$this->get_exporter()->process_ajax();
 		die();
 	}
@@ -117,8 +121,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 	/**
 	 * @return CIE_Importer
 	 */
-	public function get_importer()
-	{
+	public function get_importer() {
 		if ( ! $this->exporter instanceof CIE_Importer ) {
 			$this->importer = new CIE_Module_Comments_Importer();
 		}
@@ -126,8 +129,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract
 		return $this->importer;
 	}
 
-	public function process_import()
-	{
+	public function process_import() {
 		$this->get_importer()->import_json();
 	}
 }

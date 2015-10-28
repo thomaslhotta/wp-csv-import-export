@@ -1,37 +1,33 @@
 <?php
 /**
+ * Adds existing users to a blog/site
  */
-class CIE_Module_Users_Adder extends CIE_Importer
-{
-	public function get_required_fields( $mode )
-	{
+class CIE_Module_Users_Adder extends CIE_Importer {
+	public function get_required_fields( $mode ) {
 		return array(
 			array(
 				'columns'     => array( 'ID', 'user_login', 'user_email' ),
-				'description' => __( 'User ID, login name or email.', 'cie' )
-			)
+				'description' => __( 'User ID, login name or email.', 'cie' ),
+			),
 		);
 	}
 
-	public function get_supported_fields()
-	{
+	public function get_supported_fields() {
 		return array(
-			'option'
+			'option',
 		);
 	}
 
-	public function get_supported_mode()
-	{
+	public function get_supported_mode() {
 		return parent::MODE_UPDATE;
 	}
 
-	public function create_element( array $data, $mode = parent::MODE_UPDATE )
-	{
+	public function create_element( array $data, $mode = parent::MODE_UPDATE ) {
 		$element = new CIE_Element();
 
 		$user = null;
 		if ( ! empty( $data['ID'] ) ) {
-			$user = get_user_by( 'id' , $data['ID'] );
+			$user = get_user_by( 'id', $data['ID'] );
 		} elseif ( ! empty( $data['createdby'] ) ) {
 			$user = get_user_by( 'id', $data['createdby'] );
 		} elseif ( ! empty( $data['user_email'] ) ) {
@@ -47,9 +43,11 @@ class CIE_Module_Users_Adder extends CIE_Importer
 				$role = $data['role'];
 			}
 
-			if ( ! in_array( $role, $user->roles ) ) {
+			// Only allow adding new users, but don't mark as error to allow other imports on this user to occur.
+			if ( empty( $user->roles ) ) {
 				$user->add_role( $role );
 			}
+
 			$element->set_element( $user, $user->ID, $user->ID );
 		} else {
 			$element->set_error( __( 'User could be found', 'cie' ) );

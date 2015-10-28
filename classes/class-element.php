@@ -1,9 +1,9 @@
 <?php
+
 /**
  * Container class for importing and exporting elements
  */
-class CIE_Element
-{
+class CIE_Element {
 	/**
 	 * @var WP_Post|WP_User|object
 	 */
@@ -35,8 +35,7 @@ class CIE_Element
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function set_element( $element, $element_id, $user_id )
-	{
+	public function set_element( $element, $element_id, $user_id ) {
 		$this->element = $element;
 
 		if ( ! is_numeric( $element_id ) ) {
@@ -55,24 +54,21 @@ class CIE_Element
 	/**
 	 * @return object|WP_Post|WP_User
 	 */
-	public function get_element()
-	{
+	public function get_element() {
 		return $this->element;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function get_element_id()
-	{
+	public function get_element_id() {
 		return $this->element_id;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function get_user_id()
-	{
+	public function get_user_id() {
 		return $this->user_id;
 	}
 
@@ -81,17 +77,16 @@ class CIE_Element
 	 *
 	 * @return $this
 	 */
-	public function set_error( $error )
-	{
+	public function set_error( $error ) {
 		$this->error = strip_tags( $error );
+
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function get_error()
-	{
+	public function get_error() {
 		return $this->error;
 	}
 
@@ -100,8 +95,7 @@ class CIE_Element
 	 *
 	 * @return bool
 	 */
-	public function has_error()
-	{
+	public function has_error() {
 		return ! empty( $this->error );
 	}
 }

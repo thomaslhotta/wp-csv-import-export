@@ -1,32 +1,29 @@
 <?php
+
 /**
  * Imports comments
  */
-class CIE_Module_Comments_Importer extends CIE_Importer
-{
+class CIE_Module_Comments_Importer extends CIE_Importer {
 	protected $posts = array();
 
 	protected $users = array();
 
-	public function get_supported_mode()
-	{
+	public function get_supported_mode() {
 		return self::MODE_BOTH;
 	}
 
-	public function get_supported_fields()
-	{
+	public function get_supported_fields() {
 		return array(
 			'commentmeta',
 		);
 	}
 
-	public function get_required_fields( $mode )
-	{
+	public function get_required_fields( $mode ) {
 		if ( parent::MODE_UPDATE === $mode ) {
 			return array(
 				array(
 					'columns'     => array( 'comment_ID' ),
-					'description' => __( 'Comment ID.', 'cie' )
+					'description' => __( 'Comment ID.', 'cie' ),
 				),
 			);
 		}
@@ -34,19 +31,19 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		return array(
 			array(
 				'columns'     => array( 'comment_post_ID', 'comment_post_title', 'comment_post_name' ),
-				'description' => __( 'User login name.', 'cie' )
+				'description' => __( 'User login name.', 'cie' ),
 			),
 		);
 	}
 
-	public function create_element( array $data, $mode = parent::MODE_IMPORT )
-	{
+	public function create_element( array $data, $mode = parent::MODE_IMPORT ) {
 		$element = new CIE_Element();
 
 		// Merge data with existing comment in update mode
-		if ( $mode === parent::MODE_UPDATE ) {
+		if ( parent::MODE_UPDATE === $mode ) {
 			if ( empty( $data['comment_ID'] ) ) {
 				$element->set_error( __( 'comment_ID is missing', 'cie' ) );
+
 				return $element;
 			}
 
@@ -58,6 +55,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 						$data['comment_ID']
 					)
 				);
+
 				return $element;
 			}
 
@@ -67,6 +65,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		$data['comment_post_ID'] = $this->find_post_id( $data );
 		if ( empty( $data['comment_post_ID'] ) ) {
 			$element->set_error( __( 'Could not find parent post', 'cie' ) );
+
 			return $element;
 		}
 
@@ -76,6 +75,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 
 			if ( empty( $comment_parent ) ) {
 				$element->set_error( __( 'Comment parent could not be found', 'cie' ) );
+
 				return $element;
 			}
 
@@ -86,6 +86,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		$comment_author = $this->get_user( $data );
 		if ( false === $comment_author ) {
 			$element->set_error( __( 'Comment author could not be found', 'cie' ) );
+
 			return $element;
 		}
 
@@ -104,6 +105,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		// Ensure that comment author name is set
 		if ( empty( $data['comment_author'] ) ) {
 			$element->set_error( __( 'Comment author name is missing', 'cie' ) );
+
 			return $element;
 		}
 
@@ -111,7 +113,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 
 		if ( self::MODE_IMPORT === $mode ) {
 			$comment_id = wp_insert_comment( $data );
-			$comment = get_comment( $comment_id );
+			$comment    = get_comment( $comment_id );
 		} else {
 			if ( wp_update_comment( $data ) ) {
 				$comment = get_comment( $data['comment_ID'] );
@@ -127,8 +129,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		return $element;
 	}
 
-	public function find_post_id( array $data )
-	{
+	public function find_post_id( array $data ) {
 		$post = null;
 		if ( ! empty( $data['comment_post_ID'] ) && is_numeric( $data['comment_post_ID'] ) ) {
 			$post = get_post( $data['comment_post_ID'] );
@@ -150,10 +151,10 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 	 *
 	 * @param string $name
 	 * @param string $type
+	 *
 	 * @return WP_Post|null
 	 */
-	public function get_post( $name, $type = 'post_name' )
-	{
+	public function get_post( $name, $type = 'post_name' ) {
 		if ( isset( $this->posts[ $name ] ) ) {
 			return $this->posts[ $name ];
 		}
@@ -173,11 +174,11 @@ class CIE_Module_Comments_Importer extends CIE_Importer
 		}
 
 		$this->posts[ $name ] = $post;
+
 		return $post;
 	}
 
-	public function get_user( array $data )
-	{
+	public function get_user( array $data ) {
 		$user = null;
 		if ( ! empty( $data['user_id'] ) ) {
 			$user = get_user_by( 'id', $data['user_id'] );

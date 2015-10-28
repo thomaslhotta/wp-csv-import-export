@@ -1,9 +1,9 @@
 <?php
+
 /**
  * Abstract processor class
  */
-abstract class CIE_Processor
-{
+abstract class CIE_Processor {
 	/**
 	 * @var array
 	 */
@@ -24,8 +24,7 @@ abstract class CIE_Processor
 	 * @return mixed
 	 * @throws Exception
 	 */
-	protected function get_field_type_object( $field_type )
-	{
+	protected function get_field_type_object( $field_type ) {
 		if ( empty( $this->field_type_objects[ $field_type ] ) ) {
 			$class = 'CIE_Field_' . ucfirst( $field_type );
 			if ( ! class_exists( $class ) ) {

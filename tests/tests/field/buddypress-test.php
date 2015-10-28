@@ -1,10 +1,5 @@
 <?php
-/**
- * Date: 14.01.15
- * Time: 14:21
- */
-class Field_Buddypress_Test extends BP_UnitTestCase
-{
+class Field_Buddypress_Test extends BP_UnitTestCase {
 	/**
 	 * @var CIE_Field_Buddypress
 	 */
@@ -12,8 +7,7 @@ class Field_Buddypress_Test extends BP_UnitTestCase
 
 	protected $checkBox;
 
-	public function setUp()
-	{
+	public function setUp() {
 		parent::setUp();
 		$this->field = new CIE_Field_Buddypress();
 
@@ -21,22 +15,26 @@ class Field_Buddypress_Test extends BP_UnitTestCase
 
 		$this->checkBox = $this->factory->xprofile_field->create_and_get( array(
 			'field_group_id' => $group,
-			'type' => 'checkbox',
-			'name' => 'Checkbox field',
+			'type'           => 'checkbox',
+			'name'           => 'Checkbox field',
 		) );
 
+		$this->checkBox = $this->factory->xprofile_field->create_and_get( array(
+			'field_group_id' => $group,
+			'type'           => 'textbox',
+			'name'           => 'Name',
+		) );
 	}
 
-	public function test_set_field_values()
-	{
+	public function test_set_field_values() {
 		$user_id = wp_create_user( 'hanswurst', 'pw', 'hans@email.com' );
-		$user = get_user_by( 'id', $user_id );
+		$user    = get_user_by( 'id', $user_id );
 
 		$element = new CIE_Element();
 		$element->set_element( $user, $user_id, $user_id );
 
 		$data = array(
-			'bp_Name' => 'Hans Wurst II',
+			'bp_Name'           => 'Hans Wurst II',
 			'bp_Checkbox field' => 'option1;option2',
 		);
 

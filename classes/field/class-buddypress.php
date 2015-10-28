@@ -1,12 +1,9 @@
 <?php
 /**
- * Date: 07.01.15
- * Time: 16:08
+ * Handles BuddyPress xprofile fields
  */
-class CIE_Field_Buddypress extends CIE_Field_Abstract
-{
-	public function get_available_fields( array $search = array() )
-	{
+class CIE_Field_Buddypress extends CIE_Field_Abstract {
+	public function get_available_fields( array $search = array() ) {
 		$fields = array();
 		if ( function_exists( 'buddypress' ) ) {
 			$bp = buddypress();
@@ -18,14 +15,15 @@ class CIE_Field_Buddypress extends CIE_Field_Abstract
 				$fields[ intval( $key->id ) ] = $key->name;
 			}
 		}
+
 		return $fields;
 	}
 
-	public function get_field_values( array $fields, CIE_Element $element )
-	{
+	public function get_field_values( array $fields, CIE_Element $element ) {
 		$data = array();
 
 		$field_objects = array();
+
 		foreach ( BP_XProfile_ProfileData::get_data_for_user( $element->get_user_id(), $fields ) as $field_object ) {
 			$field_objects[ $field_object->field_id ] = $field_object->value;
 		}
@@ -47,11 +45,16 @@ class CIE_Field_Buddypress extends CIE_Field_Abstract
 		return $data;
 	}
 
-	public function set_field_values( array $fields, CIE_Element $element )
-	{
+	/**
+	 * @param array $fields
+	 * @param CIE_Element $element
+	 *
+	 * @return array
+	 */
+	public function set_field_values( array $fields, CIE_Element $element ) {
 		if ( ! $element->get_user_id() ) {
 			return array(
-				__( 'User id required to set BuddyPress profile values', 'cie' )
+				__( 'User id required to set BuddyPress profile values', 'cie' ),
 			);
 		}
 
@@ -64,6 +67,7 @@ class CIE_Field_Buddypress extends CIE_Field_Abstract
 
 			$name = str_replace( 'bp_', '', $name );
 
+			// Convert id to name if necessary
 			if ( ! is_numeric( $name ) ) {
 				$name = xprofile_get_field_id_from_name( $name );
 			}

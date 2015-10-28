@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Date: 16.01.15
  * Time: 09:51
  */
-class Module_Posts_Exporter_Test extends WP_UnitTestCase
-{
+class Module_Posts_Exporter_Test extends BP_UnitTestCase {
 	/**
 	 * @var CIE_Module_Posts_Exporter
 	 */
@@ -17,8 +17,7 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 
 	protected $posts = array();
 
-	public function setUp()
-	{
+	public function setUp() {
 		parent::setUp();
 		$this->exporter = new CIE_Module_Posts_Exporter();
 
@@ -38,19 +37,42 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 		xprofile_set_field_data( 'Name', $this->user_4->ID, 'BP User 4' );
 		update_user_meta( $this->user_4->ID, 'user_meta_4', 'User meta 4' );
 
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_1->ID, 'post_type' => 'post' ) );
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_2->ID, 'post_type' => 'post' ) );
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_3->ID, 'post_type' => 'post' ) );
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_4->ID, 'post_type' => 'post' ) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_1->ID,
+			'post_type'   => 'post',
+		) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_2->ID,
+			'post_type'   => 'post',
+		) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_3->ID,
+			'post_type'   => 'post',
+		) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_4->ID,
+			'post_type'   => 'post',
+		) );
 
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_2->ID, 'post_type' => 'page' ) );
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_2->ID, 'post_type' => 'page' ) );
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_2->ID, 'post_type' => 'page' ) );
-		$this->posts[] = $this->factory->post->create_and_get( array( 'post_author' => $this->user_2->ID, 'post_type' => 'page' ) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_2->ID,
+			'post_type'   => 'page',
+		) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_2->ID,
+			'post_type'   => 'page',
+		) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_2->ID,
+			'post_type'   => 'page',
+		) );
+		$this->posts[] = $this->factory->post->create_and_get( array(
+			'post_author' => $this->user_2->ID,
+			'post_type'   => 'page',
+		) );
 	}
 
-	public function test_get_main_elements()
-	{
+	public function test_get_main_elements() {
 		$elements = $this->exporter->get_main_elements(
 			array(
 				'post' => array(
@@ -72,8 +94,7 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 		$this->assertEquals( $elements['elements'][3]->get_user_id(), $this->user_4->ID );
 	}
 
-	public function test_get_main_elements_offset()
-	{
+	public function test_get_main_elements_offset() {
 		$elements = $this->exporter->get_main_elements(
 			array(
 				'post' => array(
@@ -93,48 +114,54 @@ class Module_Posts_Exporter_Test extends WP_UnitTestCase
 		$this->assertEquals( $elements['elements'][1]->get_user_id(), $this->user_3->ID );
 	}
 
-	public function test_process_row()
-	{
+	public function test_process_row() {
 		$element = new CIE_Element();
 		$element->set_element( $this->posts[4], $this->posts[4]->ID, $this->posts[4]->post_author );
 
+		// Add and set a BuddyPress field
+		$bp_field = $this->factory->xprofile_field->create_and_get(
+			array(
+				'field_group_id' => 1,
+				'type'           => 'textbox',
+				'name'           => 'Name',
+			)
+		);
+
+		xprofile_set_field_data( $bp_field->id, $element->get_user_id(), 'Name of user' );
+
 		$fields = array(
-			'post' => array(
+			'post'       => array(
 				'ID'          => 'ID',
 				'post_title'  => 'post_title',
 				'post_author' => 'post_author',
 			),
-			'user' => array(
+			'user'       => array(
 				'ID' => 'ID',
 			),
 			'buddypress' => array(
-				'1' => 'Name',
+				xprofile_get_field_id_from_name( 'Name' ) => 'Name',
 			),
-			'usermeta' => array(
+			'usermeta'   => array(
 				'user_meta_2' => 'user_meta_2',
 			),
 		);
-
-		$first_row = $this->exporter->create_first_row( $fields );
 
 		$row = $this->exporter->create_row( $element, $fields );
 
 		$this->assertCount( 6, $row );
 
 		$this->assertEquals( $this->posts[4]->ID, $row[0] );
-		$this->assertEquals( 'BP User 2', $row[4] );
+		$this->assertEquals( 'Name of user', $row[4] );
 		$this->assertEquals( 'User meta 2', $row[5] );
 	}
 
-	public function check_posts( array $elements, $post_type )
-	{
+	public function check_posts( array $elements, $post_type ) {
 		foreach ( $elements['elements'] as $element ) {
 			$this->check_post( $element, $post_type );
 		}
 	}
 
-	public function check_post( CIE_Element $element, $post_type )
-	{
+	public function check_post( CIE_Element $element, $post_type ) {
 		$post = $element->get_element();
 		$this->assertInstanceOf( 'WP_Post', $post );
 		$this->assertEquals( $post->ID, $element->get_element_id() );

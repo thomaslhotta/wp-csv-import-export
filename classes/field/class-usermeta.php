@@ -1,10 +1,9 @@
 <?php
+
 /**
- * Date: 08.01.15
- * Time: 15:42
+ * Handles user meta
  */
-class CIE_Field_Usermeta extends CIE_Field_Meta
-{
+class CIE_Field_Usermeta extends CIE_Field_Meta {
 	protected $ignored_keys = array(
 		'metabox',
 		'meta-box',
@@ -12,8 +11,7 @@ class CIE_Field_Usermeta extends CIE_Field_Meta
 		'screen_layout',
 	);
 
-	public function get_available_fields( array $search = array() )
-	{
+	public function get_available_fields( array $search = array() ) {
 		global $wpdb;
 
 		$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->usermeta;
@@ -36,12 +34,14 @@ class CIE_Field_Usermeta extends CIE_Field_Meta
 		foreach ( $meta_keys as $meta_key ) {
 			$meta_key = $meta_key[0];
 
+			// Don't export ignored keys
 			foreach ( $this->ignored_keys as $ignored ) {
 				if ( 0 === strpos( $meta_key, $ignored ) ) {
 					continue 2;
 				}
 			}
 
+			// Don't show meta data that is not relevant for the current blog
 			$blog_prefix = 'wp_' . get_current_blog_id() . '_';
 			if ( ! is_network_admin() && 0 === strpos( $meta_key, 'wp_' ) && 0 !== strpos( $meta_key, $blog_prefix ) ) {
 				continue;
@@ -54,13 +54,11 @@ class CIE_Field_Usermeta extends CIE_Field_Meta
 		return $return;
 	}
 
-	public function get_field_values( array $fields, CIE_Element $element )
-	{
+	public function get_field_values( array $fields, CIE_Element $element ) {
 		return $this->get_meta_values( $fields, 'user', $element->get_user_id() );
 	}
 
-	public function set_field_values( array $fields, CIE_Element $element )
-	{
+	public function set_field_values( array $fields, CIE_Element $element ) {
 		$errors = array();
 
 		foreach ( $fields as $field_id => $value ) {

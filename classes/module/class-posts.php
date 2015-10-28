@@ -1,15 +1,18 @@
 <?php
+
 /**
  * Handles posts import and export
  *
  * @todo Implement importer
  */
-class CIE_Module_Posts extends CIE_Module_Abstract
-{
+class CIE_Module_Posts extends CIE_Module_Abstract {
+
+	/**
+	 * @var CIE_Module_Posts_Exporter
+	 */
 	protected $exporter;
 
-	public function register_menus()
-	{
+	public function register_menus() {
 		$import = __( 'Import CSV', 'cie' );
 		$export = __( 'Export CSV', 'cie' );
 
@@ -19,7 +22,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 				'edit.php?post_type=' . $post_type,
 				$import,
 				$import,
-				'activate_plugins',
+				'import',
 				'import-' . $post_type . '',
 				array( $this, 'display_post_import_page' )
 			);
@@ -28,7 +31,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 				'edit.php?post_type=' . $post_type,
 				$export,
 				$export,
-				'activate_plugins',
+				'export',
 				'export-' . $post_type . '',
 				array( $this, 'display_post_export_page' )
 			);
@@ -38,7 +41,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 		add_media_page(
 			$export,
 			$export,
-			'activate_plugins',
+			'export',
 			'export-media',
 			array( $this, 'display_post_export_page' )
 		);
@@ -46,13 +49,13 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 		do_action( 'cie_register_post_menus', $this );
 	}
 
-	public function register_ajax()
-	{
-		add_action( 'wp_ajax_export_posts', array( $this, 'process_export' ) );
+	public function register_ajax() {
+		if ( current_user_can( 'export' ) ) {
+			add_action( 'wp_ajax_export_posts', array( $this, 'process_export' ) );
+		}
 	}
 
-	public function display_post_export_page( $searches = array() )
-	{
+	public function display_post_export_page( $searches = array() ) {
 		if ( ! is_array( $searches ) ) {
 			$searches = array();
 		}
@@ -81,8 +84,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 	/**
 	 * @return CIE_Module_Posts_Exporter
 	 */
-	public function get_exporter()
-	{
+	public function get_exporter() {
 		if ( ! $this->exporter instanceof CIE_Module_Posts_Exporter ) {
 			$this->exporter = new CIE_Module_Posts_Exporter();
 		}
@@ -90,8 +92,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract
 		return $this->exporter;
 	}
 
-	public function process_export()
-	{
+	public function process_export() {
 		$this->get_exporter()->process_ajax();
 		die();
 	}

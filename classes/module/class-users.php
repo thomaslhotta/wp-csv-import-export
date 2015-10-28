@@ -2,18 +2,23 @@
 /**
  * Handles import and export
  */
-class CIE_Module_Users extends CIE_Module_Abstract
-{
+class CIE_Module_Users extends CIE_Module_Abstract {
+
+	/**
+	 * @var CIE_Module_Users_Exporter
+	 */
 	protected $exporter;
 
+	/**
+	 * @var CIE_Importer
+	 */
 	protected $importer;
 
-	public function register_menus()
-	{
+	public function register_menus() {
 		add_users_page(
 			__( 'Import CSV', 'cie' ),
 			__( 'Import CSV', 'cie' ),
-			'activate_plugins',
+			'import',
 			'import',
 			array( $this, 'display_user_import_page' )
 		);
@@ -22,21 +27,25 @@ class CIE_Module_Users extends CIE_Module_Abstract
 			add_users_page(
 				__( 'Export CSV', 'cie' ),
 				__( 'Export CSV', 'cie' ),
-				'activate_plugins',
+				'export',
 				'export',
 				array( $this, 'display_user_export_page' )
 			);
 		}
 	}
 
-	public function register_ajax()
-	{
-		add_action( 'wp_ajax_export_users', array( $this, 'process_export' ) );
-		add_action( 'wp_ajax_import_users', array( $this, 'process_import' ) );
+	public function register_ajax() {
+		// Only super admins can export users
+		if ( is_super_admin() ) {
+			add_action( 'wp_ajax_export_users', array( $this, 'process_export' ) );
+		}
+
+		if ( current_user_can( 'import' ) ) {
+			add_action( 'wp_ajax_import_users', array( $this, 'process_import' ) );
+		}
 	}
 
-	public function add_meta_boxes( $post_type, WP_Post $post )
-	{
+	public function add_meta_boxes( $post_type, WP_Post $post ) {
 		// Only useful for posts that have comments
 		if ( empty( $post->comment_count ) ) {
 			return;
@@ -49,8 +58,7 @@ class CIE_Module_Users extends CIE_Module_Abstract
 		);
 	}
 
-	public function display_user_export_page()
-	{
+	public function display_user_export_page() {
 		$fields = $this->get_exporter()->get_available_fields( array() );
 
 		printf(
@@ -65,16 +73,14 @@ class CIE_Module_Users extends CIE_Module_Abstract
 		);
 	}
 
-	public function display_user_import_page()
-	{
+	public function display_user_import_page() {
 		echo $this->render_import_ui( 'import_users' );
 	}
 
 	/**
 	 * @return CIE_Module_Users_Exporter
 	 */
-	public function get_exporter()
-	{
+	public function get_exporter() {
 		if ( ! $this->exporter instanceof CIE_Module_Users_Exporter ) {
 			$this->exporter = new CIE_Module_Users_Exporter();
 		}
@@ -85,8 +91,7 @@ class CIE_Module_Users extends CIE_Module_Abstract
 	/**
 	 * @return CIE_Importer
 	 */
-	public function get_importer()
-	{
+	public function get_importer() {
 		if ( ! $this->exporter instanceof CIE_Importer ) {
 			if ( is_multisite() && ! $this->is_network_admin() ) {
 				$this->importer = new CIE_Module_Users_Adder();
@@ -98,14 +103,12 @@ class CIE_Module_Users extends CIE_Module_Abstract
 		return $this->importer;
 	}
 
-	public function process_export()
-	{
+	public function process_export() {
 		$this->get_exporter()->process_ajax();
 		die();
 	}
 
-	public function process_import()
-	{
+	public function process_import() {
 		$this->get_importer()->import_json();
 	}
 }

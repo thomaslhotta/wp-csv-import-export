@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Main class for CSV Import Export
  *
@@ -29,13 +30,17 @@ class CSV_Import_Export {
 	 * settings page and menu.
 	 */
 	private function __construct() {
-		// @todo Add capabilities checking
-		if ( ! is_admin() || ! is_super_admin() ) {
+		$this->init();
+	}
+
+	public function init() {
+		// Check user rights
+		if ( ! current_user_can( 'export' ) && ! current_user_can( 'import' ) ) {
 			return;
 		}
 
 		// Init auto loader
-		require __DIR__ . DIRECTORY_SEPARATOR . 'class-autoloader.php';
+		require_once __DIR__ . DIRECTORY_SEPARATOR . 'class-autoloader.php';
 		$autoloader = new CIE_Autoloader();
 		$autoloader->register();
 
@@ -57,7 +62,7 @@ class CSV_Import_Export {
 	 *
 	 * @since     1.0.0
 	 *
-	 * @return    object    A single instance of this class.
+	 * @return    $this    A single instance of this class.
 	 */
 	public static function get_instance() {
 
@@ -74,10 +79,9 @@ class CSV_Import_Export {
 	 *
 	 * @todo Improve conditional loading of text domain
 	 *
-	 * @since	1.0.0
+	 * @since    1.0.0
 	 */
-	public function load_plugin_textdomain()
-	{
+	public function load_plugin_textdomain() {
 		load_plugin_textdomain(
 			'cie',
 			true,
@@ -88,8 +92,7 @@ class CSV_Import_Export {
 	/**
 	 * Adds admin menus
 	 */
-	public function admin_menu()
-	{
+	public function admin_menu() {
 		foreach ( $this->get_modules() as $module ) {
 			$module->register_menus();
 		}
@@ -100,8 +103,7 @@ class CSV_Import_Export {
 	 *
 	 * @return null Return early if no settings page is registered.
 	 */
-	public function enqueue_admin_scripts()
-	{
+	public function enqueue_admin_scripts() {
 		$script_url = basename( dirname( dirname( __FILE__ ) ) );
 
 		wp_register_script(
@@ -163,14 +165,13 @@ class CSV_Import_Export {
 	 *
 	 * @return array
 	 */
-	public function get_modules()
-	{
+	public function get_modules() {
 		if ( empty( $this->modules ) ) {
 			$this->modules = array(
 				'comments' => new CIE_Module_Comments(),
-				'users' => new CIE_Module_Users(),
-				'posts' => new CIE_Module_Posts(),
-				'gforms' => new CIE_Module_Gforms(),
+				'users'    => new CIE_Module_Users(),
+				'posts'    => new CIE_Module_Posts(),
+				'gforms'   => new CIE_Module_Gforms(),
 			);
 		}
 

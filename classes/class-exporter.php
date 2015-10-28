@@ -1,9 +1,9 @@
 <?php
+
 /**
  * Base class for exporters
  */
-abstract class CIE_Exporter extends CIE_Processor
-{
+abstract class CIE_Exporter extends CIE_Processor {
 	/**
 	 * Returns the available fields for this processor
 	 *
@@ -19,13 +19,12 @@ abstract class CIE_Exporter extends CIE_Processor
 	 * @return array
 	 * @throws Exception
 	 */
-	public function get_available_fields( array $search = array() )
-	{
+	public function get_available_fields( array $search = array() ) {
 		$fields = array();
 
 		// Get generic field types
 		foreach ( $this->get_supported_fields() as $field_type ) {
-			$field = $this->get_field_type_object( $field_type );
+			$field                 = $this->get_field_type_object( $field_type );
 			$fields[ $field_type ] = $field->get_available_fields( $search );
 		}
 
@@ -39,19 +38,17 @@ abstract class CIE_Exporter extends CIE_Processor
 	 *
 	 * @return array
 	 */
-	public function get_available_searches( array $searches = array() )
-	{
+	public function get_available_searches( array $searches = array() ) {
 		return array();
 	}
 
-	public function process_ajax()
-	{
-		$fields           = $_REQUEST['fields'];
+	public function process_ajax() {
+		$fields = $_REQUEST['fields'];
 
 		// Sanitize given field names to export
 		$sanitized_fields = array();
 		foreach ( $this->get_available_fields() as $group_name => $field_group ) {
-			foreach ( $field_group  as $field_id => $field_name ) {
+			foreach ( $field_group as $field_id => $field_name ) {
 				if ( ! empty( $fields[ $group_name ] ) && ! empty( $fields[ $group_name ][ $field_id ] ) ) {
 					$sanitized_fields[ $group_name ][ $field_id ] = $field_name;
 				}
@@ -77,15 +74,14 @@ abstract class CIE_Exporter extends CIE_Processor
 		$this->print_export( $sanitized_fields, $search, $page, $limit );
 	}
 
-	public function print_export( $sanitized_fields, $search = array(), $page = 1, $per_page = 100 )
-	{
+	public function print_export( $sanitized_fields, $search = array(), $page = 1, $per_page = 100 ) {
 		$offset = $per_page * ( intval( $page ) - 1 );
 		if ( 0 > $offset ) {
 			$offset = 0;
 		}
 
 		$elements = $this->get_main_elements( $search, $offset, $per_page );
-		$total = $elements['total'];
+		$total    = $elements['total'];
 		$elements = $elements['elements'];
 
 		$first_row = $this->create_first_row( $sanitized_fields );
@@ -140,13 +136,12 @@ abstract class CIE_Exporter extends CIE_Processor
 	 * Creates a row
 	 *
 	 * @param CIE_Element $element
-	 * @param array       $fields
+	 * @param array $fields
 	 *
 	 * @return array
 	 * @throws Exception
 	 */
-	public function create_row( CIE_Element $element, array $fields )
-	{
+	public function create_row( CIE_Element $element, array $fields ) {
 		$row = array();
 
 		do_action( 'cie_pre_create_row', $element );
@@ -155,7 +150,7 @@ abstract class CIE_Exporter extends CIE_Processor
 			// Get value from generic field object
 			if ( in_array( $group_name, $this->get_supported_fields() ) ) {
 				$object = $this->get_field_type_object( $group_name );
-				$row = array_merge( $row, $object->get_field_values( array_keys( $field_group ), $element ) );
+				$row    = array_merge( $row, $object->get_field_values( array_keys( $field_group ), $element ) );
 				continue;
 			}
 
@@ -204,8 +199,7 @@ abstract class CIE_Exporter extends CIE_Processor
 	 *
 	 * @return array
 	 */
-	public function create_first_row( array $fields = array() )
-	{
+	public function create_first_row( array $fields = array() ) {
 		$first_row = array();
 		foreach ( $fields as $group_name => $field_group ) {
 			foreach ( $field_group as $field_id => $field_name ) {

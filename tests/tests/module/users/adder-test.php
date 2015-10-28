@@ -1,17 +1,11 @@
 <?php
-/**
- * Date: 14.01.15
- * Time: 14:21
- */
-class Module_Users_Adder_Test extends WP_UnitTestCase
-{
+class Module_Users_Adder_Test extends WP_UnitTestCase {
 	/**
 	 * @var CIE_Module_Users_Creator
 	 */
 	protected $importer;
 
-	public function setUp()
-	{
+	public function setUp() {
 		$this->importer = new CIE_Module_Users_Adder();
 		parent::setUp();
 	}
@@ -19,24 +13,39 @@ class Module_Users_Adder_Test extends WP_UnitTestCase
 	/**
 	 * Test user import
 	 */
-	public function test_import_user()
-	{
-		$user_id_1 = wp_create_user( 'u1', 'pw', 'u1@email.com' );
-		$user_id_2 = wp_create_user( 'u2', 'pw', 'u2@email.com' );
-		$user_id_3 = wp_create_user( 'u3', 'pw', 'u3@email.com' );
+	public function test_import_user() {
+		$user_1 = $this->factory->user->create_and_get(
+			array(
+				'role'       => 'subscriber',
+				'user_login' => 'u1',
+				'user_email' => 'u1@email.com',
+			)
+		);
 
-		$user_1 = get_user_by( 'id', $user_id_1 );
-		$user_2 = get_user_by( 'id', $user_id_2 );
-		$user_3 = get_user_by( 'id', $user_id_3 );
+		$user_2 = $this->factory->user->create_and_get(
+			array(
+				'role'       => array(),
+				'user_login' => 'u2',
+				'user_email' => 'u2@email.com',
+			)
+		);
+
+		$user_3 = $this->factory->user->create_and_get(
+			array(
+				'role'       => array(),
+				'user_login' => 'u3',
+				'user_email' => 'u3@email.com',
+			)
+		);
 
 		$this->assertContains( 'subscriber', $user_1->roles );
 		$this->assertNotContains( 'editor', $user_2->roles );
 		$this->assertNotContains( 'administrator', $user_3->roles );
-		$this->assertNotContains( 'author', $user_3->roles );
 
 		$data = array(
 			array(
-				'ID' => $user_id_1,  // Should default to subscriber role, should fail because user already has subscriber role
+				'ID'               => $user_1->ID,
+				// Should default to subscriber role, should be skipped because user already has subscriber role
 				'user_option_test' => 'user_1',
 			),
 			array(
@@ -60,16 +69,18 @@ class Module_Users_Adder_Test extends WP_UnitTestCase
 		$this->assertCount( 1, $result['errors'] );
 		$this->assertEquals( 3, $result['imported'] );
 
-		$user_1 = get_user_by( 'id', $user_id_1 );
-		$user_2 = get_user_by( 'id', $user_id_2 );
-		$user_3 = get_user_by( 'id', $user_id_3 );
+		$user_1 = get_user_by( 'id', $user_1->ID );
+		$user_2 = get_user_by( 'id', $user_2->ID );
+		$user_3 = get_user_by( 'id', $user_3->ID );
 
 		$this->assertContains( 'subscriber', $user_1->roles );
 		$this->assertContains( 'editor', $user_2->roles );
 		$this->assertContains( 'administrator', $user_3->roles );
 
-		$this->assertEquals( 'user_1', get_option( 'user_option_test_' . $user_id_1 ) );
-		$this->assertEquals( 'user_2', get_option( 'user_option_test_' . $user_id_2 ) );
-		$this->assertEquals( 'user_3', get_option( 'user_option_test_' . $user_id_3 ) );
+		$this->assertEquals( 'user_1', get_option( 'user_option_test_' . $user_1->ID ) );
+		$this->assertEquals( 'user_2', get_option( 'user_option_test_' . $user_2->ID ) );
+		$this->assertEquals( 'user_3', get_option( 'user_option_test_' . $user_3->ID ) );
+
+		$this->assertCount( 1, $result['errors'] );
 	}
 }

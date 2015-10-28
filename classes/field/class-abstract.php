@@ -1,9 +1,9 @@
 <?php
+
 /**
  * Abstract class for field handlers
  */
-abstract class CIE_Field_Abstract
-{
+abstract class CIE_Field_Abstract {
 	/**
 	 * Returns an array of available field names
 	 *
@@ -16,7 +16,7 @@ abstract class CIE_Field_Abstract
 	/**
 	 * Returns field values
 	 *
-	 * @param array       $fields
+	 * @param array $fields
 	 * @param CIE_Element $element
 	 *
 	 * @return array
@@ -26,15 +26,14 @@ abstract class CIE_Field_Abstract
 	/**
 	 * Set field values for this field type. Returns an array of errors
 	 *
-	 * @param array       $fields
+	 * @param array $fields
 	 * @param CIE_Element $element
 	 *
 	 * @return array
 	 */
 	abstract public function set_field_values( array $fields, CIE_Element $element );
 
-	public function extract_meta( array $fields )
-	{
+	public function extract_meta( array $fields ) {
 		$meta_fields = array();
 		foreach ( $fields as $key => $value ) {
 			if ( 0 !== strpos( $key, 'meta_' ) ) {
@@ -62,8 +61,7 @@ abstract class CIE_Field_Abstract
 		return $meta_to_set;
 	}
 
-	public function get_searchable_fields()
-	{
+	public function get_searchable_fields() {
 		return array();
 	}
 }

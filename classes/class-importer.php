@@ -1,20 +1,19 @@
 <?php
+
 /**
  * Provides basic import processing functionality
  */
-abstract class CIE_Importer extends CIE_Processor
-{
+abstract class CIE_Importer extends CIE_Processor {
 	const MODE_IMPORT = 1;
 	const MODE_UPDATE = 2;
-	const MODE_BOTH   = 3;
+	const MODE_BOTH = 3;
 
 	/**
 	 * By default importers support no field types
 	 *
 	 * @return array
 	 */
-	public function get_supported_fields()
-	{
+	public function get_supported_fields() {
 		return array();
 	}
 
@@ -38,7 +37,7 @@ abstract class CIE_Importer extends CIE_Processor
 	 * Creates an element from a CSV row
 	 *
 	 * @param array $row
-	 * @param int   $mode
+	 * @param int $mode
 	 *
 	 * @return array
 	 */
@@ -47,8 +46,7 @@ abstract class CIE_Importer extends CIE_Processor
 	/**
 	 * Handles uploaded JSON data
 	 */
-	public function import_json()
-	{
+	public function import_json() {
 		$data = false;
 		if ( ! empty( $_POST['data'] ) ) {
 			$data = json_decode( stripslashes( $_POST['data'] ), true );
@@ -56,6 +54,7 @@ abstract class CIE_Importer extends CIE_Processor
 
 		if ( ! is_array( $data ) ) {
 			wp_send_json_error();
+
 			return;
 		}
 
@@ -76,8 +75,7 @@ abstract class CIE_Importer extends CIE_Processor
 	 *
 	 * @return array
 	 */
-	public function import( array $data, $mode )
-	{
+	public function import( array $data, $mode ) {
 		$return = array(
 			'errors'   => array(),
 			'imported' => 0,
@@ -90,7 +88,7 @@ abstract class CIE_Importer extends CIE_Processor
 			// Make 1 based
 			$number += 1;
 
-			if ( ! empty ( $errors ) ) {
+			if ( ! empty( $errors ) ) {
 				$return['errors'][ $number ] = $errors;
 				continue;
 			}
@@ -107,7 +105,7 @@ abstract class CIE_Importer extends CIE_Processor
 
 			$errors = $this->precess_element( $element, $row );
 
-			if ( ! empty ( $errors ) ) {
+			if ( ! empty( $errors ) ) {
 				$return['errors'][ $number ] = $errors;
 			}
 		}
@@ -115,8 +113,7 @@ abstract class CIE_Importer extends CIE_Processor
 		return $return;
 	}
 
-	public function precess_element( CIE_Element $element, array $data )
-	{
+	public function precess_element( CIE_Element $element, array $data ) {
 		$errors = array();
 
 		foreach ( $this->get_supported_fields() as $field_type ) {
@@ -135,8 +132,7 @@ abstract class CIE_Importer extends CIE_Processor
 	 *
 	 * @return array
 	 */
-	public function check_required_fields( array $row, array $required )
-	{
+	public function check_required_fields( array $row, array $required ) {
 		$errors = array();
 
 		foreach ( $required as $missing ) {
@@ -147,7 +143,6 @@ abstract class CIE_Importer extends CIE_Processor
 					break;
 				}
 			}
-
 
 
 			// Required field was found
@@ -173,6 +168,7 @@ abstract class CIE_Importer extends CIE_Processor
 				);
 			}
 		}
+
 		return $errors;
 	}
 }

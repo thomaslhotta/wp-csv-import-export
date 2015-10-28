@@ -1,12 +1,10 @@
 <?php
+
 /**
- * Date: 16.01.15
- * Time: 12:21
+ * Handles post meta
  */
-class CIE_Field_Postmeta extends CIE_Field_Meta
-{
-	public function get_available_fields( array $search = array() )
-	{
+class CIE_Field_Postmeta extends CIE_Field_Meta {
+	public function get_available_fields( array $search = array() ) {
 		global $wpdb;
 
 		$sql = 'SELECT DISTINCT( meta_key ) FROM ' . $wpdb->postmeta;
@@ -26,15 +24,14 @@ class CIE_Field_Postmeta extends CIE_Field_Meta
 
 		$return = array();
 		foreach ( $meta_keys as $meta_key ) {
-			$meta_key = $meta_key[0];
+			$meta_key            = $meta_key[0];
 			$return[ $meta_key ] = $meta_key;
 		}
 
 		return $return;
 	}
 
-	public function get_searchable_fields( array $search = array() )
-	{
+	public function get_searchable_fields( array $search = array() ) {
 		$searches = array();
 		foreach ( $this->get_available_fields( $search ) as $search ) {
 			$searches[ $search ] = $search;
@@ -43,11 +40,10 @@ class CIE_Field_Postmeta extends CIE_Field_Meta
 		return $searches;
 	}
 
-	public function get_field_values( array $fields, CIE_Element $element )
-	{
+	public function get_field_values( array $fields, CIE_Element $element ) {
 		$data = array();
 
-		$id = null;
+		$id      = null;
 		$element = $element->get_element();
 		if ( $element instanceof WP_Post ) {
 			$id = $element->ID;
@@ -64,8 +60,7 @@ class CIE_Field_Postmeta extends CIE_Field_Meta
 		return $this->get_meta_values( $fields, 'post', $id );
 	}
 
-	public function set_field_values( array $fields, CIE_Element $element )
-	{
+	public function set_field_values( array $fields, CIE_Element $element ) {
 		$errors = array();
 
 		foreach ( $fields as $field_id => $value ) {

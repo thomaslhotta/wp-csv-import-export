@@ -1,13 +1,12 @@
 <?php
+
 /**
  * Exports Users
  *
  * Class CIE_Exporter_User
  */
-class CIE_Module_Users_Exporter extends CIE_Exporter
-{
-	public function get_supported_fields()
-	{
+class CIE_Module_Users_Exporter extends CIE_Exporter {
+	public function get_supported_fields() {
 		return array(
 			'user',
 			'usermeta',
@@ -15,9 +14,8 @@ class CIE_Module_Users_Exporter extends CIE_Exporter
 		);
 	}
 
-	public function get_main_elements( array $search, $offset, $limit )
-	{
-		$role = 'Subscriber';
+	public function get_main_elements( array $search, $offset, $limit ) {
+		$role   = 'Subscriber';
 		$params = array(
 			'offset'      => $offset,
 			'number'      => $limit,
@@ -52,15 +50,12 @@ class CIE_Module_Users_Exporter extends CIE_Exporter
 		return $return;
 	}
 
-
-
 	/**
 	 * Detect network admin in an AJAX safe way
 	 */
-	public function is_network_admin()
-	{
+	public function is_network_admin() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			return ( is_multisite() && preg_match( '#^' . network_admin_url(). '#i', $_SERVER['HTTP_REFERER'] ) );
+			return ( is_multisite() && preg_match( '#^' . network_admin_url() . '#i', $_SERVER['HTTP_REFERER'] ) );
 		}
 
 		return is_network_admin();

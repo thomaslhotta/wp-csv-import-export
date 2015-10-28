@@ -1,14 +1,13 @@
 <?php
+
 /**
  * Auto loader class
  */
-class CIE_Autoloader
-{
+class CIE_Autoloader {
 	/**
 	 * Creates and registers the auto loader
 	 */
-	public function register()
-	{
+	public function register() {
 		spl_autoload_register( array( $this, 'autoload' ) );
 	}
 
@@ -19,13 +18,12 @@ class CIE_Autoloader
 	 *
 	 * @return bool
 	 */
-	public function autoload( $class )
-	{
+	public function autoload( $class ) {
 		if ( 0 !== strpos( $class, 'CIE' ) ) {
 			return false;
 		}
 
-		$class = strtolower( str_replace( 'CIE_' , '', $class ) );
+		$class = strtolower( str_replace( 'CIE_', '', $class ) );
 
 		$parts = explode( '_', $class );
 
@@ -44,6 +42,7 @@ class CIE_Autoloader
 		}
 
 		require_once $path;
+
 		return true;
 	}
 }

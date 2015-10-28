@@ -1,12 +1,10 @@
 <?php
+
 /**
- * Date: 08.01.15
- * Time: 15:42
+ * Handles generic meta data
  */
-abstract class CIE_Field_Meta extends CIE_Field_Abstract
-{
-	public function get_meta_values( array $fields, $type, $id )
-	{
+abstract class CIE_Field_Meta extends CIE_Field_Abstract {
+	public function get_meta_values( array $fields, $type, $id ) {
 		$data = array();
 		foreach ( $fields as $field_id ) {
 			$meta = (array) get_metadata( $type, $id, $field_id, false );
@@ -32,6 +30,7 @@ abstract class CIE_Field_Meta extends CIE_Field_Abstract
 
 			$data[] = $meta;
 		}
+
 		return $data;
 	}
 }

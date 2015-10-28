@@ -1,14 +1,10 @@
 <?php
+
 /**
  * Imports and exports comment meta data
- *
- * Date: 08.01.15
- * Time: 15:42
  */
-class CIE_Field_Commentmeta extends CIE_Field_Meta
-{
-	public function get_available_fields( array $search = array() )
-	{
+class CIE_Field_Commentmeta extends CIE_Field_Meta {
+	public function get_available_fields( array $search = array() ) {
 		global $wpdb;
 
 		if ( empty( $search['post']['post_id'] ) || empty( $search['post']['post_id'] ) ) {
@@ -30,18 +26,15 @@ class CIE_Field_Commentmeta extends CIE_Field_Meta
 		return $return;
 	}
 
-	public function get_searchable_fields( array $search = array() )
-	{
+	public function get_searchable_fields( array $search = array() ) {
 		return $this->get_available_fields( $search );
 	}
 
-	public function get_field_values( array $fields, CIE_Element $element )
-	{
+	public function get_field_values( array $fields, CIE_Element $element ) {
 		return $this->get_meta_values( $fields, 'comment', $element->get_element_id() );
 	}
 
-	public function set_field_values( array $fields, CIE_Element $element )
-	{
+	public function set_field_values( array $fields, CIE_Element $element ) {
 		$errors = array();
 
 		$fields = $this->extract_meta( $fields );
@@ -70,7 +63,7 @@ class CIE_Field_Commentmeta extends CIE_Field_Meta
 				}
 			}
 		}
-		
+
 		return $errors;
 	}
 }

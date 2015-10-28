@@ -1,18 +1,20 @@
 <?php
+
 /**
  * Base class for modules
  */
-abstract class CIE_Module_Abstract
-{
+abstract class CIE_Module_Abstract {
 	/**
 	 * Registers admin menus
 	 */
-	public function register_menus() {}
+	public function register_menus() {
+	}
 
 	/**
 	 * Registers AJAX handlers
 	 */
-	public function register_ajax() {}
+	public function register_ajax() {
+	}
 
 	/**
 	 * Renders the export UI
@@ -22,8 +24,7 @@ abstract class CIE_Module_Abstract
 	 *
 	 * @return string
 	 */
-	public function render_export_ui( array $fields, array $hidden_fields = array(), array $searchable = array() )
-	{
+	public function render_export_ui( array $fields, array $hidden_fields = array(), array $searchable = array() ) {
 		$hidden_fields = $this->flatten_hidden( $hidden_fields );
 
 		$html = '';
@@ -108,14 +109,13 @@ abstract class CIE_Module_Abstract
 		return $html;
 	}
 
-	public function flatten_hidden( array $hidden )
-	{
+	public function flatten_hidden( array $hidden ) {
 		$return = array();
 
 		foreach ( $hidden as $k1 => $v1 ) {
 			if ( is_array( $v1 ) ) {
 				foreach ( $v1 as $k2 => $v2 ) {
-					$key = $k1 .  '[' . $k2 . ']';
+					$key = $k1 . '[' . $k2 . ']';
 					dump( $key );
 					if ( is_array( $v2 ) ) {
 						foreach ( $v2 as $k3 => $v3 ) {
@@ -141,9 +141,8 @@ abstract class CIE_Module_Abstract
 	 *
 	 * @return string
 	 */
-	public function render_import_ui( $action, $show_title = true )
-	{
-		$csv = '';
+	public function render_import_ui( $action, $show_title = true ) {
+		$csv       = '';
 		$csv_valid = true;
 		if ( ! empty( $_FILES['csv'] ) && check_admin_referer( 'upload-csv', 'nonce' ) ) {
 			$finfo = finfo_open( FILEINFO_MIME_TYPE );
@@ -178,12 +177,12 @@ abstract class CIE_Module_Abstract
 				CIE_Importer::MODE_IMPORT === $mode ? ' nav-tab-active' : '',
 				__( 'Import', 'cie' ),
 				esc_url( add_query_arg( 'mode', CIE_Importer::MODE_UPDATE, $url ) ),
-				CIE_Importer::MODE_UPDATE === $mode  ? ' nav-tab-active' : '',
+				CIE_Importer::MODE_UPDATE === $mode ? ' nav-tab-active' : '',
 				__( 'Update', 'cie' )
 			);
 		}
 
-		if ( empty( $csv ) || empty ( $csv_valid ) ) {
+		if ( empty( $csv ) || empty( $csv_valid ) ) {
 			// If no file was uploaded show default UI
 			$required = '';
 			foreach ( $this->get_importer()->get_required_fields( $mode ) as $field ) {
@@ -269,8 +268,7 @@ abstract class CIE_Module_Abstract
 	/**
 	 * Detect network admin in an AJAX safe way
 	 */
-	public function is_network_admin()
-	{
+	public function is_network_admin() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return ( is_multisite() && false !== strpos( $_SERVER['HTTP_REFERER'], network_admin_url() ) );
 		}

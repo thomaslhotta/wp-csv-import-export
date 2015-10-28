@@ -27,6 +27,11 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// This plugin is only action in admin
+if ( ! is_admin() ) {
+	return;
+}
+
 require_once( plugin_dir_path( __FILE__ ) . '/classes/class-csv-import-export.php' );
 
 add_action( 'plugins_loaded', array( 'CSV_Import_Export', 'get_instance' ) );

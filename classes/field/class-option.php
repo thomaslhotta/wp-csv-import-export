@@ -2,12 +2,10 @@
 /**
  * Add 'user' options
  */
-class CIE_Field_Option extends CIE_Field_Abstract
-{
+class CIE_Field_Option extends CIE_Field_Abstract {
 	protected $type = 'user_option_';
 
-	public function get_available_fields( array $search = array() )
-	{
+	public function get_available_fields( array $search = array() ) {
 		global $wpdb;
 
 		$sql = $wpdb->prepare(
@@ -25,8 +23,7 @@ class CIE_Field_Option extends CIE_Field_Abstract
 		return $fields;
 	}
 
-	public function get_field_values( array $fields, CIE_Element $element )
-	{
+	public function get_field_values( array $fields, CIE_Element $element ) {
 		$user_id = $element->get_user_id();
 
 		$data = array();
@@ -41,11 +38,10 @@ class CIE_Field_Option extends CIE_Field_Abstract
 		return $data;
 	}
 
-	public function set_field_values( array $fields, CIE_Element $element )
-	{
+	public function set_field_values( array $fields, CIE_Element $element ) {
 		if ( ! $element->get_user_id() ) {
 			return array(
-				__( 'User id required to set user options', 'cie' )
+				__( 'User id required to set user options', 'cie' ),
 			);
 		}
 
@@ -58,7 +54,7 @@ class CIE_Field_Option extends CIE_Field_Abstract
 
 			$name = strtolower( $name . '_' . $element->get_user_id() );
 
-			$added = add_option( $name, $value, '' , 'no' );
+			$added = add_option( $name, $value, '', 'no' );
 
 			if ( ! $added ) {
 				$added = update_option( $name, $value );
@@ -70,7 +66,6 @@ class CIE_Field_Option extends CIE_Field_Abstract
 					strip_tags( $name )
 				);
 			}
-
 		}
 
 		return $errors;
