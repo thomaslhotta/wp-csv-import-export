@@ -39,7 +39,7 @@ class CIE_Field_Buddypress extends CIE_Field_Abstract {
 				}
 			}
 
-			$data[] = $value;
+			$data[] = (string) $value;
 		}
 
 		return $data;

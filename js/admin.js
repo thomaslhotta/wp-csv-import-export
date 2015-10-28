@@ -1,23 +1,29 @@
-// the semi-colon before the function invocation is a safety
-// net against concatenated scripts and/or other plugins
-// that are not closed properly.
-;(function ( $, Backbone, window, document, wp, zip, undefined ) {
-	"use strict";
+/* global jQuery, document, Backbone, window, wp, zip, ajaxurl, _, Papa */
+
+;(function ( $, Backbone, window, document, wp, zip ) {
+	'use strict';
 
 	// Setup zip.js
 	var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem;
 
-	var createTempFile = function (callback) {
+	var createTempFile = function( callback ) {
 		var tmpFilename = 'tmp.zip';
 		requestFileSystem( TEMPORARY, 4 * 1024 * 1024 * 1024, function( filesystem ) {
 			var create = function() {
-				filesystem.root.getFile(tmpFilename, {
-					create : true
-				}, function(zipFile) {
-					callback(zipFile);
+				filesystem.root.getFile( tmpFilename, {
+					create: true
+				}, function( zipFile ) {
+					callback( zipFile );
 				});
-			}
-			filesystem.root.getFile( tmpFilename, null, function(entry) { entry.remove(create, create); }, create);
+			};
+
+			filesystem.root.getFile(
+				tmpFilename,
+				null,
+				function( entry ) {
+					entry.remove( create, create );
+				}, create
+			);
 		});
 	};
 
@@ -51,20 +57,20 @@
 		function init(callback, onerror) {
 			var request = new XMLHttpRequest();
 
-			request.addEventListener("load", function() {
-				that.data = new Uint8Array(request.response);
-				that.size = that.data.length
+			request.addEventListener( 'load', function() {
+				that.data = new Uint8Array( request.response );
+				that.size = that.data.length;
 				callback();
 			}, false);
-			request.addEventListener("error", onerror, false);
-			request.open("GET", url);
-			request.responseType = "arraybuffer";
+			request.addEventListener( 'error', onerror, false );
+			request.open( 'GET', url );
+			request.responseType = 'arraybuffer';
 			request.send();
 		}
 
-		function readUint8Array(index, length, callback, onerror) {
+		function readUint8Array( index, length, callback, onerror ) {
 			getData(function() {
-				callback(new Uint8Array(that.data.subarray(index, index + length)));
+				callback( new Uint8Array( that.data.subarray( index, index + length ) ) );
 			}, onerror);
 		}
 
@@ -97,7 +103,7 @@
 	 * Errors collection
 	 */
 	wp.csvie.model.Errors = Backbone.Collection.extend({
-		model : wp.csvie.model.Error
+		model: wp.csvie.model.Error
 	});
 
 	/**
@@ -117,8 +123,8 @@
 			if ( this.get( 'Attachments' ) ) {
 				_.each( this.get( 'Attachments' ).split( ';' ), function( url ) {
 					var callback = $.Deferred(),
-						// Follow the Wordpress structure for directory naming
-						name = url.split('/').slice( -3 ).join('/');
+						// Follow the WordPress structure for directory naming
+						name = url.split( '/' ).slice( -3 ).join( '/' );
 
 					// Use HTTPS if available
 					if ( 'https:' === window.location.protocol ) {
@@ -266,13 +272,12 @@
 		 * Restores all settings to the ones stored in the model
 		 */
 		render: function() {
-			var that = this;
 			var settings = this.model.toJSON();
 
 			this.$el.find( 'input' ).each( function() {
-				var input = $(this);
+				var input = $( this );
 				// Skip hidden inputs
-				if ( 'hidden' === input.attr( 'type' ) || ! settings[ input.attr( 'name' ) ]  ) {
+				if ( 'hidden' === input.attr( 'type' ) || ! settings[ input.attr( 'name' ) ] ) {
 					return;
 				}
 
@@ -281,7 +286,7 @@
 					return;
 				}
 
-				input.val( settings[ input.attr( 'name' ) ] );
+				input.val(settings[ input.attr( 'name' ) ]);
 			});
 
 			return this;
@@ -398,7 +403,7 @@
 					});
 				} else {
 					// Else use blobs
-					zip.createWriter(new zip.BlobWriter(), function( writer ) {
+					zip.createWriter( new zip.BlobWriter(), function( writer ) {
 						that.model.zipWriter = writer;
 						that.exportCSV();
 					});
@@ -412,17 +417,17 @@
 		 * Runs CSV export
 		 */
 		exportCSV: function() {
-			var that = this;
-			this.attachments = null;
-
-			var page = this.model.state.currentPage + 1;
+			var that = this,
+				page = this.model.state.currentPage + 1;
 			if ( null === this.model.state.totalPages ) {
 				page = 1;
 			}
 
-			this.model.getPage(page).done(function(){
+			this.attachments = null;
+
+			this.model.getPage( page ).done( function() {
 				that.addElements( that.model );
-				if (that.model.hasNextPage()) {
+				if ( that.model.hasNextPage() ) {
 					that.exportCSV();
 				} else {
 					that.saveCSV();
@@ -548,12 +553,12 @@
 			// CSV Parser configuration
 				config = {
 					header: true,
-					complete: function(results, file) {
+					complete: function( results ) {
 						that.elements = results.data;
 						that.progressModel.set( 'total', that.elements.length );
 						that.sendData();
 					},
-					error: function(err, file, inputElem, reason)
+					error: function( err, file, inputElem, reason )
 					{
 						//@todo Do something on errors
 					}
@@ -570,10 +575,10 @@
 			if ( $.trim( textarea.val() ) ) {
 				Papa.parse( textarea.val(), config );
 			} else if ( window.FileReader && 0 < file[0].files.length ) {
-				file.parse( { config:config } );
+				file.parse( { config: config } );
 			} else {
 				// @todo Translate this
-				alert ('No file selected' );
+				alert( 'No file selected' );
 			}
 		},
 		/**
@@ -599,11 +604,11 @@
 				},
 				dataType: 'json',
 				type: 'POST',
-				success: function(response) {
-					_.each( response.data.errors, function( errors, row ){
+				success: function( response ) {
+					_.each( response.data.errors, function( errors, row ) {
 						this.errorsView.model.add( new wp.csvie.model.Error({
 							row: row,
-							errors : errors
+							errors: errors
 						}));
 					}, that );
 
@@ -634,19 +639,19 @@
 		});
 	}
 
-})(jQuery, Backbone, window, document, wp, zip );
+})( jQuery, Backbone, window, document, wp, zip );
 
-(function ( $, document ) {
-	"use strict";
-	$.fn['checkAll'] = function () {
-		return this.each(function () {
+( function ( $, document ) {
+	'use strict';
+	$.fn['checkAll'] = function() {
+		return this.each( function () {
 			var target = $( this ).data( 'target' );
 			$( target ).find( 'input[type=checkbox]' ).prop( 'checked', $( this ).prop( 'checked' ) ).trigger( 'change' );
 		});
 	};
 
 	// Data API
-	$(document).on( 'click', '[data-toggle="checked"]', function() {
+	$( document ).on( 'click', '[data-toggle="checked"]', function() {
 		$( this ).checkAll();
 	});
-})(jQuery, document);
+})( jQuery, document );

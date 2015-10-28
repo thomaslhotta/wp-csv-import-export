@@ -86,7 +86,6 @@ abstract class CIE_Exporter extends CIE_Processor {
 
 		$first_row = $this->create_first_row( $sanitized_fields );
 
-
 		header( 'Content-Type: application/json' );
 
 		// We build our own JSON to be able to use flush()
