@@ -105,7 +105,6 @@ abstract class CIE_Module_Abstract {
 
 		wp_enqueue_script( 'cie-admin-script' );
 
-
 		return $html;
 	}
 
@@ -116,7 +115,6 @@ abstract class CIE_Module_Abstract {
 			if ( is_array( $v1 ) ) {
 				foreach ( $v1 as $k2 => $v2 ) {
 					$key = $k1 . '[' . $k2 . ']';
-					dump( $key );
 					if ( is_array( $v2 ) ) {
 						foreach ( $v2 as $k3 => $v3 ) {
 							$return[ $key . '[' . $k3 . ']' ] = $v3;

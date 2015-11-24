@@ -25,6 +25,12 @@ class CIE_Field_Postmeta extends CIE_Field_Meta {
 		$return = array();
 		foreach ( $meta_keys as $meta_key ) {
 			$meta_key            = $meta_key[0];
+
+			// Skip metas with underscore keys
+			if ( 0 === strpos( $meta_key, '_' ) ) {
+				continue;
+			}
+
 			$return[ $meta_key ] = $meta_key;
 		}
 
