@@ -4,20 +4,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress CSV Import Export\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/plugins/plugin-name\n"
-"POT-Creation-Date: 2015-05-15 19:20+0100\n"
-"PO-Revision-Date: 2015-05-15 20:03+0100\n"
+"POT-Creation-Date: 2015-11-24 16:25+0100\n"
+"PO-Revision-Date: 2015-11-24 16:44+0100\n"
 "Last-Translator: Thomas Lhotta <th.lhotta@gmail.com>\n"
-"Language-Team:  <th.lhotta@gmail.com>\n"
+"Language-Team: th.lhotta@gmail.com\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.8.4\n"
 "X-Poedit-KeywordsList: __;_e;_n;_x;esc_html_e;esc_html__;esc_attr_e;"
 "esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
-"X-Poedit-Basepath: ../\n"
+"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-0: classes\n"
+"X-Poedit-SearchPath-1: views\n"
 
 #: classes/class-cie-attachment-processor.php:34
 msgid "Invalid file type"
@@ -40,59 +41,139 @@ msgstr ""
 msgid "Zero size file downloaded"
 msgstr ""
 
-#: classes/class-importer.php:161
+#: classes/class-importer.php:156
 #, php-format
 msgid "\"%s\" is missing or empty"
 msgstr ""
 
-#: classes/class-importer.php:169
+#: classes/class-importer.php:164
 #, php-format
 msgid "One of the following columns must be present: %s "
 msgstr ""
 
-#: classes/field/class-attachment.php:11
+#: classes/field/class-attachment.php:10
 msgid "Attachments"
 msgstr "Dateianhänge"
 
-#: classes/field/class-buddypress.php:54
+#: classes/field/class-buddypress.php:57
 msgid "User id required to set BuddyPress profile values"
 msgstr ""
 
-#: classes/field/class-buddypress.php:78
+#: classes/field/class-buddypress.php:82
 #, php-format
 msgid "BuddyPress profile field \"%s\" could not be set"
 msgstr ""
 
-#: classes/field/class-commentmeta.php:59
-#: classes/field/class-commentmeta.php:67
+#: classes/field/class-commentmeta.php:52
+#: classes/field/class-commentmeta.php:60
 #, php-format
 msgid "User comment value %s could not be set"
 msgstr ""
 
-#: classes/field/class-option.php:48
+#: classes/field/class-option.php:44
 msgid "User id required to set user options"
 msgstr ""
 
-#: classes/field/class-option.php:69
+#: classes/field/class-option.php:65
 #, php-format
 msgid "User option \"%s\" could not be set"
 msgstr ""
 
-#: classes/field/class-postmeta.php:80
+#: classes/field/class-post.php:5
+msgid "Post ID"
+msgstr "Beitrags ID"
+
+#: classes/field/class-post.php:6
+msgid "Author ID"
+msgstr "Autor ID"
+
+#: classes/field/class-post.php:7
+msgid "Publish date"
+msgstr "Veröffentlichungsdatum"
+
+#: classes/field/class-post.php:8 classes/field/class-post.php:27
+msgid "Last Modified"
+msgstr ""
+
+#: classes/field/class-post.php:9
+msgid "Content"
+msgstr ""
+
+#: classes/field/class-post.php:10
+msgid "Title"
+msgstr ""
+
+#: classes/field/class-post.php:11
+msgid "Excerpt"
+msgstr ""
+
+#: classes/field/class-post.php:12
+msgid "Status"
+msgstr ""
+
+#: classes/field/class-post.php:13
+msgid "Comment status"
+msgstr "Kommentarstatus"
+
+#: classes/field/class-post.php:14
+msgid "Ping status"
+msgstr ""
+
+#: classes/field/class-post.php:15
+msgid "Password"
+msgstr ""
+
+#: classes/field/class-post.php:16
+msgid "Post name"
+msgstr ""
+
+#: classes/field/class-post.php:17
+msgid "URLs to ping"
+msgstr ""
+
+#: classes/field/class-post.php:18
+msgid "Pinged URLs"
+msgstr "Angepingte URLs"
+
+#: classes/field/class-post.php:19
+msgid "Post parent"
+msgstr ""
+
+#: classes/field/class-post.php:21 classes/module/posts/class-exporter.php:33
+msgid "Permalink"
+msgstr ""
+
+#: classes/field/class-post.php:22
+msgid "Menu order"
+msgstr ""
+
+#: classes/field/class-post.php:23
+msgid "Post type"
+msgstr "Postart"
+
+#: classes/field/class-post.php:25
+msgid "Comment count"
+msgstr "Kommentaranzahl"
+
+#: classes/field/class-post.php:26
+msgid "Publish date (GMT)"
+msgstr ""
+
+#: classes/field/class-postmeta.php:81
 #, php-format
 msgid "User post value %s could not be set"
 msgstr ""
 
-#: classes/field/class-usermeta.php:75
+#: classes/field/class-usermeta.php:73
 #, php-format
 msgid "User meta value %s could not be set"
 msgstr "User Metawert %s konnte nicht gesetzt werden."
 
-#: classes/module/class-abstract.php:51
+#: classes/module/class-abstract.php:52
 msgid "All"
 msgstr ""
 
-#: classes/module/class-abstract.php:97 views/export.php:38
+#: classes/module/class-abstract.php:98 views/export.php:34
 msgid "Export"
 msgstr "Export"
 
@@ -142,51 +223,50 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: classes/module/class-comments.php:13 classes/module/class-comments.php:14
-#: classes/module/class-posts.php:17 classes/module/class-posts.php:18
-#: classes/module/class-users.php:14 classes/module/class-users.php:15
+#: classes/module/class-comments.php:20 classes/module/class-comments.php:21
+#: classes/module/class-posts.php:16 classes/module/class-users.php:19
+#: classes/module/class-users.php:20
 msgid "Import CSV"
 msgstr "CSV importieren"
 
-#: classes/module/class-comments.php:21 classes/module/class-comments.php:22
-#: classes/module/class-posts.php:26 classes/module/class-posts.php:27
-#: classes/module/class-posts.php:36 classes/module/class-posts.php:37
-#: classes/module/class-users.php:23 classes/module/class-users.php:24
+#: classes/module/class-comments.php:28 classes/module/class-comments.php:29
+#: classes/module/class-posts.php:17 classes/module/class-users.php:28
+#: classes/module/class-users.php:29
 msgid "Export CSV"
 msgstr "CSV exportieren"
 
-#: classes/module/class-comments.php:55 classes/module/class-users.php:47
+#: classes/module/class-comments.php:64 classes/module/class-users.php:56
 msgid "Export comments"
 msgstr "Kommentare exportieren"
 
-#: classes/module/class-gforms.php:26 classes/module/class-gforms.php:40
-#: classes/module/class-gforms.php:44
+#: classes/module/class-gforms.php:29 classes/module/class-gforms.php:41
+#: classes/module/class-gforms.php:45
 msgid "Import entries"
 msgstr "Einträge importieren"
 
-#: classes/module/comments/class-importer.php:29
+#: classes/module/comments/class-importer.php:26
 msgid "Comment ID."
 msgstr ""
 
-#: classes/module/comments/class-importer.php:37
-#: classes/module/users/class-creator.php:59
+#: classes/module/comments/class-importer.php:34
+#: classes/module/users/class-creator.php:55
 msgid "User login name."
 msgstr ""
 
-#: classes/module/comments/class-importer.php:49
+#: classes/module/comments/class-importer.php:45
 msgid "comment_ID is missing"
 msgstr ""
 
-#: classes/module/comments/class-importer.php:57
+#: classes/module/comments/class-importer.php:54
 #, php-format
 msgid "Comment with ID %d could not be found"
 msgstr ""
 
-#: classes/module/comments/class-importer.php:69
+#: classes/module/comments/class-importer.php:67
 msgid "Could not find parent post"
 msgstr ""
 
-#: classes/module/comments/class-importer.php:78
+#: classes/module/comments/class-importer.php:77
 msgid "Comment parent could not be found"
 msgstr ""
 
@@ -194,44 +274,44 @@ msgstr ""
 msgid "Comment author could not be found"
 msgstr ""
 
-#: classes/module/comments/class-importer.php:106
+#: classes/module/comments/class-importer.php:107
 msgid "Comment author name is missing"
 msgstr ""
 
-#: classes/module/comments/class-importer.php:124
+#: classes/module/comments/class-importer.php:126
 msgid "Comment could not be inserted"
 msgstr ""
 
-#: classes/module/gforms/class-importer.php:26
+#: classes/module/gforms/class-importer.php:23
 msgid "Form ID"
 msgstr "Formular ID"
 
-#: classes/module/users/class-adder.php:11
-#: classes/module/users/class-creator.php:51
+#: classes/module/users/class-adder.php:10
+#: classes/module/users/class-creator.php:47
 msgid "User ID, login name or email."
 msgstr ""
 
-#: classes/module/users/class-adder.php:55
+#: classes/module/users/class-adder.php:53
 msgid "User could be found"
 msgstr ""
 
-#: classes/module/users/class-creator.php:63
+#: classes/module/users/class-creator.php:59
 msgid "User email address."
 msgstr "Benutzer Email Adresse"
 
-#: classes/module/users/class-creator.php:67
+#: classes/module/users/class-creator.php:63
 msgid "Hashed user passwords"
 msgstr ""
 
-#: classes/module/users/class-creator.php:87
+#: classes/module/users/class-creator.php:82
 msgid "No user could be found"
 msgstr ""
 
-#: classes/module/users/class-creator.php:114
+#: classes/module/users/class-creator.php:111
 msgid "User could not be created for an unknown reason"
 msgstr ""
 
-#: views/export.php:17
+#: views/export.php:13
 msgid "Select all"
 msgstr "Alle auswählen"
 
@@ -297,6 +377,9 @@ msgstr "Zeile"
 #: views/import.php:128
 msgid "Message"
 msgstr "Nachricht"
+
+#~ msgid "Comment type"
+#~ msgstr "Comment "
 
 #~ msgid ""
 #~ "No user identification column found. Valid columns are ID, user_email or "

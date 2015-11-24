@@ -203,7 +203,11 @@ abstract class CIE_Exporter extends CIE_Processor {
 		foreach ( $fields as $group_name => $field_group ) {
 			foreach ( $field_group as $field_id => $field_name ) {
 				if ( isset( $fields[ $group_name ] ) && isset( $fields[ $group_name ][ $field_id ] ) ) {
-					$first_row[] = $field_name;
+					if ( ! empty( $_REQUEST['expert_mode'] ) ) {
+						$first_row[] = $field_id;
+					} else {
+						$first_row[] = $field_name;
+					}
 				}
 			}
 		}

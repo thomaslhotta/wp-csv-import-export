@@ -74,10 +74,17 @@ abstract class CIE_Module_Abstract {
 
 		if ( ! empty( $search_html ) ) {
 			$html .= sprintf(
-				'<tr><th>Search</th><td><table>%s</table></td></tr>',
+				'<tr><th>%s</th><td><table>%s</table></td></tr>',
+				__( 'Search' ),
 				$search_html
 			);
 		}
+
+		$html .= sprintf(
+			'<tr><th>%s</th><td><label><input type="checkbox" name="expert_mode" value="expert">%s</label></td></tr>',
+			__( 'Settings' ),
+			__( 'Expert mode', 'cie' )
+		);
 
 		$html = sprintf(
 			'<table class="form-table">%s</table>',
@@ -94,7 +101,7 @@ abstract class CIE_Module_Abstract {
 		);
 
 		$html .= sprintf(
-			'<button type="button" class="button-secondary export" data-toggle="export" data-target="#export-settings">%s</button>',
+			'<button type="button" class="button button-primary button-large export" data-toggle="export" data-target="#export-settings">%s</button>',
 			__( 'Export' )
 		);
 
@@ -237,6 +244,7 @@ abstract class CIE_Module_Abstract {
 		);
 
 		$html .= sprintf( '<input name="mode" value="%d" type="hidden">', $mode );
+		$html .= sprintf( '<input name="export_nonce" value="%d" type="hidden">', wp_create_nonce( $action ) );
 
 		// Import button
 		$html .= sprintf(

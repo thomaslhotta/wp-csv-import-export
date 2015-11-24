@@ -36,7 +36,7 @@
 					<th scope="row"><label for="csv"><?php _e( 'CSV File', $ps )?></label></th>
 					<td><input type="file" name="csv" id="csv" size="35" class="csv" required/></td>
 				</tr>
-				<?php if ( isset( $use_ajax ) ):?>
+				<?php if ( isset( $use_ajax ) ) :?>
 				<tr valign="top">
 					<th scope="row"><label for="csv"><?php _e( 'Use AJAX', $ps )?></label></th>
 					<td>
@@ -50,7 +50,7 @@
 				</tr>
 				<?php endif;?>
 				<?php if ( is_network_admin() ) : ?>
-					<?php if ( ! isset( $stopped_at ) ||  0 === $stopped_at ):?>
+					<?php if ( ! isset( $stopped_at ) ||  0 === $stopped_at ) :?>
 					<tr valign="top">
 						<th scope="row"><label for="renames"><?php _e( 'Rename fields', $ps )?></label></th>
 						<td>
@@ -63,7 +63,7 @@
 							<textarea rows="5" cols="50" id="transforms" name="transforms">{}</textarea>
 						</td>
 					</tr>
-					<?php else :?>
+					<?php else : ?>
 						<input type="hidden" name="renames" value="<?php echo esc_attr( $renames ) ?>" />
 						<input type="hidden" name="transforms" value="<?php echo esc_attr( $transforms ) ?>" />
 						<input type="hidden" name="stopped_at" value="<?php echo esc_attr( $stopped_at ) ?>" />
@@ -71,7 +71,7 @@
 						<input type="hidden" name="resume_data" value="<?php echo esc_attr( $resume_data ) ?>" />
 
 					<?php endif;?>
-				<?php else: ?>
+				<?php else : ?>
 					<tr valign="top">
 						<th><?php _e( 'File format', $ps ) ?></th>
 						<td>
@@ -118,7 +118,7 @@
 		}
     ?>
     
-    <?php if( ! empty( $errors ) || isset( $use_ajax ) ):?>
+    <?php if ( ! empty( $errors ) || isset( $use_ajax ) ) :?>
     	<div id="errors"<? echo empty( $errors) ? ' style="display:none;"' : ''?>>
 	    	<h3><?php _e( 'Errors', $ps )?></h3>
 		    <table class="widefat">
@@ -129,7 +129,7 @@
 		    		</tr>
 		    	</thead>
 				<tbody>
-					<?php foreach ( $errors as $row => $message ):?>
+					<?php foreach ( $errors as $row => $message ) :?>
 					<tr>
 						<td><?php echo esc_html( $row )?></td>
 						<td><?php echo esc_html( $message )?></td>

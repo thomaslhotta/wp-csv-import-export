@@ -6,6 +6,7 @@
 class CIE_Module_Posts_Exporter extends CIE_Exporter {
 	public function get_supported_fields() {
 		return array(
+			'post',
 			'postmeta',
 			'user',
 			'usermeta',
@@ -19,18 +20,6 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter {
 			'post'     => array( 'post_type' => 'post_type' ),
 			'postmeta' => $this->get_field_type_object( 'postmeta' )->get_searchable_fields( $searches ),
 		);
-	}
-
-	public function get_available_fields( array $search = array() ) {
-		$post = new WP_Post( new stdClass() );
-
-		foreach ( array_keys( get_object_vars( $post ) ) as $field ) {
-			$fields['post'][ $field ] = $field;
-		}
-
-		$fields = array_merge( $fields, parent::get_available_fields( $search ) );
-
-		return $fields;
 	}
 
 	public function get_main_elements( array $search, $offset, $limit ) {
