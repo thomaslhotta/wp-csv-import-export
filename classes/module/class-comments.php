@@ -33,15 +33,6 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 		);
 	}
 
-	public function register_ajax() {
-		if ( current_user_can( 'import' ) ) {
-			add_action( 'wp_ajax_import_comments', array( $this, 'process_import' ) );
-		}
-		if ( current_user_can( 'export' ) ) {
-			add_action( 'wp_ajax_export_comments', array( $this, 'process_ajax' ) );
-		}
-	}
-
 	/**
 	 * Adds comment export to every post
 	 *
@@ -49,6 +40,10 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 	 * @param WP_Post $post
 	 */
 	public function add_meta_boxes( $post_type, $post ) {
+		if ( ! post_type_supports( $post_type, 'comments' ) ) {
+			return;
+		}
+
 		// Only for posts
 		if ( ! $post instanceof WP_Post ) {
 			return;
@@ -74,7 +69,6 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 		);
 
 		$fields = $this->get_exporter()->get_available_fields( $search );
-
 
 		echo $this->render_export_ui(
 			$fields,
@@ -113,11 +107,6 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 		return $this->exporter;
 	}
 
-	public function process_ajax() {
-		$this->get_exporter()->process_ajax();
-		die();
-	}
-
 	/**
 	 * @return CIE_Importer
 	 */
@@ -127,9 +116,5 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 		}
 
 		return $this->importer;
-	}
-
-	public function process_import() {
-		$this->get_importer()->import_json();
 	}
 }

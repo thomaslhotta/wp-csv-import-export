@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Handles post fields
+ */
 class CIE_Field_Post extends CIE_Field_Object {
 	public function get_available_fields( array $search = array() ) {
 		$post_type_name = __( 'Post' );

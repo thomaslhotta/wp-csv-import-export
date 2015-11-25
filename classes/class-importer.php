@@ -39,7 +39,7 @@ abstract class CIE_Importer extends CIE_Processor {
 	 * @param array $row
 	 * @param int $mode
 	 *
-	 * @return array
+	 * @return CIE_Element
 	 */
 	abstract public function create_element( array $row, $mode = self::MODE_IMPORT );
 
@@ -143,7 +143,6 @@ abstract class CIE_Importer extends CIE_Processor {
 					break;
 				}
 			}
-
 
 			// Required field was found
 			if ( $found ) {

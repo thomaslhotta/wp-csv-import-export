@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles BuddyPress xprofile fields
+ * Handles BuddyPress xProfile fields
  */
 class CIE_Field_Buddypress extends CIE_Field_Abstract {
 	public function get_available_fields( array $search = array() ) {

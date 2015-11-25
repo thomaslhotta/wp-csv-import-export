@@ -14,6 +14,82 @@ abstract class CIE_Module_Abstract {
 	 * Registers AJAX handlers
 	 */
 	public function register_ajax() {
+		if ( current_user_can( 'export' ) && $this->get_exporter() ) {
+			add_action( 'wp_ajax_' . $this->get_export_action(), array( $this, 'process_export' ) );
+		}
+
+		if ( current_user_can( 'import' ) ) {
+			add_action( 'wp_ajax_' . $this->get_import_action(), array( $this, 'process_import' ) );
+		}
+	}
+
+	/**
+	 * Returns the exporter object. Should be overwritten if the module has an exporter.
+	 *
+	 * @return CIE_Exporter|null
+	 */
+	public function get_exporter() {
+		return null;
+	}
+
+	/**
+	 * Return the importer object. Should be overwritten if the module has en importer.
+	 *
+	 * @return CIE_Importer|null
+	 */
+	public function get_importer() {
+		return null;
+	}
+
+	/**
+	 * Returns the export action if the module has an exporter.
+	 *
+	 * @return null|string
+	 */
+	public function get_export_action() {
+		$exporter = $this->get_exporter();
+		if ( $exporter ) {
+			return strtolower( get_class( $this->get_exporter() ) );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the import action if the module has an importer.
+	 *
+	 * @return null|string
+	 */
+	public function get_import_action() {
+		$exporter = $this->get_exporter();
+		if ( $exporter ) {
+			return strtolower( get_class( $this->get_importer() ) );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Processes exports
+	 */
+	public function process_export() {
+		if ( ! $this->get_exporter() || ! wp_verify_nonce( $_REQUEST['nonce'], $this->get_export_action() ) ) {
+			die( 'Error' );
+		}
+
+		$this->get_exporter()->process_ajax();
+		die();
+	}
+
+	/**
+	 * Processes imports
+	 */
+	public function process_import() {
+		if ( ! $this->get_importer() || ! wp_verify_nonce( $_REQUEST['nonce'], $this->get_import_action() ) ) {
+			die( 'Error' );
+		}
+
+		$this->get_importer()->import_json();
 	}
 
 	/**
@@ -21,14 +97,31 @@ abstract class CIE_Module_Abstract {
 	 *
 	 * @param array $fields
 	 * @param array $hidden_fields
+	 * @param array $searchable
 	 *
 	 * @return string
 	 */
 	public function render_export_ui( array $fields, array $hidden_fields = array(), array $searchable = array() ) {
+		wp_localize_script(
+			'cie-admin-script',
+			'csvieSettings',
+			array(
+				'action'    => $this->get_export_action(),
+				'nonce'     => wp_create_nonce( $this->get_export_action() ),
+			)
+		);
+
+		wp_enqueue_script( 'cie-admin-script' );
+
 		$hidden_fields = $this->flatten_hidden( $hidden_fields );
 
 		$html = '';
 		foreach ( $fields as $group_name => $group ) {
+			// Skip empty groups
+			if ( empty( $group ) ) {
+				continue;
+			}
+
 			$options = '';
 
 			foreach ( $group as $field_id => $field_name ) {
@@ -47,7 +140,7 @@ abstract class CIE_Module_Abstract {
 
 			$html .= sprintf(
 				'<tr><th>%s<br><label><input type="checkbox" data-toggle="checked" data-target="#%s">%s</label></th><td id="%s">%s</td></tr>',
-				esc_html( ucfirst( $group_name ) ),
+				esc_html( __( ucfirst( $group_name ), 'cie' ) ),
 				$id,
 				__( 'All' ),
 				$id,
@@ -110,8 +203,6 @@ abstract class CIE_Module_Abstract {
 			$html
 		);
 
-		wp_enqueue_script( 'cie-admin-script' );
-
 		return $html;
 	}
 
@@ -143,10 +234,22 @@ abstract class CIE_Module_Abstract {
 	 *
 	 * @param $action
 	 * @param $show_title
+	 * @todo Simplify this functions
 	 *
 	 * @return string
 	 */
 	public function render_import_ui( $action, $show_title = true ) {
+		wp_localize_script(
+			'cie-admin-script',
+			'csvieSettings',
+			array(
+				'action' => $this->get_import_action(),
+				'nonce'  => wp_create_nonce( $this->get_import_action() ),
+			)
+		);
+
+		wp_enqueue_script( 'cie-admin-script' );
+
 		$csv       = '';
 		$csv_valid = true;
 		if ( ! empty( $_FILES['csv'] ) && check_admin_referer( 'upload-csv', 'nonce' ) ) {
@@ -216,8 +319,6 @@ abstract class CIE_Module_Abstract {
 			);
 
 			$html .= '<td><textarea class="widefat" name="csv_fallback" rows="5"></textarea></td></tr>';
-
-
 		} else {
 			// Show fallback UI for non FileReader browsers if file was uploaded
 			$html .= sprintf( '<tr><th>%s</th>', __( 'Uploaded CSV', 'cie' ) );
@@ -265,8 +366,6 @@ abstract class CIE_Module_Abstract {
 			esc_attr( $action ),
 			$html
 		);
-
-		wp_enqueue_script( 'cie-admin-script' );
 
 		return $html;
 	}

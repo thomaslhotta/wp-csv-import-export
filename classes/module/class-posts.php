@@ -49,12 +49,6 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 		do_action( 'cie_register_post_menus', $this );
 	}
 
-	public function register_ajax() {
-		if ( current_user_can( 'export' ) ) {
-			add_action( 'wp_ajax_export_posts', array( $this, 'process_export' ) );
-		}
-	}
-
 	public function display_post_export_page( $searches = array() ) {
 		if ( ! is_array( $searches ) ) {
 			$searches = array();
@@ -72,7 +66,6 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 		);
 
 		$hidden['search']      = $searches;
-		$hidden['ajax-action'] = 'export_posts';
 
 		echo $this->render_export_ui(
 			$fields,
@@ -90,10 +83,5 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 		}
 
 		return $this->exporter;
-	}
-
-	public function process_export() {
-		$this->get_exporter()->process_ajax();
-		die();
 	}
 }

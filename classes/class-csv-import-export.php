@@ -53,6 +53,7 @@ class CSV_Import_Export {
 
 		// Register AJAX actions
 		foreach ( $this->get_modules() as $module ) {
+			// @var CIE_Module_Abstract $module
 			$module->register_ajax();
 		}
 	}
@@ -94,6 +95,7 @@ class CSV_Import_Export {
 	 */
 	public function admin_menu() {
 		foreach ( $this->get_modules() as $module ) {
+			// @var CIE_Module_Abstract $module
 			$module->register_menus();
 		}
 	}
@@ -154,7 +156,9 @@ class CSV_Import_Export {
 		wp_register_script(
 			'cie-admin-script',
 			plugins_url( $script_url . '/js/admin.js' ),
-			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'zip-ext.js' )
+			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'zip-ext.js' ),
+			'1.1',
+			true
 		);
 
 		wp_localize_script( 'cie-admin-script', 'zipJsWorkerScriptsPath', plugins_url( $script_url . '/js/zip.js/' ) );

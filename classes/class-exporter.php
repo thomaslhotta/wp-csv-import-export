@@ -35,6 +35,7 @@ abstract class CIE_Exporter extends CIE_Processor {
 
 	/**
 	 * Returns the available search values
+	 * @param array $searches
 	 *
 	 * @return array
 	 */
@@ -90,10 +91,11 @@ abstract class CIE_Exporter extends CIE_Processor {
 
 		// We build our own JSON to be able to use flush()
 		printf(
-			'[{"total_entries":%d,"page":%d, "per_page":%d}, [',
+			'[{"total_entries":%d,"page":%d,"per_page":%d,"file_name":"%s"}, [',
 			$total,
 			$page,
-			$per_page
+			$per_page,
+			$this->get_export_name( $search )
 		);
 
 		$not_first = false;
@@ -214,4 +216,6 @@ abstract class CIE_Exporter extends CIE_Processor {
 
 		return $first_row;
 	}
+
+	abstract public function get_export_name( array $search );
 }

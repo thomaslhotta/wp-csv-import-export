@@ -34,17 +34,6 @@ class CIE_Module_Users extends CIE_Module_Abstract {
 		}
 	}
 
-	public function register_ajax() {
-		// Only super admins can export users
-		if ( is_super_admin() ) {
-			add_action( 'wp_ajax_export_users', array( $this, 'process_export' ) );
-		}
-
-		if ( current_user_can( 'import' ) ) {
-			add_action( 'wp_ajax_import_users', array( $this, 'process_import' ) );
-		}
-	}
-
 	public function add_meta_boxes( $post_type, WP_Post $post ) {
 		// Only useful for posts that have comments
 		if ( empty( $post->comment_count ) ) {
@@ -101,14 +90,5 @@ class CIE_Module_Users extends CIE_Module_Abstract {
 		}
 
 		return $this->importer;
-	}
-
-	public function process_export() {
-		$this->get_exporter()->process_ajax();
-		die();
-	}
-
-	public function process_import() {
-		$this->get_importer()->import_json();
 	}
 }

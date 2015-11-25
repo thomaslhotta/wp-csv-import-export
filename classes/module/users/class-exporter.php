@@ -50,6 +50,14 @@ class CIE_Module_Users_Exporter extends CIE_Exporter {
 		return $return;
 	}
 
+	public function get_export_name( array $search ) {
+		if ( is_network_admin() ) {
+			return 'users';
+		}
+
+		return sanitize_title( get_bloginfo( 'name' ) );
+	}
+
 	/**
 	 * Detect network admin in an AJAX safe way
 	 */

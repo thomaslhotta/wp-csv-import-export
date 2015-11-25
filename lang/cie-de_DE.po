@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress CSV Import Export\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/plugins/plugin-name\n"
-"POT-Creation-Date: 2015-11-24 16:25+0100\n"
-"PO-Revision-Date: 2015-11-24 16:44+0100\n"
+"POT-Creation-Date: 2015-11-24 18:38+0100\n"
+"PO-Revision-Date: 2015-11-24 18:38+0100\n"
 "Last-Translator: Thomas Lhotta <th.lhotta@gmail.com>\n"
 "Language-Team: th.lhotta@gmail.com\n"
 "Language: de_DE\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "One of the following columns must be present: %s "
 msgstr ""
 
-#: classes/field/class-attachment.php:10
+#: classes/field/class-attachment.php:9
 msgid "Attachments"
 msgstr "Dateianhänge"
 
@@ -79,85 +79,83 @@ msgstr ""
 msgid "User option \"%s\" could not be set"
 msgstr ""
 
-#: classes/field/class-post.php:5
-msgid "Post ID"
-msgstr "Beitrags ID"
-
-#: classes/field/class-post.php:6
-msgid "Author ID"
-msgstr "Autor ID"
-
-#: classes/field/class-post.php:7
-msgid "Publish date"
-msgstr "Veröffentlichungsdatum"
-
-#: classes/field/class-post.php:8 classes/field/class-post.php:27
-msgid "Last Modified"
-msgstr ""
-
-#: classes/field/class-post.php:9
-msgid "Content"
-msgstr ""
-
-#: classes/field/class-post.php:10
-msgid "Title"
-msgstr ""
-
-#: classes/field/class-post.php:11
-msgid "Excerpt"
-msgstr ""
-
-#: classes/field/class-post.php:12
-msgid "Status"
-msgstr ""
-
-#: classes/field/class-post.php:13
-msgid "Comment status"
-msgstr "Kommentarstatus"
-
-#: classes/field/class-post.php:14
-msgid "Ping status"
-msgstr ""
-
-#: classes/field/class-post.php:15
-msgid "Password"
+#: classes/field/class-post.php:8
+#: classes/module/comments/class-exporter.php:22
+msgid "Post"
 msgstr ""
 
 #: classes/field/class-post.php:16
-msgid "Post name"
-msgstr ""
+msgid "Author ID"
+msgstr "Autor ID"
 
-#: classes/field/class-post.php:17
-msgid "URLs to ping"
-msgstr ""
+#: classes/field/class-post.php:17 classes/field/class-post.php:36
+msgid "Publish date"
+msgstr "Veröffentlichungsdatum"
 
-#: classes/field/class-post.php:18
-msgid "Pinged URLs"
-msgstr "Angepingte URLs"
+#: classes/field/class-post.php:18 classes/field/class-post.php:37
+msgid "Last Modified"
+msgstr ""
 
 #: classes/field/class-post.php:19
-msgid "Post parent"
+#: classes/module/comments/class-exporter.php:29
+msgid "Content"
 msgstr ""
 
-#: classes/field/class-post.php:21 classes/module/posts/class-exporter.php:33
-msgid "Permalink"
+#: classes/field/class-post.php:20
+msgid "Title"
+msgstr ""
+
+#: classes/field/class-post.php:21
+msgid "Excerpt"
 msgstr ""
 
 #: classes/field/class-post.php:22
-msgid "Menu order"
+msgid "Status"
 msgstr ""
 
 #: classes/field/class-post.php:23
+msgid "Comment status"
+msgstr "Kommentarstatus"
+
+#: classes/field/class-post.php:24
+msgid "Ping status"
+msgstr ""
+
+#: classes/field/class-post.php:25
+msgid "Password"
+msgstr ""
+
+#: classes/field/class-post.php:26
+msgid "Post name"
+msgstr ""
+
+#: classes/field/class-post.php:27
+msgid "URLs to ping"
+msgstr ""
+
+#: classes/field/class-post.php:28
+msgid "Pinged URLs"
+msgstr "Angepingte URLs"
+
+#: classes/field/class-post.php:29
+msgid "Post parent"
+msgstr ""
+
+#: classes/field/class-post.php:31
+msgid "Permalink"
+msgstr ""
+
+#: classes/field/class-post.php:32
+msgid "Menu order"
+msgstr ""
+
+#: classes/field/class-post.php:33
 msgid "Post type"
 msgstr "Postart"
 
-#: classes/field/class-post.php:25
+#: classes/field/class-post.php:35
 msgid "Comment count"
 msgstr "Kommentaranzahl"
-
-#: classes/field/class-post.php:26
-msgid "Publish date (GMT)"
-msgstr ""
 
 #: classes/field/class-postmeta.php:81
 #, php-format
@@ -169,57 +167,69 @@ msgstr ""
 msgid "User meta value %s could not be set"
 msgstr "User Metawert %s konnte nicht gesetzt werden."
 
-#: classes/module/class-abstract.php:52
+#: classes/module/class-abstract.php:118
 msgid "All"
 msgstr ""
 
-#: classes/module/class-abstract.php:98 views/export.php:34
+#: classes/module/class-abstract.php:144
+msgid "Search"
+msgstr ""
+
+#: classes/module/class-abstract.php:151
+msgid "Settings"
+msgstr ""
+
+#: classes/module/class-abstract.php:152
+msgid "Expert mode"
+msgstr ""
+
+#: classes/module/class-abstract.php:171
 msgid "Export"
 msgstr "Export"
 
-#: classes/module/class-abstract.php:176 classes/module/class-abstract.php:244
+#: classes/module/class-abstract.php:258 classes/module/class-abstract.php:327
 #: views/import.php:110
 msgid "Import"
 msgstr "Import"
 
-#: classes/module/class-abstract.php:179
+#: classes/module/class-abstract.php:261
 msgid "Update"
 msgstr ""
 
-#: classes/module/class-abstract.php:196
+#: classes/module/class-abstract.php:278
 msgid "Required columns"
 msgstr "Benötigte Spalten"
 
-#: classes/module/class-abstract.php:202
+#: classes/module/class-abstract.php:284
 msgid "Select a CSV file"
 msgstr "Wählen Sie eine CSV Datei"
 
-#: classes/module/class-abstract.php:203
+#: classes/module/class-abstract.php:285
 msgid "The uploaded file is not a valid CSV file."
 msgstr ""
 
-#: classes/module/class-abstract.php:208
+#: classes/module/class-abstract.php:290
 msgid "or copy & paste the CSV data from your spreadsheet software."
 msgstr "oder kopieren Sie die Daten aus ihrer Tabellenkalkulationssoftware."
 
-#: classes/module/class-abstract.php:216
+#: classes/module/class-abstract.php:298
 msgid "Uploaded CSV"
 msgstr "Hochgeladenes CSV"
 
-#: classes/module/class-abstract.php:229 classes/module/class-abstract.php:230
+#: classes/module/class-abstract.php:311 classes/module/class-abstract.php:312
 #: views/import.php:123
 msgid "Errors"
 msgstr "Fehler"
 
-#: classes/module/class-abstract.php:231
+#: classes/module/class-abstract.php:313
 msgid "Row number"
 msgstr "Zeilenummer"
 
-#: classes/module/class-abstract.php:244
+#: classes/module/class-abstract.php:327
 msgid "Continue"
 msgstr ""
 
-#: classes/module/class-abstract.php:251
+#: classes/module/class-abstract.php:334
 msgid "Clear"
 msgstr ""
 
@@ -235,14 +245,42 @@ msgstr "CSV importieren"
 msgid "Export CSV"
 msgstr "CSV exportieren"
 
-#: classes/module/class-comments.php:64 classes/module/class-users.php:56
+#: classes/module/class-comments.php:59 classes/module/class-users.php:45
 msgid "Export comments"
 msgstr "Kommentare exportieren"
 
-#: classes/module/class-gforms.php:29 classes/module/class-gforms.php:41
-#: classes/module/class-gforms.php:45
+#: classes/module/class-gforms.php:23 classes/module/class-gforms.php:35
+#: classes/module/class-gforms.php:39
 msgid "Import entries"
 msgstr "Einträge importieren"
+
+#: classes/module/comments/class-exporter.php:21
+msgid "Comment"
+msgstr "Kommentar"
+
+#: classes/module/comments/class-exporter.php:23
+#: classes/module/comments/class-exporter.php:24
+#: classes/module/comments/class-exporter.php:25
+#: classes/module/comments/class-exporter.php:35
+msgid "Author:"
+msgstr ""
+
+#: classes/module/comments/class-exporter.php:23
+msgid "Name"
+msgstr ""
+
+#: classes/module/comments/class-exporter.php:26
+msgid "IP address:"
+msgstr ""
+
+#: classes/module/comments/class-exporter.php:27
+#: classes/module/comments/class-exporter.php:28
+msgid "Date"
+msgstr ""
+
+#: classes/module/comments/class-exporter.php:31
+msgid "Approved"
+msgstr ""
 
 #: classes/module/comments/class-importer.php:26
 msgid "Comment ID."
@@ -311,10 +349,6 @@ msgstr ""
 msgid "User could not be created for an unknown reason"
 msgstr ""
 
-#: views/export.php:13
-msgid "Select all"
-msgstr "Alle auswählen"
-
 #: views/import.php:36
 msgid "CSV File"
 msgstr "CSV Datei"
@@ -377,6 +411,12 @@ msgstr "Zeile"
 #: views/import.php:128
 msgid "Message"
 msgstr "Nachricht"
+
+#~ msgid "Post ID"
+#~ msgstr "Beitrags ID"
+
+#~ msgid "Select all"
+#~ msgstr "Alle auswählen"
 
 #~ msgid "Comment type"
 #~ msgstr "Comment "

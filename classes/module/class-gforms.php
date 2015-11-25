@@ -7,7 +7,7 @@ class CIE_Module_Gforms extends CIE_Module_Abstract {
 	/**
 	 * @var CIE_Module_Gforms_Importer
 	 */
-	protected $exporter;
+	protected $importer;
 
 	public function register_menus() {
 		if ( ! current_user_can( 'import' ) ) {
@@ -15,12 +15,6 @@ class CIE_Module_Gforms extends CIE_Module_Abstract {
 		}
 		add_filter( 'gform_export_menu', array( $this, 'gform_export_menu' ) );
 		add_action( 'gform_export_page_import_entry', array( $this, 'display_import_ui' ) );
-	}
-
-	public function register_ajax() {
-		if (  current_user_can( 'import' ) ) {
-			add_action( 'wp_ajax_import_gforms', array( $this, 'process_import' ) );
-		}
 	}
 
 	public function gform_export_menu( array $entries ) {
@@ -45,11 +39,6 @@ class CIE_Module_Gforms extends CIE_Module_Abstract {
 		GFExport::page_footer( __( 'Import entries', 'cie' ) );
 	}
 
-	public function process_ajax() {
-		$this->get_exporter()->process_ajax();
-		die();
-	}
-
 	/**
 	 * @return CIE_Importer
 	 */
@@ -59,9 +48,5 @@ class CIE_Module_Gforms extends CIE_Module_Abstract {
 		}
 
 		return $this->importer;
-	}
-
-	public function process_import() {
-		$this->get_importer()->import_json();
 	}
 }

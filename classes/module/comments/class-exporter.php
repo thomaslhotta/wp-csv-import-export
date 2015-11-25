@@ -18,21 +18,21 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter {
 
 	public function get_available_fields( array $search = array() ) {
 		$fields['comment'] = array(
-			'comment_ID'           => 'comment_ID',
-			'comment_post_ID'      => 'comment_post_ID',
-			'comment_author'       => 'comment_author',
-			'comment_author_email' => 'comment_author_email',
-			'comment_author_url'   => 'comment_author_url',
-			'comment_author_IP'    => 'comment_author_IP',
-			'comment_date'         => 'comment_date',
-			'comment_date_gmt'     => 'comment_date_gmt',
-			'comment_content'      => 'comment_content',
-			'comment_karma'        => 'comment_karma',
-			'comment_approved'     => 'comment_approved',
-			'comment_agent'        => 'comment_agent',
+			'comment_ID'           => __( 'Comment', 'cie' ) .' ID',
+			'comment_post_ID'      => __( 'Post', 'cie' ) .' ID',
+			'comment_author'       => __( 'Author:' ) . ' ' .  __( 'Name' ),
+			'comment_author_email' => __( 'Author:' ) . ' Email',
+			'comment_author_url'   => __( 'Author:' ) . ' URL',
+			'comment_author_IP'    => rtrim( __( 'IP address:' ), ':' ),
+			'comment_date'         => __( 'Date' ),
+			'comment_date_gmt'     => __( 'Date' ) . ' (GMT)',
+			'comment_content'      => __( 'Content' ),
+			'comment_karma'        => 'Karma',
+			'comment_approved'     => __( 'Approved' ),
+			'comment_agent'        => 'User Agent',
 			'comment_type'         => 'comment_type',
 			'comment_parent'       => 'comment_parent',
-			'user_id'              => 'user_id',
+			'user_id'              => __( 'Author:' ) . ' ID',
 		);
 
 		$fields = array_merge( $fields, parent::get_available_fields( $search ) );
@@ -55,10 +55,9 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter {
 			'number' => $limit,
 		);
 
-		if ( ! empty( $search['post'] ) ) {
-			if ( ! empty( $search['post']['post_id'] ) ) {
-				$query_args['post_id'] = $search['post']['post_id'];
-			}
+		$post_id = $this->get_post_id( $search );
+		if ( $post_id ) {
+			$query_args['post_id'] = $post_id;
 		}
 
 		if ( ! empty( $search['commentmeta'] ) ) {
@@ -91,5 +90,24 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter {
 		}
 
 		return $return;
+	}
+
+	public function get_post_id( array $search ) {
+		if ( ! empty( $search['post'] ) ) {
+			if ( ! empty( $search['post']['post_id'] ) ) {
+				return intval( $search['post']['post_id'] );
+			}
+		}
+
+		return null;
+	}
+
+	public function get_export_name( array $search ) {
+		$post_id = $this->get_post_id( $search );
+		if ( empty( $post_id ) ) {
+			return 'comment';
+		}
+
+		return sanitize_title( get_the_title( $post_id ) );
 	}
 }

@@ -1,85 +1,39 @@
-/* global jQuery, document, Backbone, window, wp, zip, ajaxurl, _, Papa */
+/* global jQuery, document, Backbone, window, wp, zip, ajaxurl, _, Papa, csvieSettings, zipJsWorkerScriptsPath, saveAs, Blob */
 
-;(function ( $, Backbone, window, document, wp, zip ) {
+;( function( $, Backbone, window, document, wp, zip ) {
 	'use strict';
 
 	// Setup zip.js
-	var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem;
+	var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem,
+		createTempFile = function( callback ) {
+			var tmpFilename = 'tmp.zip';
+			requestFileSystem( TEMPORARY, 4 * 1024 * 1024 * 1024, function( filesystem ) {
+				var create = function() {
+					filesystem.root.getFile( tmpFilename, {
+						create: true
+					}, function( zipFile ) {
+						callback( zipFile );
+					});
+				};
 
-	var createTempFile = function( callback ) {
-		var tmpFilename = 'tmp.zip';
-		requestFileSystem( TEMPORARY, 4 * 1024 * 1024 * 1024, function( filesystem ) {
-			var create = function() {
-				filesystem.root.getFile( tmpFilename, {
-					create: true
-				}, function( zipFile ) {
-					callback( zipFile );
-				});
-			};
-
-			filesystem.root.getFile(
-				tmpFilename,
-				null,
-				function( entry ) {
-					entry.remove( create, create );
-				}, create
-			);
-		});
-	};
+				filesystem.root.getFile(
+					tmpFilename,
+					null,
+					function( entry ) {
+						entry.remove( create, create );
+					}, create
+				);
+			});
+		};
 
 	zip.workerScriptsPath = zipJsWorkerScriptsPath;
 
 	wp.csvie = {
 		model: {},
-		view: {}
+		view: {},
+		views: {},
+		settings: csvieSettings
 	};
-
-	/**
-	 * Http File Reader for zip.js
-	 *
-	 * It is based on the HttpReader of zip.js, but does not rely on the Content-Length header. This makes it work
-	 * with Google Pagespeed
-	 *
-	 * @param url
-	 * @constructor
-	 */
-	var HttpReaderGet = function(url) {
-		var that = this,
-			error = false;
-
-		function getData(callback, onerror) {
-			if ( that.error ) {
-				return onerror();
-			}
-			callback();
-		}
-
-		function init(callback, onerror) {
-			var request = new XMLHttpRequest();
-
-			request.addEventListener( 'load', function() {
-				that.data = new Uint8Array( request.response );
-				that.size = that.data.length;
-				callback();
-			}, false);
-			request.addEventListener( 'error', onerror, false );
-			request.open( 'GET', url );
-			request.responseType = 'arraybuffer';
-			request.send();
-		}
-
-		function readUint8Array( index, length, callback, onerror ) {
-			getData(function() {
-				callback( new Uint8Array( that.data.subarray( index, index + length ) ) );
-			}, onerror);
-		}
-
-		that.size = 0;
-		that.init = init;
-		that.readUint8Array = readUint8Array;
-	}
-	HttpReaderGet.prototype = new zip.Reader();
-	HttpReaderGet.prototype.constructor = HttpReaderGet;
 
 	/**
 	 * Model for handling and persisting settings
@@ -133,13 +87,13 @@
 
 					this.collection.zipWriter.add( name, new HttpReaderGet( url ) , function () {
 						callback.resolve();
-					}, function(){}, { level: 0 });
+					}, function() {}, { level: 0 });
 
 					calls.push( callback.promise() );
 				}, this );
 
 				// Resolve the current defer once all
-				$.when.apply( $, calls ).always(function() {
+				$.when.apply( $, calls ).always( function() {
 					deferred.resolve( this );
 				});
 
@@ -155,6 +109,7 @@
 	 * Collection for element models. Handles pagination
 	 */
 	wp.csvie.model.CSV = Backbone.PageableCollection.extend({
+		file_name: 'export',
 		settings: null,
 		model: wp.csvie.model.Element,
 		mode: 'server',
@@ -162,11 +117,41 @@
 			pageSize: 1000,
 			currentPage: 1
 		},
-		initialize: function( models, options ){
+		initialize: function( models, options ) {
 			// Manually add settings variable
 			this.settings = options.settings;
 			// Setup correct url
-			this.url = ajaxurl + '?action=' + options.settings.get( 'ajax-action' );
+			this.url = ajaxurl;
+		},
+		/**
+		 * Injects additional data into the requests
+		 *
+		 * @param method
+		 * @param object
+		 * @param options
+		 */
+		sync: function( method, object, options ) {
+			if ( typeof options.data === 'undefined' ) {
+				options.data = {};
+			}
+
+			options.data.nonce = wp.csvie.settings.nonce;
+			options.data.action = wp.csvie.settings.action;
+
+			var json = this.toJSON(),
+				formattedJSON = {};
+
+			if ( json instanceof Array ) {
+				formattedJSON.models = json;
+			} else {
+				formattedJSON.model = json;
+			}
+
+			_.extend( options.data, formattedJSON );
+
+			options.emulateJSON = true;
+
+			return Backbone.sync.call( this, 'create', object, options );
 		},
 		/**
 		 * Overwrites original fetch to process all elements after loading
@@ -183,11 +168,15 @@
 
 			options.data = this.settings.toJSON();
 
-			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ] ).done(function(){
+			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( function() {
 				that.processElements();
 			});
 
 			return this.processElementsDeferred.promise();
+		},
+		parse: function( data ) {
+			this.file_name = data[0].file_name;
+			return Backbone.PageableCollection.prototype.parse.apply( this, [ data ]);
 		},
 		/**
 		 * Starts iterating elements after load
@@ -277,7 +266,7 @@
 			this.$el.find( 'input' ).each( function() {
 				var input = $( this );
 				// Skip hidden inputs
-				if ( 'hidden' === input.attr( 'type' ) || ! settings[ input.attr( 'name' ) ] ) {
+				if ( 'hidden' === input.attr( 'type' ) || ! settings[ input.attr( 'name' ) ]) {
 					return;
 				}
 
@@ -286,7 +275,7 @@
 					return;
 				}
 
-				input.val(settings[ input.attr( 'name' ) ]);
+				input.val( settings[ input.attr( 'name' ) ]);
 			});
 
 			return this;
@@ -341,7 +330,7 @@
 		 */
 		reset: function() {
 			this.model.clear();
-			this.$el.text('');
+			this.$el.text( '' );
 			this.$el.parent().prop( 'disabled', false );
 			return this;
 		}
@@ -356,7 +345,6 @@
 		},
 		initialize: function() {
 			this.csv = [];
-
 			// Initialize settings
 			this.settingsView = new wp.csvie.view.Settings({
 				el: this.$el.find( '#export-settings' )
@@ -375,14 +363,13 @@
 
 			this.$el.find( '.export' ).append( this.progressView.$el );
 
-			var that = this;
-			this.model.on( 'processElement', function() {
-				that.progressModel.tick();
-			} );
+			this.model.on( 'processElement', _.bind( function() {
+				this.progressModel.tick();
+			}, this ) );
 
-			this.model.on( 'sync', function() {
-				that.progressModel.set( 'total', that.model.state.totalRecords );
-			} );
+			this.model.on( 'sync', _.bind( function() {
+				this.progressModel.set( 'total', this.model.state.totalRecords );
+			}, this ) );
 		},
 		/**
 		 * Starts the CSV export
@@ -417,22 +404,21 @@
 		 * Runs CSV export
 		 */
 		exportCSV: function() {
-			var that = this,
-				page = this.model.state.currentPage + 1;
+			var page = this.model.state.currentPage + 1;
 			if ( null === this.model.state.totalPages ) {
 				page = 1;
 			}
 
 			this.attachments = null;
 
-			this.model.getPage( page ).done( function() {
-				that.addElements( that.model );
-				if ( that.model.hasNextPage() ) {
-					that.exportCSV();
+			this.model.getPage( page ).done( _.bind( function() {
+				this.addElements( this.model );
+				if ( this.model.hasNextPage() ) {
+					this.exportCSV();
 				} else {
-					that.saveCSV();
+					this.saveCSV();
 				}
-			});
+			}, this ) );
 		},
 		/**
 		 * Adds elements from the given page of the collection
@@ -448,8 +434,12 @@
 		 * Saves the current export
 		 */
 		saveCSV: function() {
-			var name = 'export',
-				csv  = Papa.unparse( this.csv );
+			var name = this.model.file_name,
+				csv  = Papa.unparse( this.csv ),
+				now  = new Date();
+
+			// Append current date and time to string
+			name = name + '-' + now.toISOString().substring( 0, 19 ).replace( 'T', '-' );
 
 			if ( this.model.zipWriter ) {
 				var that = this;
@@ -462,7 +452,7 @@
 
 			} else {
 				// Else save as csv
-				saveAs( new Blob( [ csv ], { type: 'text/csv;charset=utf-8' } ), name + '.csv' );
+				saveAs( new Blob([ csv ], { type: 'text/csv;charset=utf-8' }), name + '.csv' );
 				this.reset();
 			}
 		},
@@ -509,12 +499,12 @@
 
 			row.append( $( '<td>' ).text( model.get( 'row' ) ) );
 
-			_.each( model.get( 'errors' ), function( error ){
+			_.each( model.get( 'errors' ), function( error ) {
 				ul.append( $( '<li>' ).text( error ) );
 			});
 			row.append( $( '<td>' ).append( ul ) );
 
-			this.$el.show().find('table').append(row);
+			this.$el.show().find( 'table' ).append( row );
 			return this;
 		}
 	});
@@ -524,7 +514,7 @@
 	 */
 	wp.csvie.view.ImportView = Backbone.View.extend({
 		events: {
-			'click button' : 'importCSV'
+			'click button': 'importCSV'
 		},
 		initialize: function() {
 			this.elements = [];
@@ -545,21 +535,21 @@
 		 * Starts CSV import
 		 * @param e
 		 */
-		importCSV: function(e) {
+		importCSV: function( e ) {
 			var that = this,
 				textarea = this.$el.find( 'textarea' ),
 				file = this.$el.find( 'input[type=file]' ),
 
-			// CSV Parser configuration
+				// CSV Parser configuration
 				config = {
 					header: true,
+					skipEmptyLines: true,
 					complete: function( results ) {
 						that.elements = results.data;
 						that.progressModel.set( 'total', that.elements.length );
 						that.sendData();
 					},
-					error: function( err, file, inputElem, reason )
-					{
+					error: function( err, file, inputElem, reason ) {
 						//@todo Do something on errors
 					}
 				};
@@ -575,7 +565,7 @@
 			if ( $.trim( textarea.val() ) ) {
 				Papa.parse( textarea.val(), config );
 			} else if ( window.FileReader && 0 < file[0].files.length ) {
-				file.parse( { config: config } );
+				file.parse({ config: config });
 			} else {
 				// @todo Translate this
 				alert( 'No file selected' );
@@ -598,7 +588,8 @@
 			$.ajax({
 				url: ajaxurl,
 				data: {
-					action: this.$el.data( 'action' ),
+					action: wp.csvie.settings.action,
+					nonce: wp.csvie.settings.nonce,
 					data: batch,
 					mode: this.$el.find( '[name=mode]' ).val()
 				},
@@ -609,7 +600,7 @@
 						this.errorsView.model.add( new wp.csvie.model.Error({
 							row: row,
 							errors: errors
-						}));
+						}) );
 					}, that );
 
 					if ( 0 < that.elements.length ) {
@@ -617,7 +608,6 @@
 					} else {
 						that.progressView.reset();
 					}
-
 				}
 			});
 		}
@@ -627,26 +617,29 @@
 
 	var importPage = $( '#csv-import-form' );
 	if ( 0 < importPage.length ) {
-		var view = new wp.csvie.view.ImportView({
+		wp.csvie.views.import = new wp.csvie.view.ImportView({
 			el: importPage
 		});
 	}
 
 	var exportPage = $( '#csv-export' );
 	if ( 0 < exportPage.length ) {
-		var view = new wp.csvie.view.View({
+		wp.csvie.views.export = new wp.csvie.view.View({
 			el: exportPage
 		});
 	}
 
 })( jQuery, Backbone, window, document, wp, zip );
 
-( function ( $, document ) {
+// Misc UI stuff
+( function( $, document ) {
 	'use strict';
 	$.fn['checkAll'] = function() {
-		return this.each( function () {
+		return this.each( function() {
 			var target = $( this ).data( 'target' );
-			$( target ).find( 'input[type=checkbox]' ).prop( 'checked', $( this ).prop( 'checked' ) ).trigger( 'change' );
+			$( target ).find( 'input[type=checkbox]' )
+				.prop( 'checked', $( this ).prop( 'checked' ) )
+				.trigger( 'change' );
 		});
 	};
 

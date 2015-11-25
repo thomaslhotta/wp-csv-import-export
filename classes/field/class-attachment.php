@@ -2,7 +2,6 @@
 
 /**
  * Handles attachment image import and export
- * @todo Implement this
  */
 class CIE_Field_Attachment extends CIE_Field_Abstract {
 	public function get_available_fields( array $search = array() ) {

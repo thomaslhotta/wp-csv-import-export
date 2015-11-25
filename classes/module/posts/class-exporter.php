@@ -72,4 +72,8 @@ class CIE_Module_Posts_Exporter extends CIE_Exporter {
 
 		return $return;
 	}
+
+	public function get_export_name( array $search ) {
+		return sanitize_title( $search['post']['post_type'] );
+	}
 }
