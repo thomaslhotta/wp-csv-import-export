@@ -87,9 +87,9 @@
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					this.collection.zipWriter.add( name, new zip.HttpReader( url ) , function() {
+					this.collection.zipWriter.add( name, new zip.HttpReader( url ), function() {
 						callback.resolve();
-					}, function() {}, { level: 0 });
+					}, function() {}, { level: 3 });
 
 					calls.push( callback.promise() );
 				}, this );
@@ -253,7 +253,6 @@
 			});
 
 			this.model.fetch();
-
 
 			// Restore options
 			this.render();
