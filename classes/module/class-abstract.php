@@ -375,7 +375,8 @@ abstract class CIE_Module_Abstract {
 	 */
 	public function is_network_admin() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			return ( is_multisite() && false !== strpos( $_SERVER['HTTP_REFERER'], network_admin_url() ) );
+			$referer = filter_input( INPUT_SERVER, 'HTTP_REFERER' );
+			return ( is_multisite() && false !== strpos( $referer, network_admin_url() ) );
 		}
 
 		return is_network_admin();

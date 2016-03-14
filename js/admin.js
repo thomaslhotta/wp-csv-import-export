@@ -1,6 +1,6 @@
 /* global jQuery, document, Backbone, window, wp, zip, ajaxurl, _, Papa, csvieSettings, zipJsWorkerScriptsPath, saveAs, Blob */
 
-;( function( $, Backbone, window, document, wp, zip ) {
+( function( $, Backbone, window, document, wp, zip ) {
 	'use strict';
 
 	// Setup zip.js
@@ -32,7 +32,9 @@
 		model: {},
 		view: {},
 		views: {},
-		settings: csvieSettings
+		settings: csvieSettings,
+		importPage: null,
+		exportPage: null
 	};
 
 	/**
@@ -85,7 +87,7 @@
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					this.collection.zipWriter.add( name, new HttpReaderGet( url ) , function () {
+					this.collection.zipWriter.add( name, new zip.HttpReader( url ) , function() {
 						callback.resolve();
 					}, function() {}, { level: 0 });
 
@@ -163,14 +165,13 @@
 				options = {};
 			}
 
-			var that = this;
 			this.processElementsDeferred = $.Deferred();
 
 			options.data = this.settings.toJSON();
 
-			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( function() {
-				that.processElements();
-			});
+			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( _.bind( function() {
+				this.processElements();
+			}, this ) );
 
 			return this.processElementsDeferred.promise();
 		},
@@ -284,11 +285,10 @@
 		 * Read and store settings
 		 */
 		readOptions: function() {
-			var that = this,
-				id = this.model.id;
+			var model = this.model;
 
 			// Reset model and restore id
-			this.model.clear().set( 'id', id );
+			this.model.clear().set( 'id', this.model.id );
 
 			this.$el.find( 'input' ).each( function() {
 				var input = $( this );
@@ -297,11 +297,11 @@
 				}
 
 				if ( input.val() ) {
-					that.model.set( input.attr( 'name' ), input.val() );
+					model.set( input.attr( 'name' ), input.val() );
 				}
 			});
 
-			this.model.save();
+			model.save();
 			return this;
 		}
 	});
@@ -383,7 +383,7 @@
 				if ( requestFileSystem ) {
 					// If available use temporary file
 					createTempFile( function( tmpFilename ) {
-						zip.createWriter(new zip.FileWriter( tmpFilename ), function( writer ) {
+						zip.createWriter( new zip.FileWriter( tmpFilename ), function( writer ) {
 							that.model.zipWriter = writer;
 							that.exportCSV();
 						});
@@ -442,13 +442,12 @@
 			name = name + '-' + now.toISOString().substring( 0, 19 ).replace( 'T', '-' );
 
 			if ( this.model.zipWriter ) {
-				var that = this;
-				this.model.zipWriter.add( name + '.csv', new zip.TextReader( csv ), function() {
-					that.model.zipWriter.close( function( blob ) {
+				this.model.zipWriter.add( name + '.csv', new zip.TextReader( csv ), _.bind( function() {
+					this.model.zipWriter.close( _.bind( function( blob ) {
 						saveAs( blob, name + '.zip' );
-						that.progressView.reset();
-					});
-				});
+						this.progressView.reset();
+					}, this ) );
+				}, this ) );
 
 			} else {
 				// Else save as csv
@@ -615,17 +614,17 @@
 
 	// Instantiates views
 
-	var importPage = $( '#csv-import-form' );
-	if ( 0 < importPage.length ) {
+	this.csvie.importPage = $( '#csv-import-form' );
+	if ( 0 < this.csvie.importPage.length ) {
 		wp.csvie.views.import = new wp.csvie.view.ImportView({
-			el: importPage
+			el: this.csvie.importPage
 		});
 	}
 
-	var exportPage = $( '#csv-export' );
-	if ( 0 < exportPage.length ) {
+	this.csvie.exportPage = $( '#csv-export' );
+	if ( 0 < this.csvie.exportPage.length ) {
 		wp.csvie.views.export = new wp.csvie.view.View({
-			el: exportPage
+			el: this.csvie.exportPage
 		});
 	}
 

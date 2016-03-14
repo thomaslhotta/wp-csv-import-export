@@ -44,7 +44,6 @@ class CIE_Field_Commentmeta extends CIE_Field_Meta {
 
 			$value = apply_filters( 'cie_import_comment_meta_value_' . $field_id, $value, $element );
 
-
 			if ( is_array( $value ) ) {
 				foreach ( array_reverse( $value ) as $v ) {
 					if ( ! add_comment_meta( $element->get_element_id(), $field_id, $v ) ) {

@@ -1,12 +1,12 @@
 <?php
-
 /**
  * Handles attachment image import and export
  */
 class CIE_Field_Attachment extends CIE_Field_Abstract {
 	public function get_available_fields( array $search = array() ) {
+		// @todo Find another way to translate this
 		return array(
-			'attachment_attachments' => __( 'Attachments', 'cie' ),
+			'attachment_attachments' => 'Attachments',
 		);
 	}
 
@@ -18,6 +18,8 @@ class CIE_Field_Attachment extends CIE_Field_Abstract {
 		if ( 'attachment' === $element->get_element()->post_type ) {
 			return array( array( $element->get_element()->guid ) );
 		}
+
+		$urls = array();
 
 		foreach ( get_attached_media( $element->get_element(), 'image' ) as $attachment ) {
 			$url = wp_get_attachment_url( $attachment );

@@ -50,7 +50,6 @@ class CIE_Field_Usermeta extends CIE_Field_Meta {
 			$return[ $meta_key ] = $meta_key;
 		}
 
-
 		return $return;
 	}
 
