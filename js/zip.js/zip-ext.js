@@ -51,7 +51,8 @@
 				request = new XMLHttpRequest();
 				request.addEventListener("load", function() {
 					if (!that.size)
-						that.size = Number(request.getResponseHeader("Content-Length"));
+						// Fixed bug with chucked encoding
+						that.size = Number(request.response.byteLength);
 					that.data = new Uint8Array(request.response);
 					callback();
 				}, false);
