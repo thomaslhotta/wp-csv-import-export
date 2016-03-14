@@ -249,10 +249,12 @@
 		initialize: function() {
 			// Create model with current action as id
 			this.model = new wp.csvie.model.Settings({
-				id: this.$el.find( '[name=ajax-action]' ).val()
+				id: wp.csvie.settings.action
 			});
 
 			this.model.fetch();
+
+
 			// Restore options
 			this.render();
 			// Read back options
@@ -288,7 +290,8 @@
 			var model = this.model;
 
 			// Reset model and restore id
-			this.model.clear().set( 'id', this.model.id );
+			this.model.clear();
+			this.model.id = wp.csvie.settings.action;
 
 			this.$el.find( 'input' ).each( function() {
 				var input = $( this );
@@ -614,17 +617,17 @@
 
 	// Instantiates views
 
-	this.csvie.importPage = $( '#csv-import-form' );
-	if ( 0 < this.csvie.importPage.length ) {
+	wp.csvie.importPage = $( '#csv-import-form' );
+	if ( 0 < wp.csvie.importPage.length ) {
 		wp.csvie.views.import = new wp.csvie.view.ImportView({
-			el: this.csvie.importPage
+			el: wp.csvie.importPage
 		});
 	}
 
-	this.csvie.exportPage = $( '#csv-export' );
-	if ( 0 < this.csvie.exportPage.length ) {
+	wp.csvie.exportPage = $( '#csv-export' );
+	if ( 0 < wp.csvie.exportPage.length ) {
 		wp.csvie.views.export = new wp.csvie.view.View({
-			el: this.csvie.exportPage
+			el: wp.csvie.exportPage
 		});
 	}
 
