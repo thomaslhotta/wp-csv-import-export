@@ -33,7 +33,7 @@
 
 	var Reader = zip.Reader;
 	var Writer = zip.Writer;
-	
+
 	var ZipDirectoryEntry;
 
 	var appendABViewSupported;
@@ -51,8 +51,7 @@
 				request = new XMLHttpRequest();
 				request.addEventListener("load", function() {
 					if (!that.size)
-						// Fixed bug with chucked encoding
-						that.size = Number(request.response.byteLength);
+						that.size = Number(request.getResponseHeader("Content-Length"));
 					that.data = new Uint8Array(request.response);
 					callback();
 				}, false);

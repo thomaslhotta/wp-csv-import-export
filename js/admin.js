@@ -26,6 +26,54 @@
 			});
 		};
 
+	/**
+	 * Http File Reader for zip.js
+	 *
+	 * It is based on the HttpReader of zip.js, but does not rely on the Content-Length header. This makes it work
+	 * with Google Pagespeed
+	 *
+	 * @param url
+	 * @constructor
+	 */
+	var HttpReader = function( url ) {
+		var that = this,
+			error = false;
+
+		function getData( callback, onerror ) {
+			if ( that.error ) {
+				return onerror();
+			}
+			callback();
+		}
+
+		function init( callback, onerror ) {
+			var request = new XMLHttpRequest();
+
+			request.addEventListener( 'load', function() {
+				that.data = new Uint8Array( request.response );
+				that.size = that.data.length;
+				callback();
+			}, false );
+			request.addEventListener( 'error', onerror, false );
+			request.open( 'GET', url );
+			request.responseType = 'arraybuffer';
+			request.send();
+		}
+
+		function readUint8Array( index, length, callback, onerror ) {
+			getData( function() {
+				callback( new Uint8Array( that.data.subarray( index, index + length ) ) );
+			}, onerror );
+		}
+
+		that.size = 0;
+		that.init = init;
+		that.readUint8Array = readUint8Array;
+	};
+
+	HttpReader.prototype = new zip.Reader();
+	HttpReader.prototype.constructor = HttpReader;
+
 	zip.workerScriptsPath = zipJsWorkerScriptsPath;
 
 	wp.csvie = {
@@ -87,7 +135,7 @@
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					this.collection.zipWriter.add( name, new zip.HttpReader( url ), function() {
+					this.collection.zipWriter.add( name, new HttpReader( url ), function() {
 						callback.resolve();
 					}, function() {}, { level: 3 });
 
