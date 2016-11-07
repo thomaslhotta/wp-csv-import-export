@@ -114,6 +114,7 @@
 	 * Model that holds a single element that is to be converted to a CSV row
 	 */
 	wp.csvie.model.Element = Backbone.Model.extend({
+
 		/**
 		 * Fetches attachments of the current element as array buffers
 		 *
@@ -173,6 +174,7 @@
 			// Setup correct url
 			this.url = ajaxurl;
 		},
+
 		/**
 		 * Injects additional data into the requests
 		 *
@@ -181,7 +183,7 @@
 		 * @param options
 		 */
 		sync: function( method, object, options ) {
-			if ( typeof options.data === 'undefined' ) {
+			if ( 'undefined' === typeof options.data ) {
 				options.data = {};
 			}
 
@@ -203,13 +205,14 @@
 
 			return Backbone.sync.call( this, 'create', object, options );
 		},
+
 		/**
 		 * Overwrites original fetch to process all elements after loading
 		 * @param options
 		 * @returns {*}
 		 */
 		fetch: function( options ) {
-			if ( ! $.isPlainObject( options ) ) {
+			if ( !$.isPlainObject( options ) ) {
 				options = {};
 			}
 
@@ -227,6 +230,7 @@
 			this.file_name = data[0].file_name;
 			return Backbone.PageableCollection.prototype.parse.apply( this, [ data ]);
 		},
+
 		/**
 		 * Starts iterating elements after load
 		 */
@@ -234,6 +238,7 @@
 			this.currentElement = -1;
 			this.processElement();
 		},
+
 		/**
 		 * Processes single element
 		 *
@@ -267,19 +272,21 @@
 				rate: 0
 			};
 		},
+
 		/**
 		 * Increments to progress indicator by 1
 		 */
 		tick: function() {
 			this.set( 'current', this.get( 'current' ) + 1 );
 		},
+
 		/**
 		 * Returns the progress percentage
 		 *
 		 * @returns {number}
 		 */
 		getPercent: function() {
-			if ( ! this.get( 'current' ) ) {
+			if ( !this.get( 'current' ) ) {
 				return 0;
 			}
 
@@ -292,7 +299,7 @@
 	 */
 	wp.csvie.view.Settings = Backbone.View.extend({
 		events: {
-			'change': 'readOptions'
+			change: 'readOptions'
 		},
 		initialize: function() {
 			// Create model with current action as id
@@ -307,6 +314,7 @@
 			// Read back options
 			this.readOptions();
 		},
+
 		/**
 		 * Restores all settings to the ones stored in the model
 		 */
@@ -316,7 +324,7 @@
 			this.$el.find( 'input' ).each( function() {
 				var input = $( this );
 				// Skip hidden inputs
-				if ( 'hidden' === input.attr( 'type' ) || ! settings[ input.attr( 'name' ) ]) {
+				if ( 'hidden' === input.attr( 'type' ) || !settings[input.attr( 'name' )]) {
 					return;
 				}
 
@@ -325,11 +333,12 @@
 					return;
 				}
 
-				input.val( settings[ input.attr( 'name' ) ]);
+				input.val( settings[input.attr( 'name' )]);
 			});
 
 			return this;
 		},
+
 		/**
 		 * Read and store settings
 		 */
@@ -365,6 +374,7 @@
 		initialize: function() {
 			this.model.bind( 'change', _.bind( this.render, this ) );
 		},
+
 		/**
 		 * Renders the progress indicator
 		 *
@@ -375,6 +385,7 @@
 			this.$el.parent().prop( 'disabled', true );
 			return this;
 		},
+
 		/**
 		 * Resets to progress indicator state
 		 */
@@ -401,7 +412,7 @@
 			});
 
 			// Initializes main collection
-			this.model = new wp.csvie.model.CSV([],{
+			this.model = new wp.csvie.model.CSV([], {
 				settings: this.settingsView.model
 			});
 
@@ -421,6 +432,7 @@
 				this.progressModel.set( 'total', this.model.state.totalRecords );
 			}, this ) );
 		},
+
 		/**
 		 * Starts the CSV export
 		 *
@@ -450,6 +462,7 @@
 			}
 			return this;
 		},
+
 		/**
 		 * Runs CSV export
 		 */
@@ -470,6 +483,7 @@
 				}
 			}, this ) );
 		},
+
 		/**
 		 * Adds elements from the given page of the collection
 		 *
@@ -477,16 +491,17 @@
 		 * @returns {wp.csvie.view.View}
 		 */
 		addElements: function( collection ) {
-			$.merge( this.csv,collection.toJSON() );
+			$.merge( this.csv, collection.toJSON() );
 			return this;
 		},
+
 		/**
 		 * Saves the current export
 		 */
 		saveCSV: function() {
 			var name = this.model.file_name,
-				csv  = Papa.unparse( this.csv ),
-				now  = new Date();
+				csv = Papa.unparse( this.csv ),
+				now = new Date();
 
 			// Append current date and time to string
 			name = name + '-' + now.toISOString().substring( 0, 19 ).replace( 'T', '-' );
@@ -505,6 +520,7 @@
 				this.reset();
 			}
 		},
+
 		/**
 		 * Resets the export view
 		 *
@@ -526,6 +542,7 @@
 			this.model = new wp.csvie.model.Errors();
 			this.model.on( 'add', _.bind( this.appendError, this ) );
 		},
+
 		/**
 		 * Resets the progress indicator
 		 *
@@ -536,6 +553,7 @@
 			this.$el.hide().find( 'tr' ).remove();
 			return this;
 		},
+
 		/**
 		 * Appends an error to the current list
 		 *
@@ -580,6 +598,7 @@
 
 			this.$el.find( 'button' ).append( this.progressView.$el );
 		},
+
 		/**
 		 * Starts CSV import
 		 * @param e
@@ -617,9 +636,10 @@
 				file.parse({ config: config });
 			} else {
 				// @todo Translate this
-				alert( 'No file selected' );
+				window.alert( 'No file selected' );
 			}
 		},
+
 		/**
 		 * Sends data by iterating over this.elements
 		 */
@@ -683,7 +703,7 @@
 // Misc UI stuff
 ( function( $, document ) {
 	'use strict';
-	$.fn['checkAll'] = function() {
+	$.fn.checkAll = function() {
 		return this.each( function() {
 			var target = $( this ).data( 'target' );
 			$( target ).find( 'input[type=checkbox]' )

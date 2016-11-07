@@ -43,6 +43,10 @@ class CIE_Field_Post extends CIE_Field_Object {
 	public function get_field_values( array $fields, CIE_Element $element ) {
 		$element_object = $element->get_element();
 
+		if ( $element_object instanceof WP_Comment ) {
+			$element_object = get_post( $element_object->comment_post_ID );
+		}
+
 		$data = array();
 		foreach ( $fields as $field ) {
 			if ( 'permalink' === $field ) {

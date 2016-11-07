@@ -10,6 +10,7 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter {
 	public function get_supported_fields() {
 		return array(
 			'commentmeta',
+			'post',
 			'buddypress',
 			'user',
 			'usermeta',
