@@ -12,7 +12,7 @@
  * Plugin Name:       CSV Import Export
  * Plugin URI:        https://github.com/thomaslhotta/wp-csv-import-export
  * Description:       Import and Export data as CSV
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Thomas Lhotta
  * Author URI:        https://github.com/thomaslhotta
  * Text Domain:       cie
