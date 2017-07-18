@@ -2,8 +2,6 @@
 
 /**
  * Handles posts import and export
- *
- * @todo Implement importer
  */
 class CIE_Module_Posts extends CIE_Module_Abstract {
 
@@ -11,6 +9,11 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 	 * @var CIE_Module_Posts_Exporter
 	 */
 	protected $exporter;
+
+	/**
+	 * @var CIE_Module_Posts_Importer
+	 */
+	protected $importer;
 
 	public function register_menus() {
 		$import = __( 'Import CSV', 'cie' );
@@ -83,5 +86,20 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 		}
 
 		return $this->exporter;
+	}
+
+	public function display_post_import_page() {
+		echo $this->render_import_ui( 'import_posts' );
+	}
+
+	/**
+	 * @return CIE_Module_Posts_Importer
+	 */
+	public function get_importer() {
+		if ( ! $this->importer instanceof CIE_Module_Posts_Importer ) {
+			$this->importer = new CIE_Module_Posts_Importer();
+		}
+
+		return $this->importer;
 	}
 }

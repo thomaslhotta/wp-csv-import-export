@@ -116,7 +116,7 @@ class CIE_Module_Users_Creator extends CIE_Importer {
 	 *
 	 * @param array $row
 	 *
-	 * @return int|null
+	 * @return WP_User|null
 	 */
 	protected function get_existing_user( array $row ) {
 		// Find user by ID

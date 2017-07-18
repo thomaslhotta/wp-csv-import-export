@@ -68,7 +68,6 @@ class CIE_Field_Postmeta extends CIE_Field_Meta {
 
 	public function set_field_values( array $fields, CIE_Element $element ) {
 		$errors = array();
-
 		foreach ( $fields as $field_id => $value ) {
 			if ( 0 !== strpos( $field_id, 'meta_' ) ) {
 				continue;
@@ -76,7 +75,7 @@ class CIE_Field_Postmeta extends CIE_Field_Meta {
 
 			$field_id = str_replace( 'meta_', '', $field_id );
 
-			if ( ! update_user_meta( $element->get_user_id(), $field_id, $value ) ) {
+			if ( ! update_post_meta( $element->get_element_id(), $field_id, $value ) ) {
 				$errors[] = sprintf(
 					__( 'User post value %s could not be set', 'cie' ),
 					strip_tags( $value )
