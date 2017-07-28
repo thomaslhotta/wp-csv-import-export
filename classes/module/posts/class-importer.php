@@ -37,6 +37,22 @@ class CIE_Module_Posts_Importer extends CIE_Importer {
 		);
 	}
 
+	public function import( array $data, $mode ) {
+		remove_action( 'transition_post_status', '_update_blog_date_on_post_publish', 10 );
+		remove_action( 'transition_post_status', '_update_posts_count_on_transition_post_status', 10 );
+
+
+		$return = parent::import( $data, $mode );
+
+		add_action( 'transition_post_status', '_update_blog_date_on_post_publish', 10, 3 );
+		wpmu_update_blogs_date();
+
+		add_action( 'transition_post_status', '_update_posts_count_on_transition_post_status', 10, 2 );
+		update_posts_count();
+
+		return $return;
+	}
+
 	/**
 	 * @param array $data
 	 * @param int $mode
