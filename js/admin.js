@@ -1,4 +1,4 @@
-/* global jQuery, document, Backbone, window, wp, zip, ajaxurl, _, Papa, csvieSettings, zipJsWorkerScriptsPath, saveAs, Blob */
+/* global jQuery, document, Backbone, window, wp, zip, ajaxurl, _, Papa, csvieSettings, zipJsWorkerScriptsPath, saveAs, Blob, Uint8Array */
 
 ( function( $, Backbone, window, document, wp, zip ) {
 	'use strict';
@@ -35,7 +35,7 @@
 	 * @param url
 	 * @constructor
 	 */
-	var HttpReader = function( url ) {
+	/*var HttpReader = function( url ) {
 		var that = this,
 			error = false;
 
@@ -61,7 +61,7 @@
 		}
 
 		function readUint8Array( index, length, callback, onerror ) {
-			getData( function() {
+			getData(function() {
 				callback( new Uint8Array( that.data.subarray( index, index + length ) ) );
 			}, onerror );
 		}
@@ -73,7 +73,7 @@
 
 	HttpReader.prototype = new zip.Reader();
 	HttpReader.prototype.constructor = HttpReader;
-
+*/
 	zip.workerScriptsPath = zipJsWorkerScriptsPath;
 
 	wp.csvie = {
@@ -82,7 +82,7 @@
 		views: {},
 		settings: csvieSettings,
 		importPage: null,
-		exportPage: null
+		exportPage: null,
 	};
 
 	/**
@@ -94,7 +94,7 @@
 			this.bind( 'change:ajax-action', function() {
 				this.set( 'action', this.get( 'ajax-action' ) );
 			});
-		}
+		},
 	});
 
 	/**
@@ -107,7 +107,7 @@
 	 * Errors collection
 	 */
 	wp.csvie.model.Errors = Backbone.Collection.extend({
-		model: wp.csvie.model.Error
+		model: wp.csvie.model.Error,
 	});
 
 	/**
@@ -136,11 +136,16 @@
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					this.collection.zipWriter.add( name, new HttpReader( url ), function() {
-						callback.resolve();
-					}, function() {}, { level: 3 });
+					try {
+						this.collection.zipWriter.add( name, new HttpReader( url ), function() {
+							callback.resolve();
+						}, function() {
+						}, { level: 3 });
 
-					calls.push( callback.promise() );
+						calls.push( callback.promise() );
+					} catch ( error ) {
+						console.log( 'Error' );
+					}
 				}, this );
 
 				// Resolve the current defer once all
@@ -153,7 +158,7 @@
 			}
 
 			return deferred;
-		}
+		},
 	});
 
 	/**
@@ -212,7 +217,7 @@
 		 * @returns {*}
 		 */
 		fetch: function( options ) {
-			if ( !$.isPlainObject( options ) ) {
+			if ( ! $.isPlainObject( options ) ) {
 				options = {};
 			}
 
@@ -220,12 +225,13 @@
 
 			options.data = this.settings.toJSON();
 
-			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( _.bind( function() {
+			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( _.bind(function() {
 				this.processElements();
 			}, this ) );
 
 			return this.processElementsDeferred.promise();
 		},
+
 		parse: function( data ) {
 			this.file_name = data[0].file_name;
 			return Backbone.PageableCollection.prototype.parse.apply( this, [ data ]);
@@ -235,42 +241,37 @@
 		 * Starts iterating elements after load
 		 */
 		processElements: function() {
-			this.currentElement = -1;
-			this.processElement();
+			var currentDef,
+			    defers = [];
+
+			this.currentElement = 0;
+
+			do {
+				currentDef = this.at( this.currentElement ).getAttachments();
+				currentDef.done( _.bind(function() {
+					this.trigger( 'processElement' );
+				}, this ) );
+
+				defers.push( currentDef );
+				this.currentElement += 1;
+			} while ( 'undefined' !== typeof this.at( this.currentElement ) );
+
+			$.when.apply( $, defers ).then( this.processElementsDeferred.resolve );
 		},
 
-		/**
-		 * Processes single element
-		 *
-		 * @returns {wp.csvie.model.CSV}
-		 */
-		processElement: function() {
-			this.currentElement += 1;
-			if ( this.at( this.currentElement ) ) {
-				this.trigger( 'processElement' );
-				this.at( this.currentElement ).getAttachments().done( $.proxy( this.processElement, this ) );
-			} else {
-				this.processElementsDeferred.resolve();
-			}
-			return this;
-		},
 		reset: function() {
 			this.state.currentPage = 0;
 			return Backbone.PageableCollection.prototype.reset.apply( this );
-		}
+		},
 	});
 
 	/**
 	 * Model for handling the progress indicator
 	 */
 	wp.csvie.model.Progress = Backbone.Model.extend({
-		defaults: function() {
-			return {
-				total: 1,
-				current: 0,
-				time: Date.now(),
-				rate: 0
-			};
+		defaults: {
+			total: 0,
+			current: 0,
 		},
 
 		/**
@@ -286,12 +287,14 @@
 		 * @returns {number}
 		 */
 		getPercent: function() {
-			if ( !this.get( 'current' ) ) {
-				return 0;
+			var percent = 0;
+
+			if ( this.get( 'current' ) ) {
+				percent = Math.round( this.get( 'current' ) / this.get( 'total' ) * 100 );
 			}
 
-			return Math.round( this.get( 'current' ) / this.get( 'total' ) * 100 );
-		}
+			return percent;
+		},
 	});
 
 	/**
@@ -299,12 +302,12 @@
 	 */
 	wp.csvie.view.Settings = Backbone.View.extend({
 		events: {
-			change: 'readOptions'
+			change: 'readOptions',
 		},
 		initialize: function() {
 			// Create model with current action as id
 			this.model = new wp.csvie.model.Settings({
-				id: wp.csvie.settings.action
+				id: wp.csvie.settings.action,
 			});
 
 			this.model.fetch();
@@ -321,10 +324,10 @@
 		render: function() {
 			var settings = this.model.toJSON();
 
-			this.$el.find( 'input' ).each( function() {
+			this.$el.find( 'input' ).each(function() {
 				var input = $( this );
 				// Skip hidden inputs
-				if ( 'hidden' === input.attr( 'type' ) || !settings[input.attr( 'name' )]) {
+				if ( 'hidden' === input.attr( 'type' ) || ! settings[ input.attr( 'name' ) ] ) {
 					return;
 				}
 
@@ -333,7 +336,7 @@
 					return;
 				}
 
-				input.val( settings[input.attr( 'name' )]);
+				input.val( settings[ input.attr( 'name' ) ] );
 			});
 
 			return this;
@@ -349,9 +352,9 @@
 			this.model.clear();
 			this.model.id = wp.csvie.settings.action;
 
-			this.$el.find( 'input' ).each( function() {
+			this.$el.find( 'input' ).each(function() {
 				var input = $( this );
-				if ( input.is( ':checkbox' ) && !input.prop( 'checked' ) ) {
+				if ( input.is( ':checkbox' ) && ! input.prop( 'checked' ) ) {
 					return;
 				}
 
@@ -362,7 +365,7 @@
 
 			model.save();
 			return this;
-		}
+		},
 	});
 
 	/**
@@ -381,7 +384,12 @@
 		 * @returns {wp.csvie.view.Progress}
 		 */
 		render: function() {
-			this.$el.text( ' (' + this.model.getPercent() + '%)' );
+			if ( 0 === this.model.get( 'total' ) ) {
+				this.$el.text( ' (...)' );
+			} else {
+				this.$el.text( ' (' + this.model.getPercent() + '%)' );
+			}
+
 			this.$el.parent().prop( 'disabled', true );
 			return this;
 		},
@@ -394,7 +402,7 @@
 			this.$el.text( '' );
 			this.$el.parent().prop( 'disabled', false );
 			return this;
-		}
+		},
 	});
 
 	/**
@@ -402,33 +410,31 @@
 	 */
 	wp.csvie.view.View = Backbone.View.extend({
 		events: {
-			'click .export': 'startExport'
+			'click .export': 'startExport',
 		},
 		initialize: function() {
 			this.csv = [];
 			// Initialize settings
 			this.settingsView = new wp.csvie.view.Settings({
-				el: this.$el.find( '#export-settings' )
+				el: this.$el.find( '#export-settings' ),
 			});
 
 			// Initializes main collection
 			this.model = new wp.csvie.model.CSV([], {
-				settings: this.settingsView.model
+				settings: this.settingsView.model,
 			});
 
 			// Setup progress indicator
 			this.progressModel = new wp.csvie.model.Progress();
 			this.progressView = new wp.csvie.view.Progress({
-				model: this.progressModel
+				model: this.progressModel,
 			});
 
 			this.$el.find( '.export' ).append( this.progressView.$el );
+			this.progressModel.listenTo( this.model, 'request', this.progressModel.tick );
+			this.progressModel.listenTo( this.model, 'processElement', this.progressModel.tick );
 
-			this.model.on( 'processElement', _.bind( function() {
-				this.progressModel.tick();
-			}, this ) );
-
-			this.model.on( 'sync', _.bind( function() {
+			this.model.on( 'sync', _.bind(function() {
 				this.progressModel.set( 'total', this.model.state.totalRecords );
 			}, this ) );
 		},
@@ -444,7 +450,7 @@
 			if ( this.settingsView.model.get( 'fields[attachment][attachment_attachments]' ) ) {
 				if ( requestFileSystem ) {
 					// If available use temporary file
-					createTempFile( function( tmpFilename ) {
+					createTempFile(function( tmpFilename ) {
 						zip.createWriter( new zip.FileWriter( tmpFilename ), function( writer ) {
 							that.model.zipWriter = writer;
 							that.exportCSV();
@@ -474,7 +480,7 @@
 
 			this.attachments = null;
 
-			this.model.getPage( page ).done( _.bind( function() {
+			this.model.getPage( page ).done( _.bind(function() {
 				this.addElements( this.model );
 				if ( this.model.hasNextPage() ) {
 					this.exportCSV();
@@ -507,8 +513,8 @@
 			name = name + '-' + now.toISOString().substring( 0, 19 ).replace( 'T', '-' );
 
 			if ( this.model.zipWriter ) {
-				this.model.zipWriter.add( name + '.csv', new zip.TextReader( csv ), _.bind( function() {
-					this.model.zipWriter.close( _.bind( function( blob ) {
+				this.model.zipWriter.add( name + '.csv', new zip.TextReader( csv ), _.bind(function() {
+					this.model.zipWriter.close( _.bind(function( blob ) {
 						saveAs( blob, name + '.zip' );
 						this.progressView.reset();
 					}, this ) );
@@ -531,7 +537,7 @@
 			this.model.reset();
 			this.progressView.reset();
 			return this;
-		}
+		},
 	});
 
 	/**
@@ -573,7 +579,7 @@
 
 			this.$el.show().find( 'table' ).append( row );
 			return this;
-		}
+		},
 	});
 
 	/**
@@ -581,19 +587,19 @@
 	 */
 	wp.csvie.view.ImportView = Backbone.View.extend({
 		events: {
-			'click button': 'importCSV'
+			'click button': 'importCSV',
 		},
 		initialize: function() {
 			this.elements = [];
 
 			this.errorsView = new wp.csvie.view.Errors({
-				el: this.$el.find( '#errors' )
+				el: this.$el.find( '#errors' ),
 			});
 
 			// Setup progress indicator
 			this.progressModel = new wp.csvie.model.Progress();
 			this.progressView = new wp.csvie.view.Progress({
-				model: this.progressModel
+				model: this.progressModel,
 			});
 
 			this.$el.find( 'button' ).append( this.progressView.$el );
@@ -619,7 +625,7 @@
 					},
 					error: function( err, file, inputElem, reason ) {
 						//@todo Do something on errors
-					}
+					},
 				};
 
 			if ( ! window.FileReader && ! $.trim( textarea.val() ) ) {
@@ -677,9 +683,9 @@
 					} else {
 						that.progressView.reset();
 					}
-				}
+				},
 			});
-		}
+		},
 	});
 
 	// Instantiates views
@@ -687,14 +693,14 @@
 	wp.csvie.importPage = $( '#csv-import-form' );
 	if ( 0 < wp.csvie.importPage.length ) {
 		wp.csvie.views.import = new wp.csvie.view.ImportView({
-			el: wp.csvie.importPage
+			el: wp.csvie.importPage,
 		});
 	}
 
 	wp.csvie.exportPage = $( '#csv-export' );
 	if ( 0 < wp.csvie.exportPage.length ) {
 		wp.csvie.views.export = new wp.csvie.view.View({
-			el: wp.csvie.exportPage
+			el: wp.csvie.exportPage,
 		});
 	}
 
@@ -704,7 +710,7 @@
 ( function( $, document ) {
 	'use strict';
 	$.fn.checkAll = function() {
-		return this.each( function() {
+		return this.each(function() {
 			var target = $( this ).data( 'target' );
 			$( target ).find( 'input[type=checkbox]' )
 				.prop( 'checked', $( this ).prop( 'checked' ) )
