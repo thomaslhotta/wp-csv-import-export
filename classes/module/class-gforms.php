@@ -10,9 +10,10 @@ class CIE_Module_Gforms extends CIE_Module_Abstract {
 	protected $importer;
 
 	public function register_menus() {
-		if ( ! current_user_can( 'import' ) ) {
+		if ( ! current_user_can( $this->get_import_capability() ) ) {
 			return;
 		}
+
 		add_filter( 'gform_export_menu', array( $this, 'gform_export_menu' ) );
 		add_action( 'gform_export_page_import_entry', array( $this, 'display_import_ui' ) );
 	}

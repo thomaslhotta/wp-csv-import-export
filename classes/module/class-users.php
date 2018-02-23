@@ -18,20 +18,22 @@ class CIE_Module_Users extends CIE_Module_Abstract {
 		add_users_page(
 			__( 'Import CSV', 'cie' ),
 			__( 'Import CSV', 'cie' ),
-			'import',
+			$this->get_import_capability(),
 			'import',
 			array( $this, 'display_user_import_page' )
 		);
 
-		if ( is_super_admin() ) {
-			add_users_page(
-				__( 'Export CSV', 'cie' ),
-				__( 'Export CSV', 'cie' ),
-				'export',
-				'export',
-				array( $this, 'display_user_export_page' )
-			);
-		}
+		add_users_page(
+			__( 'Export CSV', 'cie' ),
+			__( 'Export CSV', 'cie' ),
+			$this->get_export_capability(),
+			'export',
+			array( $this, 'display_user_export_page' )
+		);
+	}
+
+	public function get_export_capability() {
+		return is_multisite() ? 'manage_network_users' : 'export';
 	}
 
 	public function add_meta_boxes( $post_type, WP_Post $post ) {

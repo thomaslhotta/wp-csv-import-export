@@ -14,13 +14,31 @@ abstract class CIE_Module_Abstract {
 	 * Registers AJAX handlers
 	 */
 	public function register_ajax() {
-		if ( current_user_can( 'export' ) && $this->get_exporter() ) {
+		if ( current_user_can( $this->get_export_capability() ) && $this->get_exporter() ) {
 			add_action( 'wp_ajax_' . $this->get_export_action(), array( $this, 'process_export' ) );
 		}
 
-		if ( current_user_can( 'import' ) ) {
+		if ( current_user_can( $this->get_import_capability() ) ) {
 			add_action( 'wp_ajax_' . $this->get_import_action(), array( $this, 'process_import' ) );
 		}
+	}
+
+	/**
+	 * Returns the capability required for users to be allowed to import
+	 *
+	 * @return string
+	 */
+	public function get_import_capability() {
+		return 'import';
+	}
+
+	/**
+	 * Returns the capability required for users to be allowed to export
+	 *
+	 * @return string
+	 */
+	public function get_export_capability() {
+		return 'export';
 	}
 
 	/**

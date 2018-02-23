@@ -19,7 +19,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 		add_comments_page(
 			__( 'Import CSV', 'cie' ),
 			__( 'Import CSV', 'cie' ),
-			'import',
+			$this->get_import_capability(),
 			'import-comments',
 			array( $this, 'display_import_ui' )
 		);
@@ -27,7 +27,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 		add_comments_page(
 			__( 'Export CSV', 'cie' ),
 			__( 'Export CSV', 'cie' ),
-			'export',
+			$this->get_export_capability(),
 			'export-comments',
 			array( $this, 'display_export_ui' )
 		);

@@ -25,7 +25,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 				'edit.php?post_type=' . $post_type,
 				$import,
 				$import,
-				'import',
+				$this->get_import_capability(),
 				'import-' . $post_type . '',
 				array( $this, 'display_post_import_page' )
 			);
@@ -34,7 +34,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 				'edit.php?post_type=' . $post_type,
 				$export,
 				$export,
-				'export',
+				$this->get_export_capability(),
 				'export-' . $post_type . '',
 				array( $this, 'display_post_export_page' )
 			);
