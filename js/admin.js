@@ -56,28 +56,18 @@
 
 				_.each( this.get( 'Attachments' ).split( ';' ), function( url ) {
 					var callback = $.Deferred(),
-						i = 1,
 						name = url.split( '/' ).slice( -3 ).join( '/' ), // Follow the WordPress structure for directory naming
 						extension = '.' + url.split( '.' ).pop(),
-						generatedName, request;
+						request;
 
 					// Strip the extension from the name
 					name = name.substring( 0, name.length - ( extension.length ) );
 
-					if ( 0 < this.collection.rename.length ) {
-						name = _.map( this.collection.rename, function( col ) {
-							return this.get( col );
-						}, this );
-						name = name.join( '-' );
+					if ( 0 < this.collection.getRenameFormat().length ) {
+						name = this.collection.formatName( this.toJSON() );
 					}
 
-					generatedName = name + extension;
-					while ( -1 !== this.collection.addedFileNames.indexOf( generatedName ) ) {
-						generatedName = name + '-' + i + extension;
-						i++;
-					}
-
-					this.collection.addedFileNames.push( generatedName );
+					name = this.collection.getUniqueFileName( name, extension );
 
 					// Use HTTPS if available
 					if ( 'https:' === window.location.protocol ) {
@@ -90,7 +80,7 @@
 						request.responseType = 'blob';
 
 						request.onload = _.bind(function() {
-							this.collection.zipWriter.file( generatedName, request.response );
+							this.collection.zipWriter.file( name, request.response );
 							callback.resolve();
 						}, this );
 
@@ -119,14 +109,14 @@
 	 */
 	wp.csvie.model.CSV = Backbone.PageableCollection.extend({
 		file_name: 'export',
-		rename: [],
+		renameFormat: '',
 		addedFileNames:[],
 		settings: null,
 		model: wp.csvie.model.Element,
 		mode: 'server',
 		state: {
 			pageSize: 1000,
-			currentPage: 1
+			currentPage: 1,
 		},
 		initialize: function( models, options ) {
 			// Manually add settings variable
@@ -201,7 +191,7 @@
 				concurrent = 5,
 			    defers = [];
 
-			for ( i = 0; i <= concurrent; i ++ ) {
+			for ( i = 0; i <= concurrent; i++ ) {
 				if ( this.hasElement( this.currentElement ) ) {
 					defers.push(
 						this.at( this.currentElement ).getAttachments().done( _.bind( function() {
@@ -233,6 +223,63 @@
 		hasElement: function( index ) {
 			return 'undefined' !== typeof this.at( index );
 		},
+
+		/**
+		 * Sets the name format.
+		 *
+		 * @param format
+		 */
+		setRenameFormat: function( format ) {
+			var sanitized = format.replace( '<%', '' ).replace( '%>', '' ).replace( '=', '' );
+
+			// Convert handle bars style to underscore templates
+			sanitized = sanitized.replace( '{', '<%=' ).replace( '}', '%>' );
+
+			this.renameFormat = sanitized;
+		},
+
+		/**
+		 * Returns the name format
+		 *
+		 * @return {string}
+		 */
+		getRenameFormat: function() {
+			return this.renameFormat;
+		},
+
+		/**
+		 * Formats a name with the given values
+		 *
+		 * @param values
+		 * @return {*}
+		 */
+		formatName: function( values ) {
+			return _.template( this.getRenameFormat() )( values );
+		},
+
+		/**
+		 * Generates a unique file name
+		 *
+		 * @param baseName
+		 * @param extension
+		 * @return {*}
+		 */
+		getUniqueFileName: function( baseName, extension ) {
+			var uniqueName,
+				i = 1;
+
+			uniqueName = baseName + extension;
+			while ( -1 !== this.addedFileNames.indexOf( uniqueName ) ) {
+				uniqueName = baseName + '-' + i + extension;
+				i++;
+			}
+
+			this.addedFileNames.push( uniqueName );
+
+			return uniqueName;
+		},
+
+
 
 		reset: function() {
 			this.state.currentPage = 0;
@@ -341,7 +388,10 @@
 			model.save();
 			return this;
 		},
-		
+
+		/**
+		 * Returns an object of selected names
+		 */
 		getSelectedNames: function() {
 			var names = {};
 
@@ -440,9 +490,9 @@
 					renameMsg = window.cieAdminLocales.renameDescription + ":\n\n" +
 						available.join( ', ' ) + "\n\n" +
 						window.cieAdminLocales.example + ': ' +
-						available.slice( 0, 3 ).join( '-' ) + "\n\n";
+						'{' + available.slice( 0, 3 ).join( '}{' ) + "}\n\n";
 
-					this.model.rename = window.prompt( renameMsg ).split( '-' );
+					this.model.setRenameFormat( window.prompt( renameMsg ) );
 				}
 
 				this.model.zipWriter = window.JSZip();
@@ -499,7 +549,7 @@
 			if ( this.model.zipWriter ) {
 				this.model.zipWriter.file( name + '.csv', csv );
 
-				this.model.zipWriter.generateAsync( { type: 'blob' } ).then( _.bind( function( blob ) {
+				this.model.zipWriter.generateAsync( { type: 'blob' } ).then( _.bind(function( blob ) {
 					saveAs( blob, name + '.zip' );
 					this.progressView.reset();
 				}, this ));
@@ -649,7 +699,7 @@
 					action: wp.csvie.settings.action,
 					nonce: wp.csvie.settings.nonce,
 					data: batch,
-					mode: this.$el.find( '[name=mode]' ).val()
+					mode: this.$el.find( '[name=mode]' ).val(),
 				},
 				dataType: 'json',
 				type: 'POST',
