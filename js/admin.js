@@ -1,4 +1,4 @@
-/* global jQuery, document, Backbone, window, wp, ajaxurl, _, Papa, csvieSettings, saveAs, Blob, Uint8Array */
+/* global jQuery, document, Backbone, window, wp, ajaxurl, _, Papa, csvieSettings, saveAs, Blob, XMLHttpRequest */
 
 ( function( $, Backbone, window, document, wp ) {
 	'use strict';
@@ -56,11 +56,10 @@
 
 				_.each( this.get( 'Attachments' ).split( ';' ), function( url ) {
 					var callback = $.Deferred(),
-					    i = 1,
-						// Follow the WordPress structure for directory naming
-						name = url.split( '/' ).slice( -3 ).join( '/' ),
-					    extension = '.' + url.split( '.' ).pop(),
-						generatedName = '';
+						i = 1,
+						name = url.split( '/' ).slice( -3 ).join( '/' ), // Follow the WordPress structure for directory naming
+						extension = '.' + url.split( '.' ).pop(),
+						generatedName, request;
 
 					// Strip the extension from the name
 					name = name.substring( 0, name.length - ( extension.length ) );
@@ -75,7 +74,7 @@
 					generatedName = name + extension;
 					while ( -1 !== this.collection.addedFileNames.indexOf( generatedName ) ) {
 						generatedName = name + '-' + i + extension;
-						i ++;
+						i++;
 					}
 
 					this.collection.addedFileNames.push( generatedName );
@@ -86,13 +85,16 @@
 					}
 
 					try {
-						window.fetch( url ).then( _.bind(function( response ) {
-							if ( response.ok ) {
-								this.collection.zipWriter.file( generatedName, response.blob() );
-							}
+						request = new XMLHttpRequest();
+						request.open( 'GET', url, true );
+						request.responseType = 'blob';
 
+						request.onload = _.bind(function() {
+							this.collection.zipWriter.file( generatedName, request.response );
 							callback.resolve();
-						}, this ) );
+						}, this );
+
+						request.send();
 
 						calls.push( callback.promise() );
 					} catch ( error ) {
@@ -178,7 +180,7 @@
 
 			options.data = this.settings.toJSON();
 
-			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ] ).done( _.bind(function() {
+			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( _.bind(function() {
 				this.currentElement = 0;
 				this.processElements();
 			}, this ) );
@@ -188,26 +190,48 @@
 
 		parse: function( data ) {
 			this.file_name = data[0].file_name;
-			return Backbone.PageableCollection.prototype.parse.apply( this, [ data ]);
+			return Backbone.PageableCollection.prototype.parse.apply( this, [ data ] );
 		},
 
 		/**
 		 * Starts iterating elements after load
 		 */
 		processElements: function() {
-			var currentDef,
+			var i,
+				concurrent = 5,
 			    defers = [];
 
-			// Stop when we reached the end of the collection
-			if ( 'undefined' === typeof this.at( this.currentElement ) ) {
-				this.processElementsDeferred.resolve();
+			for ( i = 0; i <= concurrent; i ++ ) {
+				if ( this.hasElement( this.currentElement ) ) {
+					defers.push(
+						this.at( this.currentElement ).getAttachments().done( _.bind( function() {
+							this.trigger( 'processElement' );
+						}, this ) )
+					);
+
+					this.currentElement++;
+				}
 			}
 
-			this.at( this.currentElement ).getAttachments().done( _.bind( function() {
-				this.currentElement += 1;
-				this.trigger( 'processElement' );
-				this.processElements();
+			$.when.apply( null, defers ).then( _.bind(function() {
+				if ( this.hasElement( this.currentElement ) ) {
+					// Continue to iterate
+					this.processElements();
+				} else {
+					// Stop when we reached the end of the collection
+					this.processElementsDeferred.resolve();
+				}
 			}, this ));
+		},
+
+		/**
+		 * Returns true if an element exists at the given index
+		 *
+		 * @param index
+		 * @return {boolean}
+		 */
+		hasElement: function( index ) {
+			return 'undefined' !== typeof this.at( index );
 		},
 
 		reset: function() {
@@ -413,12 +437,12 @@
 				if ( window.confirm( window.cieAdminLocales.renameFiles ) ) {
 					available = Object.values( this.settingsView.getSelectedNames() );
 
-					renameMsg = window.cieAdminLocales.renameDescription + ":\n\n"
-						+ available.join( ', ' ) + "\n\n"
-						+ window.cieAdminLocales.example + ': '
-						+ available.slice( 0, 3 ) .join( '-' ) + "\n\n";
+					renameMsg = window.cieAdminLocales.renameDescription + ":\n\n" +
+						available.join( ', ' ) + "\n\n" +
+						window.cieAdminLocales.example + ': ' +
+						available.slice( 0, 3 ).join( '-' ) + "\n\n";
 
- 					this.model.rename = window.prompt( renameMsg ).split( '-' );
+					this.model.rename = window.prompt( renameMsg ).split( '-' );
 				}
 
 				this.model.zipWriter = window.JSZip();
@@ -475,9 +499,9 @@
 			if ( this.model.zipWriter ) {
 				this.model.zipWriter.file( name + '.csv', csv );
 
-				this.model.zipWriter.generateAsync({ type: 'blob' } ).then( _.bind( function( blob ) {
-				    saveAs( blob, name + '.zip' );
-				    this.progressView.reset();
+				this.model.zipWriter.generateAsync( { type: 'blob' } ).then( _.bind( function( blob ) {
+					saveAs( blob, name + '.zip' );
+					this.progressView.reset();
 				}, this ));
 			} else {
 				// Else save as csv
