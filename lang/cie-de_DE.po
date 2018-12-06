@@ -4,15 +4,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WordPress CSV Import Export\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/plugins/plugin-name\n"
-"POT-Creation-Date: 2015-11-24 18:38+0100\n"
-"PO-Revision-Date: 2015-11-24 18:38+0100\n"
+"POT-Creation-Date: 2018-12-06 11:28+0100\n"
+"PO-Revision-Date: 2018-12-06 11:29+0100\n"
 "Last-Translator: Thomas Lhotta <th.lhotta@gmail.com>\n"
 "Language-Team: th.lhotta@gmail.com\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-KeywordsList: __;_e;_n;_x;esc_html_e;esc_html__;esc_attr_e;"
 "esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -41,19 +41,31 @@ msgstr ""
 msgid "Zero size file downloaded"
 msgstr ""
 
-#: classes/class-importer.php:156
+#: classes/class-csv-import-export.php:163
+msgid "Should downloaded attachments be renamed?"
+msgstr ""
+
+#: classes/class-csv-import-export.php:164
+msgid ""
+"Enter the file name format. The following column names separated by \"-\" "
+"may be used"
+msgstr ""
+"Geben sie das Format für die Dateinamen ein. Folgende Spaltennamen getrennt "
+"durch \"-\" können verwendet werden"
+
+#: classes/class-csv-import-export.php:165
+msgid "Example"
+msgstr "Beispiel"
+
+#: classes/class-importer.php:155
 #, php-format
 msgid "\"%s\" is missing or empty"
 msgstr ""
 
-#: classes/class-importer.php:164
+#: classes/class-importer.php:163
 #, php-format
 msgid "One of the following columns must be present: %s "
 msgstr ""
-
-#: classes/field/class-attachment.php:9
-msgid "Attachments"
-msgstr "Dateianhänge"
 
 #: classes/field/class-buddypress.php:57
 msgid "User id required to set BuddyPress profile values"
@@ -64,8 +76,8 @@ msgstr ""
 msgid "BuddyPress profile field \"%s\" could not be set"
 msgstr ""
 
-#: classes/field/class-commentmeta.php:52
-#: classes/field/class-commentmeta.php:60
+#: classes/field/class-commentmeta.php:51
+#: classes/field/class-commentmeta.php:59
 #, php-format
 msgid "User comment value %s could not be set"
 msgstr ""
@@ -79,8 +91,7 @@ msgstr ""
 msgid "User option \"%s\" could not be set"
 msgstr ""
 
-#: classes/field/class-post.php:8
-#: classes/module/comments/class-exporter.php:22
+#: classes/field/class-post.php:8 classes/module/comments/class-exporter.php:23
 msgid "Post"
 msgstr ""
 
@@ -97,7 +108,7 @@ msgid "Last Modified"
 msgstr ""
 
 #: classes/field/class-post.php:19
-#: classes/module/comments/class-exporter.php:29
+#: classes/module/comments/class-exporter.php:30
 msgid "Content"
 msgstr ""
 
@@ -157,128 +168,128 @@ msgstr "Postart"
 msgid "Comment count"
 msgstr "Kommentaranzahl"
 
-#: classes/field/class-postmeta.php:81
+#: classes/field/class-postmeta.php:80
 #, php-format
 msgid "User post value %s could not be set"
 msgstr ""
 
-#: classes/field/class-usermeta.php:73
+#: classes/field/class-usermeta.php:72
 #, php-format
 msgid "User meta value %s could not be set"
 msgstr "User Metawert %s konnte nicht gesetzt werden."
 
-#: classes/module/class-abstract.php:118
+#: classes/module/class-abstract.php:163
 msgid "All"
 msgstr ""
 
-#: classes/module/class-abstract.php:144
+#: classes/module/class-abstract.php:189
 msgid "Search"
 msgstr ""
 
-#: classes/module/class-abstract.php:151
+#: classes/module/class-abstract.php:196
 msgid "Settings"
 msgstr ""
 
-#: classes/module/class-abstract.php:152
+#: classes/module/class-abstract.php:197
 msgid "Expert mode"
 msgstr ""
 
-#: classes/module/class-abstract.php:171
+#: classes/module/class-abstract.php:216
 msgid "Export"
 msgstr "Export"
 
-#: classes/module/class-abstract.php:258 classes/module/class-abstract.php:327
+#: classes/module/class-abstract.php:304 classes/module/class-abstract.php:371
 #: views/import.php:110
 msgid "Import"
 msgstr "Import"
 
-#: classes/module/class-abstract.php:261
+#: classes/module/class-abstract.php:307
 msgid "Update"
 msgstr ""
 
-#: classes/module/class-abstract.php:278
+#: classes/module/class-abstract.php:324
 msgid "Required columns"
 msgstr "Benötigte Spalten"
 
-#: classes/module/class-abstract.php:284
+#: classes/module/class-abstract.php:330
 msgid "Select a CSV file"
 msgstr "Wählen Sie eine CSV Datei"
 
-#: classes/module/class-abstract.php:285
+#: classes/module/class-abstract.php:331
 msgid "The uploaded file is not a valid CSV file."
 msgstr ""
 
-#: classes/module/class-abstract.php:290
+#: classes/module/class-abstract.php:336
 msgid "or copy & paste the CSV data from your spreadsheet software."
 msgstr "oder kopieren Sie die Daten aus ihrer Tabellenkalkulationssoftware."
 
-#: classes/module/class-abstract.php:298
+#: classes/module/class-abstract.php:342
 msgid "Uploaded CSV"
 msgstr "Hochgeladenes CSV"
 
-#: classes/module/class-abstract.php:311 classes/module/class-abstract.php:312
+#: classes/module/class-abstract.php:355 classes/module/class-abstract.php:356
 #: views/import.php:123
 msgid "Errors"
 msgstr "Fehler"
 
-#: classes/module/class-abstract.php:313
+#: classes/module/class-abstract.php:357
 msgid "Row number"
 msgstr "Zeilenummer"
 
-#: classes/module/class-abstract.php:327
+#: classes/module/class-abstract.php:371
 msgid "Continue"
 msgstr ""
 
-#: classes/module/class-abstract.php:334
+#: classes/module/class-abstract.php:378
 msgid "Clear"
 msgstr ""
 
 #: classes/module/class-comments.php:20 classes/module/class-comments.php:21
-#: classes/module/class-posts.php:16 classes/module/class-users.php:19
+#: classes/module/class-posts.php:19 classes/module/class-users.php:19
 #: classes/module/class-users.php:20
 msgid "Import CSV"
 msgstr "CSV importieren"
 
 #: classes/module/class-comments.php:28 classes/module/class-comments.php:29
-#: classes/module/class-posts.php:17 classes/module/class-users.php:28
-#: classes/module/class-users.php:29
+#: classes/module/class-posts.php:20 classes/module/class-users.php:27
+#: classes/module/class-users.php:28
 msgid "Export CSV"
 msgstr "CSV exportieren"
 
-#: classes/module/class-comments.php:59 classes/module/class-users.php:45
+#: classes/module/class-comments.php:59 classes/module/class-users.php:47
 msgid "Export comments"
 msgstr "Kommentare exportieren"
 
-#: classes/module/class-gforms.php:23 classes/module/class-gforms.php:35
-#: classes/module/class-gforms.php:39
+#: classes/module/class-gforms.php:24 classes/module/class-gforms.php:36
+#: classes/module/class-gforms.php:40
 msgid "Import entries"
 msgstr "Einträge importieren"
 
-#: classes/module/comments/class-exporter.php:21
+#: classes/module/comments/class-exporter.php:22
 msgid "Comment"
 msgstr "Kommentar"
 
-#: classes/module/comments/class-exporter.php:23
 #: classes/module/comments/class-exporter.php:24
 #: classes/module/comments/class-exporter.php:25
-#: classes/module/comments/class-exporter.php:35
+#: classes/module/comments/class-exporter.php:26
+#: classes/module/comments/class-exporter.php:36
 msgid "Author:"
 msgstr ""
 
-#: classes/module/comments/class-exporter.php:23
+#: classes/module/comments/class-exporter.php:24
 msgid "Name"
 msgstr ""
 
-#: classes/module/comments/class-exporter.php:26
+#: classes/module/comments/class-exporter.php:27
 msgid "IP address:"
 msgstr ""
 
-#: classes/module/comments/class-exporter.php:27
 #: classes/module/comments/class-exporter.php:28
+#: classes/module/comments/class-exporter.php:29
 msgid "Date"
 msgstr ""
 
-#: classes/module/comments/class-exporter.php:31
+#: classes/module/comments/class-exporter.php:32
 msgid "Approved"
 msgstr ""
 
@@ -411,6 +422,21 @@ msgstr "Zeile"
 #: views/import.php:128
 msgid "Message"
 msgstr "Nachricht"
+
+#~ msgid ""
+#~ "Enter the file name format. You may use the following column names "
+#~ "separated by \"-\"."
+#~ msgstr "Geben sie das Format für die Dateinamen ein. Folgende "
+
+#~ msgid "Do you want to rename downloaded attachments?"
+#~ msgstr "Sollen heruntergeladenen Anhänge umbenannte werden?"
+
+#~ msgid ""
+#~ "Enter the file name format. You may use column names separated by \"-\"."
+#~ msgstr "Geben sie das Format für die Dateinamen ein. "
+
+#~ msgid "Attachments"
+#~ msgstr "Dateianhänge"
 
 #~ msgid "Post ID"
 #~ msgstr "Beitrags ID"

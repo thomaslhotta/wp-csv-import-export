@@ -34,6 +34,7 @@ class CSV_Import_Export {
 	}
 
 	public function init() {
+
 		// Check user rights
 		if ( ! current_user_can( 'export' ) && ! current_user_can( 'import' ) ) {
 			return;
@@ -120,17 +121,6 @@ class CSV_Import_Export {
 		);
 
 		wp_register_script(
-			'zip.js',
-			plugins_url( $script_url . '/js/zip.js/zip.js' )
-		);
-
-		wp_register_script(
-			'zip-ext.js',
-			plugins_url( $script_url . '/js/zip.js/zip-ext.js' ),
-			array( 'zip.js' )
-		);
-
-		wp_register_script(
 			'backbone-localstorage',
 			plugins_url( $script_url . '/js/backbone.localStorage.min.js' ),
 			array( 'backbone' )
@@ -154,14 +144,27 @@ class CSV_Import_Export {
 		);
 
 		wp_register_script(
+			'jszip',
+			plugins_url( $script_url . '/js/jszip.min.js' )
+		);
+
+		wp_register_script(
 			'cie-admin-script',
 			plugins_url( $script_url . '/js/admin.js' ),
-			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'zip-ext.js' ),
+			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'jszip' ),
 			'1.1',
 			true
 		);
 
-		wp_localize_script( 'cie-admin-script', 'zipJsWorkerScriptsPath', plugins_url( $script_url . '/js/zip.js/' ) );
+		wp_localize_script(
+			'cie-admin-script',
+			'cieAdminLocales',
+			array(
+				'renameFiles'       => __( 'Should downloaded attachments be renamed?', 'cie' ),
+				'renameDescription' => __( 'Enter the file name format. The following column names separated by "-" may be used', 'cie' ),
+				'example'           => __( 'Example', 'cie' ),
+			)
+		);
 	}
 
 	/**

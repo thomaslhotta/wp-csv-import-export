@@ -1,80 +1,7 @@
-/* global jQuery, document, Backbone, window, wp, zip, ajaxurl, _, Papa, csvieSettings, zipJsWorkerScriptsPath, saveAs, Blob, Uint8Array */
+/* global jQuery, document, Backbone, window, wp, ajaxurl, _, Papa, csvieSettings, saveAs, Blob, Uint8Array */
 
-( function( $, Backbone, window, document, wp, zip ) {
+( function( $, Backbone, window, document, wp ) {
 	'use strict';
-
-	// Setup zip.js
-	var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem,
-		createTempFile = function( callback ) {
-			var tmpFilename = 'tmp.zip';
-			requestFileSystem( TEMPORARY, 4 * 1024 * 1024 * 1024, function( filesystem ) {
-				var create = function() {
-					filesystem.root.getFile( tmpFilename, {
-						create: true
-					}, function( zipFile ) {
-						callback( zipFile );
-					});
-				};
-
-				filesystem.root.getFile(
-					tmpFilename,
-					null,
-					function( entry ) {
-						entry.remove( create, create );
-					}, create
-				);
-			});
-		};
-
-	/**
-	 * Http File Reader for zip.js
-	 *
-	 * It is based on the HttpReader of zip.js, but does not rely on the Content-Length header. This makes it work
-	 * with Google Pagespeed
-	 *
-	 * @param url
-	 * @constructor
-	 */
-	/*var HttpReader = function( url ) {
-		var that = this,
-			error = false;
-
-		function getData( callback, onerror ) {
-			if ( that.error ) {
-				return onerror();
-			}
-			callback();
-		}
-
-		function init( callback, onerror ) {
-			var request = new XMLHttpRequest();
-
-			request.addEventListener( 'load', function() {
-				that.data = new Uint8Array( request.response );
-				that.size = that.data.length;
-				callback();
-			}, false );
-			request.addEventListener( 'error', onerror, false );
-			request.open( 'GET', url );
-			request.responseType = 'arraybuffer';
-			request.send();
-		}
-
-		function readUint8Array( index, length, callback, onerror ) {
-			getData(function() {
-				callback( new Uint8Array( that.data.subarray( index, index + length ) ) );
-			}, onerror );
-		}
-
-		that.size = 0;
-		that.init = init;
-		that.readUint8Array = readUint8Array;
-	};
-
-	HttpReader.prototype = new zip.Reader();
-	HttpReader.prototype.constructor = HttpReader;
-*/
-	zip.workerScriptsPath = zipJsWorkerScriptsPath;
 
 	wp.csvie = {
 		model: {},
@@ -126,10 +53,32 @@
 				deferred = $.Deferred();
 
 			if ( this.get( 'Attachments' ) ) {
+
 				_.each( this.get( 'Attachments' ).split( ';' ), function( url ) {
 					var callback = $.Deferred(),
+					    i = 1,
 						// Follow the WordPress structure for directory naming
-						name = url.split( '/' ).slice( -3 ).join( '/' );
+						name = url.split( '/' ).slice( -3 ).join( '/' ),
+					    extension = '.' + url.split( '.' ).pop(),
+						generatedName = '';
+
+					// Strip the extension from the name
+					name = name.substring( 0, name.length - ( extension.length ) );
+
+					if ( 0 < this.collection.rename.length ) {
+						name = _.map( this.collection.rename, function( col ) {
+							return this.get( col );
+						}, this );
+						name = name.join( '-' );
+					}
+
+					generatedName = name + extension;
+					while ( -1 !== this.collection.addedFileNames.indexOf( generatedName ) ) {
+						generatedName = name + '-' + i + extension;
+						i ++;
+					}
+
+					this.collection.addedFileNames.push( generatedName );
 
 					// Use HTTPS if available
 					if ( 'https:' === window.location.protocol ) {
@@ -137,22 +86,23 @@
 					}
 
 					try {
-						this.collection.zipWriter.add( name, new HttpReader( url ), function() {
+						window.fetch( url ).then( _.bind(function( response ) {
+							if ( response.ok ) {
+								this.collection.zipWriter.file( generatedName, response.blob() );
+							}
 							callback.resolve();
-						}, function() {
-						}, { level: 3 });
+						}, this ) );
 
 						calls.push( callback.promise() );
 					} catch ( error ) {
-						console.log( 'Error' );
+						console.log( 'Error', error );
 					}
 				}, this );
 
 				// Resolve the current defer once all
-				$.when.apply( $, calls ).always( function() {
+				$.when.apply( $, calls ).always(function() {
 					deferred.resolve( this );
 				});
-
 			} else {
 				deferred.resolve( this );
 			}
@@ -166,6 +116,8 @@
 	 */
 	wp.csvie.model.CSV = Backbone.PageableCollection.extend({
 		file_name: 'export',
+		rename: [],
+		addedFileNames:[],
 		settings: null,
 		model: wp.csvie.model.Element,
 		mode: 'server',
@@ -225,7 +177,7 @@
 
 			options.data = this.settings.toJSON();
 
-			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( _.bind(function() {
+			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ] ).done( _.bind(function() {
 				this.processElements();
 			}, this ) );
 
@@ -366,6 +318,16 @@
 			model.save();
 			return this;
 		},
+		
+		getSelectedNames: function() {
+			var names = {};
+
+			this.$el.find( 'input:checked' ).each(function() {
+				names[ this.name ] = this.parentNode.textContent;
+			});
+
+			return names;
+		},
 	});
 
 	/**
@@ -445,24 +407,23 @@
 		 * @returns {wp.csvie.view.View}
 		 */
 		startExport: function() {
-			var that = this;
+			var renameMsg, available;
+
 			// If attachments should be exported start the ZIP saving process
 			if ( this.settingsView.model.get( 'fields[attachment][attachment_attachments]' ) ) {
-				if ( requestFileSystem ) {
-					// If available use temporary file
-					createTempFile(function( tmpFilename ) {
-						zip.createWriter( new zip.FileWriter( tmpFilename ), function( writer ) {
-							that.model.zipWriter = writer;
-							that.exportCSV();
-						});
-					});
-				} else {
-					// Else use blobs
-					zip.createWriter( new zip.BlobWriter(), function( writer ) {
-						that.model.zipWriter = writer;
-						that.exportCSV();
-					});
+				if ( window.confirm( window.cieAdminLocales.renameFiles ) ) {
+					available = Object.values( this.settingsView.getSelectedNames() );
+
+					renameMsg = window.cieAdminLocales.renameDescription + ":\n\n"
+						+ available.join( ', ' ) + "\n\n"
+						+ window.cieAdminLocales.example + ': '
+						+ available.slice( 0, 3 ) .join( '-' ) + "\n\n";
+
+ 					this.model.rename = window.prompt( renameMsg ).split( '-' );
 				}
+
+				this.model.zipWriter = window.JSZip();
+				this.exportCSV();
 			} else {
 				this.exportCSV();
 			}
@@ -513,13 +474,12 @@
 			name = name + '-' + now.toISOString().substring( 0, 19 ).replace( 'T', '-' );
 
 			if ( this.model.zipWriter ) {
-				this.model.zipWriter.add( name + '.csv', new zip.TextReader( csv ), _.bind(function() {
-					this.model.zipWriter.close( _.bind(function( blob ) {
-						saveAs( blob, name + '.zip' );
-						this.progressView.reset();
-					}, this ) );
-				}, this ) );
+				this.model.zipWriter.file( name + '.csv', csv );
 
+				this.model.zipWriter.generateAsync({ type: 'blob' } ).then( _.bind( function( blob ) {
+				    saveAs( blob, name + '.zip' );
+				    this.progressView.reset();
+				}, this ));
 			} else {
 				// Else save as csv
 				saveAs( new Blob([ csv ], { type: 'text/csv;charset=utf-8' }), name + '.csv' );
@@ -674,7 +634,7 @@
 					_.each( response.data.errors, function( errors, row ) {
 						this.errorsView.model.add( new wp.csvie.model.Error({
 							row: row,
-							errors: errors
+							errors: errors,
 						}) );
 					}, that );
 
@@ -704,7 +664,7 @@
 		});
 	}
 
-})( jQuery, Backbone, window, document, wp, zip );
+})( jQuery, Backbone, window, document, wp );
 
 // Misc UI stuff
 ( function( $, document ) {
