@@ -90,6 +90,7 @@
 							if ( response.ok ) {
 								this.collection.zipWriter.file( generatedName, response.blob() );
 							}
+
 							callback.resolve();
 						}, this ) );
 
@@ -178,6 +179,7 @@
 			options.data = this.settings.toJSON();
 
 			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ] ).done( _.bind(function() {
+				this.currentElement = 0;
 				this.processElements();
 			}, this ) );
 
@@ -196,19 +198,16 @@
 			var currentDef,
 			    defers = [];
 
-			this.currentElement = 0;
+			// Stop when we reached the end of the collection
+			if ( 'undefined' === typeof this.at( this.currentElement ) ) {
+				this.processElementsDeferred.resolve();
+			}
 
-			do {
-				currentDef = this.at( this.currentElement ).getAttachments();
-				currentDef.done( _.bind(function() {
-					this.trigger( 'processElement' );
-				}, this ) );
-
-				defers.push( currentDef );
+			this.at( this.currentElement ).getAttachments().done( _.bind( function() {
 				this.currentElement += 1;
-			} while ( 'undefined' !== typeof this.at( this.currentElement ) );
-
-			$.when.apply( $, defers ).then( this.processElementsDeferred.resolve );
+				this.trigger( 'processElement' );
+				this.processElements();
+			}, this ));
 		},
 
 		reset: function() {
