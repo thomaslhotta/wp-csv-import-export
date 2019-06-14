@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Handles attachment image import and export
  */
 class CIE_Field_Attachment extends CIE_Field_Abstract {
+
 	public function get_available_fields( array $search = array() ) {
 		// @todo Find another way to translate this
 		return array(
@@ -11,7 +13,7 @@ class CIE_Field_Attachment extends CIE_Field_Abstract {
 	}
 
 	public function get_field_values( array $fields, CIE_Element $element ) {
-		if ( ! in_array( 'attachment_attachments', $fields ) ) {
+		if ( ! in_array( 'attachment_attachments', $fields, true ) ) {
 			return array();
 		}
 

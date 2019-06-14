@@ -4,6 +4,7 @@
  * Imports and exports comment meta data
  */
 class CIE_Field_Commentmeta extends CIE_Field_Meta {
+
 	public function get_available_fields( array $search = array() ) {
 		global $wpdb;
 

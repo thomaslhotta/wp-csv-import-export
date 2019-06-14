@@ -6,6 +6,7 @@
  * Class CIE_Exporter_User
  */
 class CIE_Module_Users_Exporter extends CIE_Exporter {
+
 	public function get_supported_fields() {
 		return array(
 			'user',

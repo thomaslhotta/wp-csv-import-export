@@ -4,6 +4,7 @@
  * Exports posts
  */
 class CIE_Module_Posts_Exporter extends CIE_Exporter {
+
 	public function get_supported_fields() {
 		return array(
 			'post',

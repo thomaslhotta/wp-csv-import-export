@@ -4,6 +4,7 @@
  * Abstract class for field handlers
  */
 abstract class CIE_Field_Abstract {
+
 	/**
 	 * Returns an array of available field names
 	 *

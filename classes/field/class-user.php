@@ -4,6 +4,7 @@
  * Handles user data
  */
 class CIE_Field_User extends CIE_Field_Abstract {
+
 	public function get_available_fields( array $search = array() ) {
 		$fields = array(
 			'ID'                  => 'ID',

@@ -4,6 +4,7 @@
  * Handles importing of posts
  */
 class CIE_Module_Posts_Importer extends CIE_Importer {
+
 	public function get_supported_fields() {
 		return array(
 			'postmeta',

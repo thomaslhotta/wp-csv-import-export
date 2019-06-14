@@ -4,6 +4,7 @@
  * Container class for importing and exporting elements
  */
 class CIE_Element {
+
 	/**
 	 * @var WP_Post|WP_User|object
 	 */

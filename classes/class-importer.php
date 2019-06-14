@@ -4,9 +4,10 @@
  * Provides basic import processing functionality
  */
 abstract class CIE_Importer extends CIE_Processor {
+
 	const MODE_IMPORT = 1;
 	const MODE_UPDATE = 2;
-	const MODE_BOTH = 3;
+	const MODE_BOTH   = 3;
 
 	/**
 	 * By default importers support no field types

@@ -4,6 +4,7 @@
  * Handles generic meta data
  */
 abstract class CIE_Field_Meta extends CIE_Field_Abstract {
+
 	public function get_meta_values( array $fields, $type, $id ) {
 		$data = array();
 		foreach ( $fields as $field_id ) {

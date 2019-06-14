@@ -4,6 +4,7 @@
  * Base class for object type elements ( Comments, Posts, Users )
  */
 abstract class CIE_Field_Object extends CIE_Field_Abstract {
+
 	public function get_value( $element_object, $field_id ) {
 		$value = 0;
 		if ( is_object( $element_object ) ) {

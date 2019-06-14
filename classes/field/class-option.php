@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Add 'user' options
  */
 class CIE_Field_Option extends CIE_Field_Abstract {
+
 	protected $type = 'user_option_';
 
 	public function get_available_fields( array $search = array() ) {

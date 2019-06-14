@@ -1,7 +1,18 @@
 /* global jQuery, document, Backbone, window, wp, ajaxurl, _, Papa, csvieSettings, saveAs, Blob, XMLHttpRequest */
-
 ( function( $, Backbone, window, document, wp ) {
 	'use strict';
+
+	const streamSaver = require('streamsaver');
+	const streamPolyfill= require('web-streams-polyfill/ponyfill');
+
+	if ( ! streamSaver.WritableStream ) {
+		streamSaver.WritableStream = streamPolyfill.WritableStream;
+	}
+
+	const JSZip = require('jszip');
+	const stream = require('stream');
+	const Papa = require('papaparse');
+	const FileSaver = require('file-saver');
 
 	wp.csvie = {
 		model: {},
@@ -42,6 +53,19 @@
 	 */
 	wp.csvie.model.Element = Backbone.Model.extend({
 
+		toJSON: function () {
+			var attr = Backbone.Model.prototype.toJSON.call( this );
+
+			Object.keys(attr).map( function( name ) {
+				let getter = 'get' + name.charAt(0).toUpperCase() + name.slice(1);
+				if (typeof this[getter] == 'function') {
+					attr[name] = this[getter]();
+				}
+			}, this );
+
+			return attr;
+		},
+
 		/**
 		 * Fetches attachments of the current element as array buffers
 		 *
@@ -49,16 +73,13 @@
 		 * @returns {*}
 		 */
 		getAttachments: function() {
-			var calls = [],
-				deferred = $.Deferred();
+			var attachments = this.get( 'Attachments' );
 
-			if ( this.get( 'Attachments' ) ) {
+			if ( attachments ) {
 
-				_.each( this.get( 'Attachments' ).split( ';' ), function( url ) {
-					var callback = $.Deferred(),
-						name = url.split( '/' ).slice( -3 ).join( '/' ), // Follow the WordPress structure for directory naming
-						extension = '.' + url.split( '.' ).pop(),
-						request;
+				_.each( attachments.split( ';' ), function( url ) {
+					var name = url.split( '/' ).slice( -3 ).join( '/' ), // Follow the WordPress structure for directory naming
+						extension = '.' + url.split( '.' ).pop();
 
 					// Strip the extension from the name
 					name = name.substring( 0, name.length - ( extension.length ) );
@@ -74,33 +95,18 @@
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					try {
-						request = new XMLHttpRequest();
-						request.open( 'GET', url, true );
-						request.responseType = 'blob';
+					let rs = stream.Readable();
+					let reader, p;
 
-						request.onload = _.bind(function() {
-							this.collection.zipWriter.file( name, request.response );
-							callback.resolve();
-						}, this );
+				  	rs._read = () => {
+						let p = reader || ( reader = fetch( url ).then(res => res.body.getReader() ) );
 
-						request.send();
+						p.then(reader => reader.read().then(({ value, done }) => rs.push(done ? null : new Buffer(value))));
+					  }
 
-						calls.push( callback.promise() );
-					} catch ( error ) {
-						console.log( 'Error', error );
-					}
+					this.collection.zipWriter.file(name, rs);
 				}, this );
-
-				// Resolve the current defer once all
-				$.when.apply( $, calls ).always(function() {
-					deferred.resolve( this );
-				});
-			} else {
-				deferred.resolve( this );
 			}
-
-			return deferred;
 		},
 	});
 
@@ -166,52 +172,14 @@
 				options = {};
 			}
 
-			this.processElementsDeferred = $.Deferred();
-
 			options.data = this.settings.toJSON();
 
-			Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]).done( _.bind(function() {
-				this.currentElement = 0;
-				this.processElements();
-			}, this ) );
-
-			return this.processElementsDeferred.promise();
+			return Backbone.PageableCollection.prototype.fetch.apply( this, [ options ]);
 		},
 
 		parse: function( data ) {
 			this.file_name = data[0].file_name;
 			return Backbone.PageableCollection.prototype.parse.apply( this, [ data ] );
-		},
-
-		/**
-		 * Starts iterating elements after load
-		 */
-		processElements: function() {
-			var i,
-				concurrent = 5,
-			    defers = [];
-
-			for ( i = 0; i <= concurrent; i++ ) {
-				if ( this.hasElement( this.currentElement ) ) {
-					defers.push(
-						this.at( this.currentElement ).getAttachments().done( _.bind( function() {
-							this.trigger( 'processElement' );
-						}, this ) )
-					);
-
-					this.currentElement++;
-				}
-			}
-
-			$.when.apply( null, defers ).then( _.bind(function() {
-				if ( this.hasElement( this.currentElement ) ) {
-					// Continue to iterate
-					this.processElements();
-				} else {
-					// Stop when we reached the end of the collection
-					this.processElementsDeferred.resolve();
-				}
-			}, this ));
 		},
 
 		/**
@@ -279,8 +247,6 @@
 			return uniqueName;
 		},
 
-
-
 		reset: function() {
 			this.state.currentPage = 0;
 			return Backbone.PageableCollection.prototype.reset.apply( this );
@@ -294,6 +260,7 @@
 		defaults: {
 			total: 0,
 			current: 0,
+			percent: 0,
 		},
 
 		/**
@@ -301,14 +268,10 @@
 		 */
 		tick: function() {
 			this.set( 'current', this.get( 'current' ) + 1 );
+			this.calculatePercent();
 		},
 
-		/**
-		 * Returns the progress percentage
-		 *
-		 * @returns {number}
-		 */
-		getPercent: function() {
+		calculatePercent: function() {
 			var percent = 0;
 
 			if ( this.get( 'current' ) ) {
@@ -317,6 +280,25 @@
 
 			return percent;
 		},
+
+		/**
+		 * Returns the progress percentage
+		 *
+		 * @returns {number}
+		 */
+		getPercent: function() {
+			return this.get( 'percent' );
+		},
+
+		setPercent: function( persent ) {
+			this.set( 'percent', persent );
+		},
+
+		reset: function () {
+			this.set( 'total', 0 );
+			this.set( 'current', 0 );
+			this.set( 'percent', 0 );
+		}
 	});
 
 	/**
@@ -418,7 +400,11 @@
 		 *
 		 * @returns {wp.csvie.view.Progress}
 		 */
-		render: function() {
+		render: function( percent ) {
+			if ( 'undefine' === typeof percent ) {
+				percent = this.model.getPercent();
+			}
+
 			if ( 0 === this.model.get( 'total' ) ) {
 				this.$el.text( ' (...)' );
 			} else {
@@ -495,11 +481,13 @@
 					this.model.setRenameFormat( window.prompt( renameMsg ) );
 				}
 
-				this.model.zipWriter = window.JSZip();
+				this.model.zipWriter = new JSZip();
+
 				this.exportCSV();
 			} else {
 				this.exportCSV();
 			}
+
 			return this;
 		},
 
@@ -516,6 +504,7 @@
 
 			this.model.getPage( page ).done( _.bind(function() {
 				this.addElements( this.model );
+
 				if ( this.model.hasNextPage() ) {
 					this.exportCSV();
 				} else {
@@ -541,7 +530,8 @@
 		saveCSV: function() {
 			var name = this.model.file_name,
 				csv = Papa.unparse( this.csv ),
-				now = new Date();
+				now = new Date(),
+				stream, writer, zipStream;
 
 			// Append current date and time to string
 			name = name + '-' + now.toISOString().substring( 0, 19 ).replace( 'T', '-' );
@@ -549,13 +539,26 @@
 			if ( this.model.zipWriter ) {
 				this.model.zipWriter.file( name + '.csv', csv );
 
-				this.model.zipWriter.generateAsync( { type: 'blob' } ).then( _.bind(function( blob ) {
-					saveAs( blob, name + '.zip' );
-					this.progressView.reset();
-				}, this ));
+				stream = streamSaver.createWriteStream( name + '.zip' );
+				zipStream = this.model.zipWriter.generateInternalStream( { type: "uint8array", streamFiles: true } );
+
+				writer = stream.getWriter();
+
+				zipStream.on( 'data', _.bind( function ( data, metadata ) {
+						writer.write( data );
+						this.progressModel.setPercent( Math.round( metadata.percent ) );
+					}, this ) )
+					.on( 'error', function ( e ) {
+						writer.abort( e );
+					} )
+					.on( 'end', _.bind( function () {
+						writer.close();
+						this.reset();
+					}, this ) ).resume();
+
 			} else {
 				// Else save as csv
-				saveAs( new Blob([ csv ], { type: 'text/csv;charset=utf-8' }), name + '.csv' );
+				FileSaver.saveAs( new Blob([ csv ], { type: 'text/csv;charset=utf-8' }), name + '.csv' );
 				this.reset();
 			}
 		},
@@ -722,7 +725,6 @@
 	});
 
 	// Instantiates views
-
 	wp.csvie.importPage = $( '#csv-import-form' );
 	if ( 0 < wp.csvie.importPage.length ) {
 		wp.csvie.views.import = new wp.csvie.view.ImportView({

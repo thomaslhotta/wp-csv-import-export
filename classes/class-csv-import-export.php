@@ -7,7 +7,7 @@
  * @author    Thomas Lhotta
  * @license   GPL-2.0+
  * @link      https://github.com/thomaslhotta/wp-csv-import-export/
- * @copyright 2013 Thomas Lhotta
+ * @copyright 2019 Thomas Lhotta
  */
 class CSV_Import_Export {
 
@@ -110,17 +110,6 @@ class CSV_Import_Export {
 		$script_url = basename( dirname( dirname( __FILE__ ) ) );
 
 		wp_register_script(
-			'cie-polyfill',
-			plugins_url( $script_url . '/js/polyfill.min.js' )
-		);
-
-		wp_register_script(
-			'papaparse',
-			plugins_url( $script_url . '/js/papaparse.min.js' ),
-			array( 'cie-polyfill' )
-		);
-
-		wp_register_script(
 			'backbone-localstorage',
 			plugins_url( $script_url . '/js/backbone.localStorage.min.js' ),
 			array( 'backbone' )
@@ -133,25 +122,9 @@ class CSV_Import_Export {
 		);
 
 		wp_register_script(
-			'blob.js',
-			plugins_url( $script_url . '/js/FileSaver.js' )
-		);
-
-		wp_register_script(
-			'cie-filesaver',
-			plugins_url( $script_url . '/js/blob.js' ),
-			array( 'blob.js' )
-		);
-
-		wp_register_script(
-			'jszip',
-			plugins_url( $script_url . '/js/jszip.min.js' )
-		);
-
-		wp_register_script(
 			'cie-admin-script',
-			plugins_url( $script_url . '/js/admin.js' ),
-			array( 'cie-filesaver', 'papaparse', 'backbone-localstorage', 'backbone-paginator', 'jszip' ),
+			plugins_url( $script_url . '/js/main.js' ),
+			array( 'backbone-localstorage', 'backbone-paginator' ),
 			'1.1',
 			true
 		);

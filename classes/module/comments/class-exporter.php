@@ -2,11 +2,9 @@
 
 /**
  * Exports comments
- *
- * Date: 18.12.14
- * Time: 12:24
  */
 class CIE_Module_Comments_Exporter extends CIE_Exporter {
+
 	public function get_supported_fields() {
 		return array(
 			'commentmeta',
@@ -19,9 +17,9 @@ class CIE_Module_Comments_Exporter extends CIE_Exporter {
 
 	public function get_available_fields( array $search = array() ) {
 		$fields['comment'] = array(
-			'comment_ID'           => __( 'Comment', 'cie' ) .' ID',
-			'comment_post_ID'      => __( 'Post', 'cie' ) .' ID',
-			'comment_author'       => __( 'Author:' ) . ' ' .  __( 'Name' ),
+			'comment_ID'           => __( 'Comment', 'cie' ) . ' ID',
+			'comment_post_ID'      => __( 'Post', 'cie' ) . ' ID',
+			'comment_author'       => __( 'Author:' ) . ' ' . __( 'Name' ),
 			'comment_author_email' => __( 'Author:' ) . ' Email',
 			'comment_author_url'   => __( 'Author:' ) . ' URL',
 			'comment_author_IP'    => rtrim( __( 'IP address:' ), ':' ),

@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Adds existing users to a blog/site
  */
 class CIE_Module_Users_Adder extends CIE_Importer {
+
 	public function get_required_fields( $mode ) {
 		return array(
 			array(

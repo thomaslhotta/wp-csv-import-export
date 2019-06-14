@@ -4,6 +4,12 @@
  * Handles user meta
  */
 class CIE_Field_Usermeta extends CIE_Field_Meta {
+
+	/**
+	 * User meta keys that should be ignored
+	 *
+	 * @var array
+	 */
 	protected $ignored_keys = array(
 		'metabox',
 		'meta-box',

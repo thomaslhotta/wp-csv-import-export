@@ -4,6 +4,7 @@
  * Imports GravityForms entries
  */
 class CIE_Module_Gforms_Importer extends CIE_Importer {
+
 	protected $posts = array();
 
 	protected $users = array();

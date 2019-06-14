@@ -4,6 +4,7 @@
  * Auto loader class
  */
 class CIE_Autoloader {
+
 	/**
 	 * Creates and registers the auto loader
 	 */

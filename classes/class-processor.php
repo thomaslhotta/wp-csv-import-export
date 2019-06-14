@@ -4,6 +4,7 @@
  * Abstract processor class
  */
 abstract class CIE_Processor {
+
 	/**
 	 * @var array
 	 */

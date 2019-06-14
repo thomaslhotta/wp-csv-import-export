@@ -4,6 +4,7 @@
  * Handles post meta
  */
 class CIE_Field_Postmeta extends CIE_Field_Meta {
+
 	public function get_available_fields( array $search = array() ) {
 		global $wpdb;
 
@@ -24,7 +25,7 @@ class CIE_Field_Postmeta extends CIE_Field_Meta {
 
 		$return = array();
 		foreach ( $meta_keys as $meta_key ) {
-			$meta_key            = $meta_key[0];
+			$meta_key = $meta_key[0];
 
 			// Skip metas with underscore keys
 			if ( 0 === strpos( $meta_key, '_' ) ) {

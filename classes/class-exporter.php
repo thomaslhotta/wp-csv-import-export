@@ -4,6 +4,7 @@
  * Base class for exporters
  */
 abstract class CIE_Exporter extends CIE_Processor {
+
 	/**
 	 * Returns the available fields for this processor
 	 *
@@ -149,7 +150,7 @@ abstract class CIE_Exporter extends CIE_Processor {
 
 		foreach ( $fields as $group_name => $field_group ) {
 			// Get value from generic field object
-			if ( in_array( $group_name, $this->get_supported_fields() ) ) {
+			if ( in_array( $group_name, $this->get_supported_fields(), true ) ) {
 				$object = $this->get_field_type_object( $group_name );
 				$row    = array_merge( $row, $object->get_field_values( array_keys( $field_group ), $element ) );
 				continue;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Hooks that might need to be removed
@@ -20,6 +21,7 @@
  * Time: 16:39
  */
 class CIE_Module_Users_Creator extends CIE_Importer {
+
 	/**
 	 * Overwrite mode
 	 *

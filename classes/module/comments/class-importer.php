@@ -4,6 +4,7 @@
  * Imports comments
  */
 class CIE_Module_Comments_Importer extends CIE_Importer {
+
 	protected $posts = array();
 
 	protected $users = array();

@@ -4,6 +4,7 @@
  * Base class for modules
  */
 abstract class CIE_Module_Abstract {
+
 	/**
 	 * Registers admin menus
 	 */
@@ -124,8 +125,8 @@ abstract class CIE_Module_Abstract {
 			'cie-admin-script',
 			'csvieSettings',
 			array(
-				'action'    => $this->get_export_action(),
-				'nonce'     => wp_create_nonce( $this->get_export_action() ),
+				'action' => $this->get_export_action(),
+				'nonce'  => wp_create_nonce( $this->get_export_action() ),
 			)
 		);
 
