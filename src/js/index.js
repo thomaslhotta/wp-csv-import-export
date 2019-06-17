@@ -2,25 +2,57 @@
 ( function( $, Backbone, window, document, wp ) {
 	'use strict';
 
-	const streamSaver = require('streamsaver');
-	const streamPolyfill= require('web-streams-polyfill/ponyfill');
+	// Load dependiencies
+	const FileSaver = require('file-saver');
+	const Papa = require('papaparse');
+	const JSZip = require('jszip');
+	const ReadableStream = require('stream').Readable;
+	const StreamPolyfill= require('web-streams-polyfill/ponyfill');
+	const StreamSaver = require('streamsaver');
 
-	if ( ! streamSaver.WritableStream ) {
-		streamSaver.WritableStream = streamPolyfill.WritableStream;
+	// Activate ponyfill
+	if ( ! StreamSaver.WritableStream ) {
+		StreamSaver.WritableStream = StreamPolyfill.WritableStream;
 	}
 
-	const JSZip = require('jszip');
-	const stream = require('stream');
-	const Papa = require('papaparse');
-	const FileSaver = require('file-saver');
-
 	wp.csvie = {
+		helper: {},
 		model: {},
 		view: {},
 		views: {},
 		settings: csvieSettings,
 		importPage: null,
 		exportPage: null,
+	};
+
+	/**
+	 * Creates a readable stream for the given URL
+	 *
+	 * return ReadableStream
+	 */
+	wp.csvie.helper.createStream = function( url ) {
+		var rs;
+		rs = new ReadableStream();
+		rs._read = function () {
+			if( !this.fetcher ) {
+				// Starts fetch process
+				this.fetcher = fetch( url ).then( function ( res ) {
+					return res.ok ? res.body.getReader() : null
+				} );
+			}
+
+			this.fetcher.then( function ( reader ) {
+				if( null === reader ) {
+					rs.push( null );
+				} else {
+					reader.read().then( function ( result ) {
+						rs.push( result.done ? null : new Buffer( result.value ) );
+					} );
+				}
+			} );
+		};
+
+		return rs;
 	};
 
 	/**
@@ -38,8 +70,7 @@
 	/**
 	 * Errors of a single row/element
 	 */
-	wp.csvie.model.Error = Backbone.Model.extend({
-	});
+	wp.csvie.model.Error = Backbone.Model.extend({});
 
 	/**
 	 * Errors collection
@@ -76,7 +107,6 @@
 			var attachments = this.get( 'Attachments' );
 
 			if ( attachments ) {
-
 				_.each( attachments.split( ';' ), function( url ) {
 					var name = url.split( '/' ).slice( -3 ).join( '/' ), // Follow the WordPress structure for directory naming
 						extension = '.' + url.split( '.' ).pop();
@@ -95,18 +125,11 @@
 						url = url.replace( 'http://', 'https://' );
 					}
 
-					let rs = stream.Readable();
-					let reader, p;
-
-				  	rs._read = () => {
-						let p = reader || ( reader = fetch( url ).then(res => res.body.getReader() ) );
-
-						p.then(reader => reader.read().then(({ value, done }) => rs.push(done ? null : new Buffer(value))));
-					  }
-
-					this.collection.zipWriter.file(name, rs);
+					this.collection.zipWriter.file( name, wp.csvie.helper.createStream( url ) );
 				}, this );
 			}
+
+			return attachments;
 		},
 	});
 
@@ -139,15 +162,15 @@
 		 * @param options
 		 */
 		sync: function( method, object, options ) {
+			var json = this.toJSON(),
+				formattedJSON = {};
+
 			if ( 'undefined' === typeof options.data ) {
 				options.data = {};
 			}
 
 			options.data.nonce = wp.csvie.settings.nonce;
 			options.data.action = wp.csvie.settings.action;
-
-			var json = this.toJSON(),
-				formattedJSON = {};
 
 			if ( json instanceof Array ) {
 				formattedJSON.models = json;
@@ -539,7 +562,7 @@
 			if ( this.model.zipWriter ) {
 				this.model.zipWriter.file( name + '.csv', csv );
 
-				stream = streamSaver.createWriteStream( name + '.zip' );
+				stream = StreamSaver.createWriteStream( name + '.zip' );
 				zipStream = this.model.zipWriter.generateInternalStream( { type: "uint8array", streamFiles: true } );
 
 				writer = stream.getWriter();
