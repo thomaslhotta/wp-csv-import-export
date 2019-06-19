@@ -33,10 +33,12 @@
 	wp.csvie.helper.createStream = function( url ) {
 		var rs;
 		rs = new ReadableStream();
-		rs._read = function () {
+		rs._read = function() {
 			if( !this.fetcher ) {
 				// Starts fetch process
-				this.fetcher = fetch( url ).then( function ( res ) {
+				this.fetcher = fetch( url, {
+					credentials: 'same-origin'
+				}).then( function ( res ) {
 					return res.ok ? res.body.getReader() : null
 				} );
 			}
