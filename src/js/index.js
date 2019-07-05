@@ -565,7 +565,11 @@
 				this.model.zipWriter.file( name + '.csv', csv );
 
 				stream = StreamSaver.createWriteStream( name + '.zip' );
-				zipStream = this.model.zipWriter.generateInternalStream( { type: "uint8array", streamFiles: true } );
+				zipStream = this.model.zipWriter.generateInternalStream({
+					compression: "DEFLATE",
+					streamFiles: true,
+					type: "uint8array"
+				});
 
 				writer = stream.getWriter();
 
