@@ -11,10 +11,10 @@
  */
 class CSV_Import_Export {
 
+	const VERSION = '1.0.4';
+
 	/**
 	 * Instance of this class.
-	 *
-	 * @since    1.1.0
 	 *
 	 * @var      object
 	 */
@@ -125,7 +125,7 @@ class CSV_Import_Export {
 			'cie-admin-script',
 			plugins_url( $script_url . '/js/main.js' ),
 			array( 'backbone-localstorage', 'backbone-paginator' ),
-			'1.1',
+			self::VERSION,
 			true
 		);
 

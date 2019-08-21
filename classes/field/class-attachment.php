@@ -18,7 +18,7 @@ class CIE_Field_Attachment extends CIE_Field_Abstract {
 		}
 
 		if ( 'attachment' === $element->get_element()->post_type ) {
-			return array( array( $element->get_element()->guid ) );
+			return array( array( wp_get_attachment_url( $element->get_element()->ID ) ) );
 		}
 
 		$urls = array();
