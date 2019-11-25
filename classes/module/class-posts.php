@@ -89,7 +89,7 @@ class CIE_Module_Posts extends CIE_Module_Abstract {
 	}
 
 	public function display_post_import_page() {
-		echo $this->render_import_ui( 'import_posts' );
+		echo $this->render_import_ui();
 	}
 
 	/**

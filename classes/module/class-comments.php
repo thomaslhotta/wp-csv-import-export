@@ -81,7 +81,7 @@ class CIE_Module_Comments extends CIE_Module_Abstract {
 	}
 
 	public function display_import_ui() {
-		echo $this->render_import_ui( 'import_comments' );
+		echo $this->render_import_ui();
 	}
 
 	public function display_export_ui() {

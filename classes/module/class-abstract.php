@@ -80,8 +80,8 @@ abstract class CIE_Module_Abstract {
 	 * @return null|string
 	 */
 	public function get_import_action() {
-		$exporter = $this->get_exporter();
-		if ( $exporter ) {
+		$importer = $this->get_importer();
+		if ( $importer ) {
 			return strtolower( get_class( $this->get_importer() ) );
 		}
 
@@ -251,13 +251,12 @@ abstract class CIE_Module_Abstract {
 	/**
 	 * Renders the import UI
 	 *
-	 * @param $action
 	 * @param $show_title
 	 * @todo Simplify this functions
 	 *
 	 * @return string
 	 */
-	public function render_import_ui( $action, $show_title = true ) {
+	public function render_import_ui( $show_title = true ) {
 		wp_localize_script(
 			'cie-admin-script',
 			'csvieSettings',
@@ -364,7 +363,6 @@ abstract class CIE_Module_Abstract {
 		);
 
 		$html .= sprintf( '<input name="mode" value="%d" type="hidden">', $mode );
-		$html .= sprintf( '<input name="export_nonce" value="%d" type="hidden">', wp_create_nonce( $action ) );
 
 		// Import button
 		$html .= sprintf(
@@ -380,9 +378,8 @@ abstract class CIE_Module_Abstract {
 		);
 
 		$html = sprintf(
-			'<form id="csv-import-form" class="wrap" action="%s" method="post" enctype="multipart/form-data" data-toggle="import-csv" data-action="%s">%s</form>',
+			'<form id="csv-import-form" class="wrap" action="%s" method="post" enctype="multipart/form-data" data-toggle="import-csv">%s</form>',
 			esc_url( wp_nonce_url( $_SERVER['REQUEST_URI'], 'upload-csv', 'nonce' ) ),
-			esc_attr( $action ),
 			$html
 		);
 

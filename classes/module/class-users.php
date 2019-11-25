@@ -66,7 +66,7 @@ class CIE_Module_Users extends CIE_Module_Abstract {
 	}
 
 	public function display_user_import_page() {
-		echo $this->render_import_ui( 'import_users' );
+		echo $this->render_import_ui();
 	}
 
 	/**

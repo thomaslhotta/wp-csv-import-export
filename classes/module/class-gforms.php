@@ -36,7 +36,7 @@ class CIE_Module_Gforms extends CIE_Module_Abstract {
 		// Using GForms functions to display markup
 		GFExport::page_header( __( 'Import entries', 'cie' ) );
 
-		echo $this->render_import_ui( 'import_gforms', false );
+		echo $this->render_import_ui( false );
 
 		GFExport::page_footer( __( 'Import entries', 'cie' ) );
 	}
@@ -45,7 +45,7 @@ class CIE_Module_Gforms extends CIE_Module_Abstract {
 	 * @return CIE_Importer
 	 */
 	public function get_importer() {
-		if ( ! $this->exporter instanceof CIE_Importer ) {
+		if ( ! $this->importer instanceof CIE_Importer ) {
 			$this->importer = new CIE_Module_Gforms_Importer();
 		}
 
