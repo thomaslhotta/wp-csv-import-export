@@ -116,7 +116,7 @@ class CIE_Module_Comments_Importer extends CIE_Importer {
 			$comment_id = wp_insert_comment( $data );
 			$comment    = get_comment( $comment_id );
 		} else {
-			if ( wp_update_comment( $data ) ) {
+			if ( false !== wp_update_comment( $data ) ) {
 				$comment = get_comment( $data['comment_ID'] );
 			}
 		}
